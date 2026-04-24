@@ -1,0 +1,23 @@
+{
+  "assumptions": {
+    "n_bolts": 6,
+    "pcd_m": 0.08,
+    "bolt_dia_m": 0.008,
+    "bolt_material_shear": 240000000.0
+  },
+  "worst_peak_F_N": 10694.11419802843,
+  "flange_result": {
+    "n_bolts": 6,
+    "cap_per_bolt_N": 12063.715789784805,
+    "bolts_needed": 1
+  },
+  "worst_case": {
+    "orifice_d_m": 0.018,
+    "Vc_m3": 0.0005,
+    "Cd": 0.8,
+    "muzzle_v": 38.307600282677335,
+    "impulse": 38.307600282677335,
+    "t_end_s": 0.02739999999999989,
+    "peak_F": 10694.11419802843
+  }
+}
