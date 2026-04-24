@@ -649,6 +649,22 @@ try:
 	for f in [out_path, out_path2, out_path3, final_doc_path, csv_path, json_path, flange_summary_path, summary_path]:
 		complete_doc.add_paragraph(f)
 
+	# Formulas and concise conclusion
+	complete_doc.add_heading('Formulas and Conclusion', level=1)
+	complete_doc.add_paragraph('Key formulas used in this analysis:')
+	complete_doc.add_paragraph(' - Isothermal work: W = P0 * V0 * ln(P0 / Pf)')
+	complete_doc.add_paragraph(' - Thin-wall hoop stress: sigma_hoop = P * r / t  (valid when t << r)')
+	complete_doc.add_paragraph('   => required thickness (hoop): t = P * r / sigma_allowable')
+	complete_doc.add_paragraph(' - Axial (longitudinal) stress for thin cylinder: sigma_axial = P * r / (2 * t)')
+	complete_doc.add_paragraph(' - Impulse and average force: I = m * v;  F_avg ≈ I / t_discharge (crude estimate)')
+
+	# Numerical recommendation for 6061-T6
+	allowable = mat_yield / safety_factor
+	recommended_t_mm = max(0.0, t_req_hoop * 1e3)
+	complete_doc.add_paragraph(f'Using 6061-T6 (yield ≈ {mat_yield/1e6:.0f} MPa) and safety factor {safety_factor:.1f}, allowable stress ≈ {allowable/1e6:.1f} MPa.')
+	complete_doc.add_paragraph(f'Calculated required hoop thickness at working pressure ({P0_gauge_bar:.1f} bar gauge) is ≈ {recommended_t_mm:.2f} mm.')
+	complete_doc.add_paragraph('Recommendation: select a standard tube/wall thickness equal to or greater than the calculated required thickness, and verify endcap/flange/bolt margins separately. Use ASME/EN pressure-vessel rules or certified fittings for the chamber when safety is critical.')
+
 	complete_path = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis_complete.docx')
 	complete_doc.save(complete_path)
 except Exception:
