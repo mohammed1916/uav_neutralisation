@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1059mm" height="300mm" viewBox="0 0 1059 300">
+<rect x="0.0" y="140" width="120.0" height="30.0" fill="none" stroke="black"/>
+<rect x="140.0" y="108.4" width="39.716" height="83.2" fill="none" stroke="black"/>
+<rect x="179.716" y="108.4" width="20.0" height="83.2" fill="none" stroke="black"/>
+<rect x="199.716" y="108.4" width="700.0" height="83.2" fill="none" stroke="black"/>
+<rect x="523.716" y="124.0" width="52.0" height="52.0" fill="none" stroke="black"/>
+<rect x="899.716" y="130" width="60.0" height="40" fill="none" stroke="black"/>
+<line x1="0.0" y1="230" x2="899.716" y2="230" stroke="black"/>
+<text x="10" y="245">Overall 960 mm</text>
+</svg>

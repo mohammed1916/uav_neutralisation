@@ -130,10 +130,7 @@ doc.add_heading('7. Quick Summary (numbers)', level=1)
 doc.add_paragraph(f'Barrel cross-sectional area: {barrel_area:.6f} m^2')
 doc.add_paragraph(f'Ideal isothermal work at {P0_gauge_bar:.1f} bar (gauge): {W_ideal:.0f} J')
 
-out_path = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis.docx')
-doc.save(out_path)
-
-out_path
+out_path = None
 
 # ---- Additional structural and thrust calculations ----
 doc2 = Document()
@@ -194,10 +191,7 @@ doc2.add_paragraph(
 	'4) Add valves and piping flow analysis (mass flow, choked flow) to predict realistic time-history, peak pressure drop and resulting thrust impulse more accurately.'
 )
 
-out_path2 = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis_structural.docx')
-doc2.save(out_path2)
-
-out_path2
+out_path2 = None
 
 # ---- Transient 1D launcher simulation (compressible orifice + projectile motion) ----
 def simulate_transient(m_payload=1.0,
@@ -381,10 +375,7 @@ for name, A_bolt in bolt_sizes.items():
 	n_needed = math.ceil(F_axial / cap)
 	doc3.add_paragraph(f'{name}: bolt shear cap ≈ {cap:.0f} N → bolts required ≈ {n_needed}')
 
-out_path3 = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis_transient.docx')
-doc3.save(out_path3)
-
-out_path3
+out_path3 = None
 
 # ---- Parametric sweep and detailed flange checks ----
 import csv
@@ -554,10 +545,7 @@ for pf in plot_files:
 		pass
 doc_final.add_heading('Flange / Bolt Check (assumed geometry)', level=1)
 doc_final.add_paragraph(json.dumps({'assumptions': flange_assumptions, 'flange_result': flange_result}, indent=2))
-final_doc_path = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis_final.docx')
-doc_final.save(final_doc_path)
-
-final_doc_path
+final_doc_path = None
 
 # ---- Now assemble the single comprehensive document (after plots & checks exist) ----
 try:
@@ -646,8 +634,10 @@ try:
 
 	# Appendix: files
 	complete_doc.add_heading('Appendix: Generated Files', level=1)
-	for f in [out_path, out_path2, out_path3, final_doc_path, csv_path, json_path, flange_summary_path, summary_path]:
-		complete_doc.add_paragraph(f)
+	for fname in sorted(os.listdir(OUTPUT_DIR)):
+		complete_doc.add_paragraph(os.path.join('outputs', fname))
+	# master document path
+	complete_doc.add_paragraph(os.path.join('docs', 'pneumatic_launcher_analysis_complete.docx'))
 
 	# Formulas and concise conclusion
 	complete_doc.add_heading('Formulas and Conclusion', level=1)
@@ -666,7 +656,29 @@ try:
 	complete_doc.add_paragraph('Recommendation: select a standard tube/wall thickness equal to or greater than the calculated required thickness, and verify endcap/flange/bolt margins separately. Use ASME/EN pressure-vessel rules or certified fittings for the chamber when safety is critical.')
 
 	complete_path = os.path.join(DOCS_DIR, 'pneumatic_launcher_analysis_complete.docx')
-	complete_doc.save(complete_path)
+	try:
+		complete_doc.save(complete_path)
+	except PermissionError:
+		# fallback: save to temp and attempt atomic replace
+		tmp_path = complete_path + '.tmp'
+		try:
+			complete_doc.save(tmp_path)
+			os.replace(tmp_path, complete_path)
+		except Exception:
+			# last resort: skip overwrite
+			pass
+
+	# Remove any intermediate document files in DOCS_DIR, keep only the master
+	try:
+		for fname in os.listdir(DOCS_DIR):
+			# remove any .docx that is not the master, and any temp files
+			if (fname.lower().endswith('.docx') and fname != os.path.basename(complete_path)) or fname.lower().endswith('.tmp') or fname.startswith(os.path.basename(complete_path)) and fname != os.path.basename(complete_path):
+				try:
+					os.remove(os.path.join(DOCS_DIR, fname))
+				except Exception:
+					pass
+	except Exception:
+		pass
 except Exception:
 	import traceback
 	traceback.print_exc()
