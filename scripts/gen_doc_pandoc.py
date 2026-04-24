@@ -360,7 +360,11 @@ def run_pandoc(md_path, out_docx):
     os.makedirs(os.path.dirname(out_docx), exist_ok=True)
     try:
         # Run pandoc from the repo root so relative image paths resolve
-        proc = subprocess.run(['pandoc', md_path, '-o', out_docx, '--standalone'],
+        ref = os.path.join(REPO_ROOT, 'docs', 'reference.docx')
+        cmd = ['pandoc', md_path, '-o', out_docx, '--standalone']
+        if os.path.exists(ref):
+            cmd += ['--reference-doc', ref]
+        proc = subprocess.run(cmd,
                               cwd=REPO_ROOT, capture_output=True, text=True)
         if proc.returncode != 0:
             print('pandoc failed:', proc.stderr.strip())
