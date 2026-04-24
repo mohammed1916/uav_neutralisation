@@ -657,19 +657,7 @@ try:
     except Exception:
         pass
 
-    # Appendix: files
-    complete_doc.add_heading('Appendix: Generated Files', level=1)
-    files = sorted(os.listdir(OUTPUT_DIR))
-    if files:
-        f_table = complete_doc.add_table(rows=1, cols=1)
-        f_table.rows[0].cells[0].text = 'Generated outputs'
-        for fname in files:
-            rc = f_table.add_row().cells
-            rc[0].text = os.path.join('outputs', fname)
-    else:
-        complete_doc.add_paragraph('No files found in outputs/.')
-    # master document path
-    complete_doc.add_paragraph(os.path.join('docs', 'pneumatic_launcher_analysis_complete.docx'))
+    # (Appendix: Generated Files) removed to keep document concise per request
 
     # Formulas and concise conclusion
     complete_doc.add_heading('Formulas and Conclusion', level=1)

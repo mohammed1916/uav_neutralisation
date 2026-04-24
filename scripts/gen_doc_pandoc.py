@@ -344,24 +344,7 @@ def build_markdown(include_artifacts=False):
     except Exception:
         pass
 
-    if include_artifacts:
-        md.append('\n## Appendix: Raw outputs\n')
-        for p in [ANALYSIS_JSON, SWEEP_JSON, FLANGE_JSON, MEASURE_CSV]:
-            if os.path.exists(p):
-                name = os.path.basename(p)
-                md.append(f'### {name}\n')
-                if p.lower().endswith('.json'):
-                    try:
-                        with open(p, 'r', encoding='utf-8') as f:
-                            md.append('```json\n' + f.read() + '\n```\n')
-                    except Exception:
-                        md.append('_unable to read file_\n')
-                else:
-                    try:
-                        with open(p, 'r', encoding='utf-8') as f:
-                            md.append('```\n' + f.read() + '\n```\n')
-                    except Exception:
-                        md.append('_unable to read file_\n')
+    # Appendix of raw outputs removed to keep document focused and compact
 
     # join with explicit newlines to preserve paragraph separation for pandoc
     return '\n'.join(md) + '\n'
