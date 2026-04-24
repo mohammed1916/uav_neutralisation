@@ -1,0 +1,30 @@
+Add top and side view drawing generation and DXF export
+ - Rewrote `scripts/generate_drawing.py` to produce top and side views
+ - Build geometry summary and output `outputs/launcher_geometry.json`
+ - Write SVG and PNG outputs for top view (`launcher_top_view.*`)
+ - Write SVG and PNG outputs for side view (`launcher_side_view.*`)
+ - Maintain legacy `launcher_drawing.png` for compatibility
+ - Add DXF export using `ezdxf` when available
+Enhance documentation pipeline and fit verification
+ - Update `scripts/gen_doc_pandoc.py` to include fit verification table
+ - Read geometry summary and measured CSV to compute pass/fail
+ - Include top/side images in generated Markdown before pandoc
+ - Preserve OMML math rendering via pandoc workflow
+Add visualization helper and preview generation
+ - Add `scripts/view_dxf.py` to render DXF to PNG using ezdxf+matplotlib
+ - Generate `outputs/launcher_drawing_preview.png` for quick viewing
+ - Provide easy commands to create and open the preview
+General improvements and housekeeping
+ - Ensure outputs directory exists before writing files
+ - Use measured overrides from `outputs/dimensions_measured.csv`
+ - Avoid modifying master DOCX from drawing generator
+Testing and verification
+ - Ran drawing generator and regenerated DOCX via `gen_doc_pandoc.py`
+ - Confirmed OMML presence using `scripts/inspect_docx.py`
+ - Produced DXF and preview images in `outputs/`
+Notes and next steps
+ - Optionally add per-component DXF layers and color coding
+ - Optionally expand fit checks to rotations and clearance tests
+ - Consider adding CI step to validate doc generation
+ - Provide higher-resolution exports for printing
+Change-set authored by automated assistant as requested

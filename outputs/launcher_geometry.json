@@ -1,0 +1,45 @@
+{
+  "params": {
+    "barrel_length_mm": 700.0,
+    "overall_length_mm": 701.418,
+    "overall_height_mm": 263.121,
+    "frame_width_mm": 697.872,
+    "barrel_id_mm": 52.0,
+    "chamber_length_mm": 39.716,
+    "sabot_od_mm": 52.0
+  },
+  "geom": {
+    "co2_cartridge": {
+      "x": 20.0,
+      "w": 120.0,
+      "h": 30.0,
+      "label": "CO2 Cartridge"
+    },
+    "chamber": {
+      "x": 160.0,
+      "w": 39.716,
+      "h": 83.2,
+      "label": "Chamber"
+    },
+    "flange": {
+      "x": 199.716,
+      "w": 20.0,
+      "h": 83.2,
+      "label": "Flange"
+    },
+    "barrel": {
+      "x": 219.716,
+      "w": 700.0,
+      "id": 52.0,
+      "label": "Barrel"
+    },
+    "sabot": {
+      "x": 919.716,
+      "w": 60.0,
+      "od": 52.0,
+      "label": "Sabot"
+    },
+    "overall_length": 999.716,
+    "y_center": 200
+  }
+}
