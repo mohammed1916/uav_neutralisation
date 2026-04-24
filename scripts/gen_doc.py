@@ -3,6 +3,8 @@ import csv
 from docx import Document
 import math
 import os
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 # Directories: scripts live in `scripts/`, runtime outputs go to `outputs/`, documents to `docs/`.
 # `BASE_DIR` is the directory containing this script (scripts/ after reorganization).
@@ -54,6 +56,41 @@ def required_P0_for_work(W_target, V, Pf=Pf, Pmin=None, Pmax=None):
         else:
             Pmin = mid
     return 0.5 * (Pmin + Pmax)
+
+
+def insert_omml_equation(paragraph, text):
+    """Insert a simple OMML math run into a python-docx paragraph.
+    This creates a minimal <m:oMath><m:r><m:t>text</m:t></m:r></m:oMath> node.
+    """
+    # create math element
+    oMath = OxmlElement('m:oMath')
+    r = OxmlElement('m:r')
+    t = OxmlElement('m:t')
+    t.text = text
+    r.append(t)
+    oMath.append(r)
+    paragraph._p.append(oMath)
+
+
+def read_measured_csv(path):
+    vals = {}
+    if not os.path.exists(path):
+        return vals
+    try:
+        with open(path, 'r', newline='') as f:
+            rdr = csv.reader(f)
+            hdr = next(rdr)
+            for row in rdr:
+                if not row:
+                    continue
+                key = row[0].strip()
+                try:
+                    vals[key] = float(row[1])
+                except Exception:
+                    vals[key] = row[1]
+    except Exception:
+        pass
+    return vals
 
 
 # Compute theoretical values (previously collected into an early doc)
@@ -446,7 +483,8 @@ try:
     # Theoretical
     complete_doc.add_heading('Theoretical Energy Estimates', level=1)
     complete_doc.add_paragraph(f'Ideal isothermal work: {W_ideal:.1f} J')
-    complete_doc.add_paragraph('Isothermal formula: W = P0*V0*ln(P0/Pf)')
+    p_thermo = complete_doc.add_paragraph('Isothermal formula: ')
+    insert_omml_equation(p_thermo, 'W = P_0 V_0 ln(P_0 / P_f)')
 
     # Representative scenarios
     complete_doc.add_heading('Representative Payload Scenarios', level=1)
@@ -561,7 +599,42 @@ try:
     complete_doc.add_heading('Flange and Bolt Check', level=1)
     with open(flange_summary_path, 'r') as ff:
         flange_info = json.load(ff)
-    complete_doc.add_paragraph(json.dumps(flange_info, indent=2))
+    # Present flange info as tables instead of raw JSON
+    try:
+        assumptions = flange_info.get('assumptions', {})
+        complete_doc.add_heading('Flange Assumptions', level=2)
+        if assumptions:
+            a_table = complete_doc.add_table(rows=1, cols=2)
+            a_table.rows[0].cells[0].text = 'Parameter'
+            a_table.rows[0].cells[1].text = 'Value'
+            for k, v in assumptions.items():
+                rc = a_table.add_row().cells
+                rc[0].text = str(k)
+                rc[1].text = str(v)
+
+        complete_doc.add_heading('Flange Check Result', level=2)
+        fr = flange_info.get('flange_result', {})
+        if fr:
+            f_table = complete_doc.add_table(rows=1, cols=2)
+            f_table.rows[0].cells[0].text = 'Metric'
+            f_table.rows[0].cells[1].text = 'Value'
+            for k, v in fr.items():
+                rc = f_table.add_row().cells
+                rc[0].text = str(k)
+                rc[1].text = str(v)
+
+        complete_doc.add_heading('Worst-case Sweep Result', level=2)
+        worst = flange_info.get('worst_case', {})
+        if worst:
+            w_table = complete_doc.add_table(rows=1, cols=2)
+            w_table.rows[0].cells[0].text = 'Metric'
+            w_table.rows[0].cells[1].text = 'Value'
+            for k, v in worst.items():
+                rc = w_table.add_row().cells
+                rc[0].text = str(k)
+                rc[1].text = str(v)
+    except Exception:
+        complete_doc.add_paragraph(json.dumps(flange_info, indent=2))
 
     # Bolt shear check table (per-bolt capacities and required count)
     try:
@@ -589,15 +662,15 @@ try:
     # Formulas and concise conclusion
     complete_doc.add_heading('Formulas and Conclusion', level=1)
     complete_doc.add_paragraph('Key formulas used in this analysis:')
-    complete_doc.add_paragraph(' - Isothermal work: W = P0 * V0 * ln(P0 / Pf)')
-    complete_doc.add_paragraph(
-        ' - Thin-wall hoop stress: sigma_hoop = P * r / t  (valid when t << r)')
-    complete_doc.add_paragraph(
-        '   => required thickness (hoop): t = P * r / sigma_allowable')
-    complete_doc.add_paragraph(
-        ' - Axial (longitudinal) stress for thin cylinder: sigma_axial = P * r / (2 * t)')
-    complete_doc.add_paragraph(
-        ' - Impulse and average force: I = m * v;  F_avg ≈ I / t_discharge (crude estimate)')
+    p1 = complete_doc.add_paragraph('Isothermal work: ')
+    insert_omml_equation(p1, 'W = P_0 V_0 ln(P_0 / P_f)')
+    p2 = complete_doc.add_paragraph('Hoop stress (thin-wall): ')
+    insert_omml_equation(p2, r'\sigma_{hoop} = P\; r / t')
+    p3 = complete_doc.add_paragraph('Required thickness (hoop): ')
+    insert_omml_equation(p3, r't = P\; r / \sigma_{allowable}')
+    p4 = complete_doc.add_paragraph('Axial stress (thin-wall): ')
+    insert_omml_equation(p4, r'\sigma_{axial} = P\; r / (2\; t)')
+    complete_doc.add_paragraph(' - Impulse and average force: I = m * v;  F_avg ≈ I / t_discharge (crude estimate)')
 
     # Numerical recommendation for 6061-T6
     allowable = mat_yield / safety_factor
