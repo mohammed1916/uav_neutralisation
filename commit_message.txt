@@ -1,30 +1,32 @@
-Add top and side view drawing generation and DXF export
- - Rewrote `scripts/generate_drawing.py` to produce top and side views
- - Build geometry summary and output `outputs/launcher_geometry.json`
- - Write SVG and PNG outputs for top view (`launcher_top_view.*`)
- - Write SVG and PNG outputs for side view (`launcher_side_view.*`)
- - Maintain legacy `launcher_drawing.png` for compatibility
- - Add DXF export using `ezdxf` when available
-Enhance documentation pipeline and fit verification
- - Update `scripts/gen_doc_pandoc.py` to include fit verification table
- - Read geometry summary and measured CSV to compute pass/fail
- - Include top/side images in generated Markdown before pandoc
- - Preserve OMML math rendering via pandoc workflow
-Add visualization helper and preview generation
- - Add `scripts/view_dxf.py` to render DXF to PNG using ezdxf+matplotlib
- - Generate `outputs/launcher_drawing_preview.png` for quick viewing
- - Provide easy commands to create and open the preview
-General improvements and housekeeping
- - Ensure outputs directory exists before writing files
- - Use measured overrides from `outputs/dimensions_measured.csv`
- - Avoid modifying master DOCX from drawing generator
-Testing and verification
- - Ran drawing generator and regenerated DOCX via `gen_doc_pandoc.py`
- - Confirmed OMML presence using `scripts/inspect_docx.py`
- - Produced DXF and preview images in `outputs/`
-Notes and next steps
- - Optionally add per-component DXF layers and color coding
- - Optionally expand fit checks to rotations and clearance tests
- - Consider adding CI step to validate doc generation
- - Provide higher-resolution exports for printing
-Change-set authored by automated assistant as requested
+Refactor gen_doc.py and regenerate analysis outputs
+
+1) Converted free-form payload scenario paragraphs into a structured table for clarity.
+2) Replaced appendix file listing with a one-column table to avoid auto-numbering in Word.
+3) Removed leading hyphen causing unintended list formatting in final document.
+4) Ensured OMML equation insertions remain unchanged and preserved.
+5) Kept existing simulation engine logic intact; no numerical changes were made.
+6) Validated syntax using `python -m py_compile scripts/gen_doc.py`.
+7) Regenerated parametric sweep CSV and JSON outputs via the script.
+8) Rebuilt matplotlib plots (velocity, peak force, impulse) and saved PNGs.
+9) Wrote `outputs/flange_check.json` summarizing worst-case bolt checks.
+10) Wrote `outputs/analysis_summary.json` with references to generated artifacts.
+11) Embedded generated plots and drawing previews into the master DOCX.
+12) Preserved transient simulation parameters and default orifice set.
+13) Added a concise representative-scenarios table to the DOCX.
+14) Converted appendix listing into a proper DOCX table for stable formatting.
+15) Performed minimal refactor only in `scripts/gen_doc.py`; other scripts unchanged.
+16) Left `scripts/gen_doc_pandoc.py` and drawing scripts untouched.
+17) Ensured outputs directory is populated and non-empty after run.
+18) Saved master document to `docs/pneumatic_launcher_analysis_complete.docx`.
+19) If DOCX was open during save, a fallback atomic-write was attempted.
+20) This commit focuses on presentation fixes and does not change core math.
+21) Recommended next tasks: add polygon collision fit checks and DXF layering.
+22) Noted: pandoc-first pipeline remains preferred for OMML reliability.
+23) Tests run: syntax check only; no unit tests were present to run.
+24) Files modified: `scripts/gen_doc.py`; files created under `outputs/` and `docs/`.
+25) Please verify DOCX headings and tables in Word to confirm formatting.
+26) For reproducibility: run `python scripts/gen_doc.py` then inspect outputs/.
+27) Author: Automated commit by development assistant (local agent).
+28) Reviewers: engineering team for validation and CAD team for DXF review.
+29) Backups: outputs are generated; consider archiving `docs/` for release.
+30) End of technical notes.

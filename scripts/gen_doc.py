@@ -486,18 +486,24 @@ try:
     p_thermo = complete_doc.add_paragraph('Isothermal formula: ')
     insert_omml_equation(p_thermo, 'W = P_0 V_0 ln(P_0 / P_f)')
 
-    # Representative scenarios
+    # Representative scenarios (presented as a concise table to avoid stray numbering)
     complete_doc.add_heading('Representative Payload Scenarios', level=1)
+    scen_table = complete_doc.add_table(rows=1, cols=4)
+    hdr = scen_table.rows[0].cells
+    hdr[0].text = 'Mass (kg)'
+    hdr[1].text = 'Efficiency (%)'
+    hdr[2].text = 'Muzzle velocity (m/s)'
+    hdr[3].text = 'Energy (J)'
     for m in masses:
-        complete_doc.add_paragraph(f'Mass = {m:.2f} kg')
         v_ideal = math.sqrt(2.0 * W_ideal / m)
-        complete_doc.add_paragraph(
-            f'Ideal muzzle velocity (no losses): {v_ideal:.1f} m/s')
         for eff in efficiencies:
             W_eff = W_ideal * eff
             v_eff = math.sqrt(2.0 * W_eff / m)
-            complete_doc.add_paragraph(
-                f'  Efficiency {eff*100:.0f}%: v = {v_eff:.1f} m/s, energy = {W_eff:.0f} J')
+            r = scen_table.add_row().cells
+            r[0].text = f'{m:.2f}'
+            r[1].text = f'{eff*100:.0f}'
+            r[2].text = f'{v_eff:.1f}'
+            r[3].text = f'{W_eff:.0f}'
 
     # Structural summary
     complete_doc.add_heading('Structural Checks (Summary)', level=1)
@@ -653,11 +659,17 @@ try:
 
     # Appendix: files
     complete_doc.add_heading('Appendix: Generated Files', level=1)
-    for fname in sorted(os.listdir(OUTPUT_DIR)):
-        complete_doc.add_paragraph(os.path.join('outputs', fname))
+    files = sorted(os.listdir(OUTPUT_DIR))
+    if files:
+        f_table = complete_doc.add_table(rows=1, cols=1)
+        f_table.rows[0].cells[0].text = 'Generated outputs'
+        for fname in files:
+            rc = f_table.add_row().cells
+            rc[0].text = os.path.join('outputs', fname)
+    else:
+        complete_doc.add_paragraph('No files found in outputs/.')
     # master document path
-    complete_doc.add_paragraph(os.path.join(
-        'docs', 'pneumatic_launcher_analysis_complete.docx'))
+    complete_doc.add_paragraph(os.path.join('docs', 'pneumatic_launcher_analysis_complete.docx'))
 
     # Formulas and concise conclusion
     complete_doc.add_heading('Formulas and Conclusion', level=1)
@@ -670,7 +682,7 @@ try:
     insert_omml_equation(p3, r't = P\; r / \sigma_{allowable}')
     p4 = complete_doc.add_paragraph('Axial stress (thin-wall): ')
     insert_omml_equation(p4, r'\sigma_{axial} = P\; r / (2\; t)')
-    complete_doc.add_paragraph(' - Impulse and average force: I = m * v;  F_avg ≈ I / t_discharge (crude estimate)')
+    complete_doc.add_paragraph('Impulse and average force: I = m * v; F_avg ≈ I / t_discharge (crude estimate)')
 
     # Numerical recommendation for 6061-T6
     allowable = mat_yield / safety_factor
