@@ -489,6 +489,26 @@ try:
     complete_doc.add_paragraph(
         f"Peak force (sim): {sim['peak_F']:.0f} N; Average force: {sim['avg_F']:.0f} N")
 
+    # Transient results summary table
+    try:
+        t_keys = ['Metric', 'Value']
+        ttable = complete_doc.add_table(rows=1, cols=2)
+        ttable.rows[0].cells[0].text = 'Metric'
+        ttable.rows[0].cells[1].text = 'Value'
+        rows = [
+            ('Muzzle velocity (m/s)', f"{sim['muzzle_v']:.2f}"),
+            ('Impulse (N·s)', f"{sim['impulse']:.2f}"),
+            ('Discharge time (ms)', f"{sim['t_end']*1e3:.1f}"),
+            ('Peak force (N)', f"{sim['peak_F']:.0f}"),
+            ('Average force (N)', f"{sim['avg_F']:.0f}")
+        ]
+        for r in rows:
+            rc = ttable.add_row().cells
+            rc[0].text = r[0]
+            rc[1].text = r[1]
+    except Exception:
+        pass
+
     # Parametric sweep table (first 30 rows)
     complete_doc.add_heading('Parametric Sweep Summary (sample)', level=1)
     with open(json_path, 'r') as jf:
@@ -519,11 +539,44 @@ try:
         except Exception:
             pass
 
+    # Engineering drawing (embed PNG preview if available)
+    complete_doc.add_heading('Engineering Drawing', level=1)
+    drawing_png = os.path.join(OUTPUT_DIR, 'launcher_drawing.png')
+    drawing_svg = os.path.join(OUTPUT_DIR, 'launcher_drawing.svg')
+    try:
+        if os.path.exists(drawing_png):
+            complete_doc.add_paragraph('Embedded preview:')
+            try:
+                complete_doc.add_picture(drawing_png)
+            except Exception:
+                complete_doc.add_paragraph(os.path.basename(drawing_png))
+        elif os.path.exists(drawing_svg):
+            complete_doc.add_paragraph(os.path.basename(drawing_svg))
+        else:
+            complete_doc.add_paragraph('No drawing files found in outputs/.')
+    except Exception:
+        pass
+
     # Flange and bolt check
     complete_doc.add_heading('Flange and Bolt Check', level=1)
     with open(flange_summary_path, 'r') as ff:
         flange_info = json.load(ff)
     complete_doc.add_paragraph(json.dumps(flange_info, indent=2))
+
+    # Bolt shear check table (per-bolt capacities and required count)
+    try:
+        complete_doc.add_heading('Bolt Shear Check (endcap)', level=2)
+        b_table = complete_doc.add_table(rows=1, cols=3)
+        b_table.rows[0].cells[0].text = 'Bolt'
+        b_table.rows[0].cells[1].text = 'Capacity (N)'
+        b_table.rows[0].cells[2].text = 'Bolts required'
+        for bname, info in bolt_check.items():
+            rc = b_table.add_row().cells
+            rc[0].text = bname
+            rc[1].text = f"{info['cap_N']:.0f}"
+            rc[2].text = str(info['bolts_needed'])
+    except Exception:
+        pass
 
     # Appendix: files
     complete_doc.add_heading('Appendix: Generated Files', level=1)
