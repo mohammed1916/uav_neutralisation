@@ -2,8 +2,8 @@
   "W_ideal_J": 4436.14195558365,
   "P0_abs_Pa": 1600000.0,
   "barrel_area_m2": 0.0021237166338267,
-  "transient_report": "C:\\Users\\BBBS-AI-01\\d\\uav_neutralisation\\docs\\pneumatic_launcher_analysis_transient.docx",
-  "structural_report": "C:\\Users\\BBBS-AI-01\\d\\uav_neutralisation\\docs\\pneumatic_launcher_analysis_structural.docx",
+  "transient_report": null,
+  "structural_report": null,
   "parametric_csv": "C:\\Users\\BBBS-AI-01\\d\\uav_neutralisation\\outputs\\parametric_sweep.csv",
   "parametric_json": "C:\\Users\\BBBS-AI-01\\d\\uav_neutralisation\\outputs\\parametric_sweep_summary.json"
 }
