@@ -96,7 +96,8 @@ def compute_fit_results(geo_summary, measures_dict, tol_pct=5.0):
         if measured is None and comp:
             measured = nominal
 
-        components.append({'name': name, 'nominal': nominal, 'measured': measured, 'units': 'mm'})
+        components.append({'name': name, 'nominal': nominal,
+                          'measured': measured, 'units': 'mm'})
 
     # overall assembly nominal/measured
     nominal_overall = None
@@ -105,7 +106,8 @@ def compute_fit_results(geo_summary, measures_dict, tol_pct=5.0):
     elif params and 'overall_length_mm' in params:
         nominal_overall = params.get('overall_length_mm')
 
-    measured_overall = measures_dict.get('overall_length_mm') if 'overall_length_mm' in measures_dict else (geom.get('overall_length') if geom else None)
+    measured_overall = measures_dict.get('overall_length_mm') if 'overall_length_mm' in measures_dict else (
+        geom.get('overall_length') if geom else None)
 
     tol = tol_pct / 100.0
     # overall row
@@ -116,7 +118,8 @@ def compute_fit_results(geo_summary, measures_dict, tol_pct=5.0):
         delta = None
         pass_flag = None
 
-    results.append({'parameter': 'Overall length', 'nominal': nominal_overall, 'measured': measured_overall, 'units': 'mm', 'delta': delta, 'tolerance_pct': tol_pct, 'pass': pass_flag})
+    results.append({'parameter': 'Overall length', 'nominal': nominal_overall, 'measured': measured_overall,
+                   'units': 'mm', 'delta': delta, 'tolerance_pct': tol_pct, 'pass': pass_flag})
 
     # per-component rows
     for c in components:
@@ -132,7 +135,8 @@ def compute_fit_results(geo_summary, measures_dict, tol_pct=5.0):
         else:
             d = None
             pf = None
-        results.append({'parameter': f"{c['name']} width", 'nominal': nom, 'measured': meas, 'units': c.get('units', 'mm'), 'delta': d, 'tolerance_pct': tol_pct, 'pass': pf})
+        results.append({'parameter': f"{c['name']} width", 'nominal': nom, 'measured': meas, 'units': c.get(
+            'units', 'mm'), 'delta': d, 'tolerance_pct': tol_pct, 'pass': pf})
 
     return results
 
@@ -144,7 +148,6 @@ def build_markdown(include_artifacts=False):
     headers, measures = read_csv(MEASURE_CSV)
     measures_dict = measures_to_dict(headers, measures)
     geo_summary = read_json(GEOM_JSON)
-
 
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
     md = []
@@ -171,12 +174,15 @@ def build_markdown(include_artifacts=False):
     if P0:
         try:
             W_calc = P0 * V0 * math.log(P0 / Pf)
-            md.append(f'Numeric: $P_0={P0:.0f}\\;\\mathrm{{Pa}},\\; V_0={V0:.4e}\\;\\mathrm{{m^3}},\\; P_f={Pf:.0f}\\;\\mathrm{{Pa}}$\\\n')
-            md.append(f'Display: $$W = {P0:.0f}\\times {V0:.4e} \\times \\ln\\left(\\frac{{{P0:.0f}}}{{{Pf:.0f}}}\\right) = {W_calc:.2f}\\ \mathrm{{J}}$$\\n')
+            md.append(
+                f'Numeric: $P_0={P0:.0f}\\;\\mathrm{{Pa}},\\; V_0={V0:.4e}\\;\\mathrm{{m^3}},\\; P_f={Pf:.0f}\\;\\mathrm{{Pa}}$\\\n')
+            md.append(
+                f'Display: $$W = {P0:.0f}\\times {V0:.4e} \\times \\ln\\left(\\frac{{{P0:.0f}}}{{{Pf:.0f}}}\\right) = {W_calc:.2f}\\ \mathrm{{J}}$$\\n')
         except Exception:
             md.append('_Numeric evaluation failed_\n')
     else:
-        md.append('_P0 not available in analysis summary; numeric evaluation skipped_\n')
+        md.append(
+            '_P0 not available in analysis summary; numeric evaluation skipped_\n')
 
     # Kinetic energy example using worst-case muzzle velocity when available
     md.append('### Kinetic energy (example)\n')
@@ -195,13 +201,15 @@ def build_markdown(include_artifacts=False):
 
     if v_example is not None:
         Ekin = 0.5 * m_example * (v_example ** 2)
-        md.append(f'Numeric (m={m_example:.2f} kg, v={v_example:.3f} m/s): $E = 0.5 \\times {m_example:.2f} \\times {v_example:.3f}^2 = {Ekin:.2f}\\;\\mathrm{{J}}$\\n')
+        md.append(
+            f'Numeric (m={m_example:.2f} kg, v={v_example:.3f} m/s): $E = 0.5 \\times {m_example:.2f} \\times {v_example:.3f}^2 = {Ekin:.2f}\\;\\mathrm{{J}}$\\n')
     else:
         md.append('_No muzzle velocity available for numeric KE example_\n')
 
     # Hoop stress / required thickness (thin-wall) example
     md.append('### Thin-wall hoop stress and required thickness\n')
-    md.append('Symbolic: $\\sigma_{hoop} = \\frac{P r}{t}$ ; therefore $t = \\frac{P r}{\\sigma_{allowable}}$\n')
+    md.append(
+        'Symbolic: $\\sigma_{hoop} = \\frac{P r}{t}$ ; therefore $t = \\frac{P r}{\\sigma_{allowable}}$\n')
     try:
         barrel_area = analysis.get('barrel_area_m2') if analysis else None
     except Exception:
@@ -214,7 +222,8 @@ def build_markdown(include_artifacts=False):
         allowable = mat_yield / safety_factor
         if P0:
             t_req = P0 * r_barrel / allowable
-            md.append(f'Numeric: barrel area={barrel_area:.6e} m^2 → r={r_barrel*1e3:.2f} mm; using allowable={allowable/1e6:.1f} MPa → t_required={t_req*1e3:.3f} mm\\n')
+            md.append(
+                f'Numeric: barrel area={barrel_area:.6e} m^2 → r={r_barrel*1e3:.2f} mm; using allowable={allowable/1e6:.1f} MPa → t_required={t_req*1e3:.3f} mm\\n')
         else:
             md.append('_P0 not available; cannot compute numeric thickness_\n')
     else:
@@ -290,15 +299,21 @@ def build_markdown(include_artifacts=False):
     md.append('\n## Fit Verification\n')
     fit_rows = compute_fit_results(geo_summary, measures_dict, tol_pct=5.0)
     if fit_rows:
-        md.append('| Parameter | Nominal | Measured | Units | Delta | Tolerance (%) | Pass |\n')
+        md.append(
+            '| Parameter | Nominal | Measured | Units | Delta | Tolerance (%) | Pass |\n')
         md.append('|---|---:|---:|---:|---:|---:|---:|\n')
         for fr in fit_rows:
-            nom = f"{fr['nominal']:.2f}" if isinstance(fr.get('nominal'), (int, float)) else ''
-            meas = f"{fr['measured']:.2f}" if isinstance(fr.get('measured'), (int, float)) else ''
-            delta = f"{fr['delta']:.2f}" if isinstance(fr.get('delta'), (int, float)) else ''
+            nom = f"{fr['nominal']:.2f}" if isinstance(
+                fr.get('nominal'), (int, float)) else ''
+            meas = f"{fr['measured']:.2f}" if isinstance(
+                fr.get('measured'), (int, float)) else ''
+            delta = f"{fr['delta']:.2f}" if isinstance(
+                fr.get('delta'), (int, float)) else ''
             units = fr.get('units', '')
-            pass_mark = 'PASS' if fr['pass'] else ('FAIL' if fr['pass'] is False else '')
-            md.append(f"| {fr['parameter']} | {nom} | {meas} | {units} | {delta} | {fr['tolerance_pct']:.1f} | {pass_mark} |\n")
+            pass_mark = 'PASS' if fr['pass'] else (
+                'FAIL' if fr['pass'] is False else '')
+            md.append(
+                f"| {fr['parameter']} | {nom} | {meas} | {units} | {delta} | {fr['tolerance_pct']:.1f} | {pass_mark} |\n")
     else:
         md.append('_Fit verification data not available_\n')
 
@@ -320,7 +335,8 @@ def build_markdown(include_artifacts=False):
     # Include all PNG plots from outputs/
     md.append('\n## Plots\n')
     try:
-        files = sorted([f for f in os.listdir(OUTPUTS_DIR) if f.lower().endswith('.png')])
+        files = sorted([f for f in os.listdir(OUTPUTS_DIR)
+                       if f.lower().endswith('.png')])
         for f in files:
             rel = os.path.join('outputs', f)
             md.append(f'### {f}\n')
@@ -347,7 +363,8 @@ def build_markdown(include_artifacts=False):
                     except Exception:
                         md.append('_unable to read file_\n')
 
-    return ''.join(md)
+    # join with explicit newlines to preserve paragraph separation for pandoc
+    return '\n'.join(md) + '\n'
 
 
 def write_md(md_text, path):
@@ -372,8 +389,10 @@ def run_pandoc(md_path, out_docx):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Build analysis markdown and convert with pandoc')
-    parser.add_argument('--include-artifacts', action='store_true', help='Append raw output files in an appendix')
+    parser = argparse.ArgumentParser(
+        description='Build analysis markdown and convert with pandoc')
+    parser.add_argument('--include-artifacts', action='store_true',
+                        help='Append raw output files in an appendix')
     args = parser.parse_args()
 
     md = build_markdown(include_artifacts=args.include_artifacts)
