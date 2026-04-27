@@ -681,6 +681,60 @@ try:
         f'Calculated required hoop thickness at working pressure ({P0_gauge_bar:.1f} bar gauge) is ≈ {recommended_t_mm:.2f} mm.')
     complete_doc.add_paragraph('Recommendation: select a standard tube/wall thickness equal to or greater than the calculated required thickness, and verify endcap/flange/bolt margins separately. Use ASME/EN pressure-vessel rules or certified fittings for the chamber when safety is critical.')
 
+    # Barrel–Payload Geometric Compatibility Constraint section
+    complete_doc.add_heading('Barrel\u2013Payload Geometric Compatibility Constraint', level=1)
+
+    complete_doc.add_paragraph(
+        'The payload\u2013sabot assembly shall fit within the barrel internal diameter under all operating '
+        'conditions without interference.'
+    )
+
+    complete_doc.add_heading('Core Constraint', level=2)
+    complete_doc.add_paragraph(
+        'Clearance condition:\n'
+        '\n'
+        '    D_eq + 2\u00b7C_sab \u2264 D_barrel,min\n'
+        '\n'
+        'where:\n'
+        '  D_eq        = \u221a(W\u00b2 + H\u00b2)   (worst-case diagonal envelope of payload cross-section)\n'
+        '  C_sab       = sabot radial clearance per side\n'
+        '  D_barrel,min = D_barrel,nom \u2212 manufacturing tolerance'
+    )
+
+    complete_doc.add_heading('Numerical Check', level=2)
+    complete_doc.add_paragraph(
+        'Given:\n'
+        '  W = 40 mm,  H = 45 mm  \u21d2  D_eq = \u221a(40\u00b2 + 45\u00b2) = 60.2 mm\n'
+        '  C_sab = 1.5 mm  \u21d2  2\u00b7C_sab = 3.0 mm\n'
+        '  D_barrel,nom = 52 mm,  tolerance = \u00b10.3 mm\n'
+        '  \u21d2  D_barrel,min = 51.7 mm\n'
+        '\n'
+        'Check:\n'
+        '  D_eq + 2\u00b7C_sab = 60.2 + 3.0 = 63.2 mm\n'
+        '  63.2 mm  >  51.7 mm  \u21d2  INTERFERENCE if payload is misaligned in barrel'
+    )
+
+    complete_doc.add_heading('Interpretation', level=2)
+    complete_doc.add_paragraph(
+        'The payload does not satisfy the worst-case diagonal envelope constraint. '
+        'Unconstrained rotation inside the barrel will result in interference (jamming). '
+        'A sabot or alignment feature is mandatory to constrain the payload orientation '
+        'and ensure the presented envelope does not exceed D_barrel,min.'
+    )
+
+    complete_doc.add_heading('Design Requirements', level=2)
+    req_para = complete_doc.add_paragraph()
+    req_para.add_run('Requirement G-01:\n').bold = True
+    req_para.add_run(
+        'The sabot shall enforce axial alignment such that payload rotation is constrained '
+        'and the effective envelope presented to the barrel remains within D_barrel,min.\n\n'
+    )
+    req_para.add_run('Requirement G-02:\n').bold = True
+    req_para.add_run(
+        'Total radial clearance (including sabot) shall be limited to 1.0\u20131.5 mm per side '
+        'to prevent tilt-induced interference while maintaining acceptable friction and ease of loading.'
+    )
+
     # ODE system documentation for report
     complete_doc.add_heading('Governing ODE System for Launcher Simulation', level=1)
     ode_text = (
