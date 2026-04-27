@@ -17,10 +17,10 @@ os.makedirs(DOCS_DIR, exist_ok=True)
 # Parameters inferred from the schematic image (labels on the figure)
 # Charge chamber: 1.0 L accumulator
 V0 = 1.0e-3  # m^3
-# Working pressure shown on accumulator: 15 bar (gauge)
-P0_gauge_bar = 15.0  # bar (gauge)
+# Working pressure shown on accumulator: 10 bar (gauge) — matches EDD nominal WP
+P0_gauge_bar = 10.0  # bar (gauge)
 BAR = 1.0e5  # Pa per bar
-P0_abs = (P0_gauge_bar + 1.0) * BAR  # convert to absolute Pa
+P0_abs = (P0_gauge_bar + 1.0) * BAR  # convert to absolute Pa  (11 bar abs)
 Pf = 1.0e5  # atmospheric pressure (Pa)
 
 # Barrel geometry from figure: 52 mm ID, 700 mm length
@@ -680,6 +680,42 @@ try:
     complete_doc.add_paragraph(
         f'Calculated required hoop thickness at working pressure ({P0_gauge_bar:.1f} bar gauge) is ≈ {recommended_t_mm:.2f} mm.')
     complete_doc.add_paragraph('Recommendation: select a standard tube/wall thickness equal to or greater than the calculated required thickness, and verify endcap/flange/bolt margins separately. Use ASME/EN pressure-vessel rules or certified fittings for the chamber when safety is critical.')
+
+    # ODE system documentation for report
+    complete_doc.add_heading('Governing ODE System for Launcher Simulation', level=1)
+    ode_text = (
+        'The launcher’s internal ballistics are modeled as a coupled system of ordinary differential equations (ODEs), solved numerically at each timestep. The state vector is:\n'
+        '\n'
+        '    s(t) = [x, v, P, m]\n'
+        '\n'
+        'where:\n'
+        '  x = projectile position\n'
+        '  v = projectile velocity\n'
+        '  P = chamber pressure\n'
+        '  m = mass of gas in chamber\n'
+        '\n'
+        'The system:\n'
+        '1. Projectile motion (Newton’s law):\n'
+        '   dv/dt = (P * A_bore - F_friction) / m_payload\n'
+        '2. Kinematics:\n'
+        '   dx/dt = v\n'
+        '3. Gas mass balance:\n'
+        '   dm/dt = -m_dot_out\n'
+        '4. Pressure evolution (ideal gas, real-gas correction applied in code):\n'
+        '   P = m * R * T / V(t)\n'
+        '   dP/dt = (R * T / V) * dm/dt - (m * R * T / V^2) * dV/dt\n'
+        '5. Chamber volume change (moving projectile):\n'
+        '   V(t) = V0 + A_bore * x(t)\n'
+        '   dV/dt = A_bore * v\n'
+        '6. Valve mass flow (critical):\n'
+        '   Choked: m_dot_out = Cd * A_orifice * P * sqrt(gamma / (R * T)) * (2/(gamma+1))^((gamma+1)/(2*(gamma-1)))\n'
+        '   Subsonic: m_dot_out = f(Cv, P_up, P_down)\n'
+        '\n'
+        'Key insight: There is no single closed-form velocity equation. The exit velocity is obtained by integrating this ODE system over time.\n'
+        '\n'
+        'This system is implemented in simulate_transient() in scripts/gen_doc.py.'
+    )
+    complete_doc.add_paragraph(ode_text)
 
     complete_path = os.path.join(
         DOCS_DIR, 'pneumatic_launcher_analysis_complete.docx')

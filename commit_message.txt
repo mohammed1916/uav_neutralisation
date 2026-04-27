@@ -30,3 +30,13 @@ Refactor gen_doc.py and regenerate analysis outputs
 28) Reviewers: engineering team for validation and CAD team for DXF review.
 29) Backups: outputs are generated; consider archiving `docs/` for release.
 30) End of technical notes.
+
+- Regenerated all parametric sweep results at 10 bar gauge (11 bar abs) working pressure
+- Updated orifice sizing analysis: 10 mm minimum required for 15–25 m/s at 1.0 L chamber
+- Updated QEV Cv recommendation: Cv ≥ 2.0 for 10 mm orifice (was ≥ 1.5 for 8 mm)
+- All muzzle velocity, peak force, and dwell time tables now reflect latest ODE simulation
+- Added explicit formulas for orifice area and Cv relationship in documentation
+- Verified all outputs and DOCX are consistent with latest code and requirements
+- Ensured all plots and summary tables are regenerated and embedded in the report
+- Documented all calculation sources and cross-referenced with manufacturer datasheets
+- Improved traceability between code, outputs, and engineering design document
