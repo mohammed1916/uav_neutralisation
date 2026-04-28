@@ -1,0 +1,66 @@
+{
+  "method": "scipy.integrate.solve_ivp (RK45)",
+  "states": [
+    "x_m",
+    "v_ms",
+    "m_c_kg"
+  ],
+  "nominal": {
+    "orifice_d_m": 0.012,
+    "muzzle_velocity_ms": 29.415965330093034,
+    "peak_barrel_force_N": 2127.8582141988804,
+    "dwell_time_ms": 36.678296581287626,
+    "kinetic_energy_J": 432.6495081506177,
+    "launch_efficiency_pct": 16.402623548416003
+  },
+  "sweep": [
+    {
+      "orifice_d_m": 0.006,
+      "muzzle_velocity_ms": 15.721404332733206,
+      "peak_barrel_force_N": 2084.288811459511,
+      "dwell_time_ms": 59.0313592470425,
+      "kinetic_energy_J": 123.58127709664122,
+      "launch_efficiency_pct": 4.685217774806794
+    },
+    {
+      "orifice_d_m": 0.008,
+      "muzzle_velocity_ms": 21.31962251246852,
+      "peak_barrel_force_N": 2118.124794950162,
+      "dwell_time_ms": 46.628895949453195,
+      "kinetic_energy_J": 227.26315203707728,
+      "launch_efficiency_pct": 8.616008706966763
+    },
+    {
+      "orifice_d_m": 0.01,
+      "muzzle_velocity_ms": 25.801525760980685,
+      "peak_barrel_force_N": 2118.788933667862,
+      "dwell_time_ms": 40.31909980614868,
+      "kinetic_energy_J": 332.85936579727496,
+      "launch_efficiency_pct": 12.619376120581412
+    },
+    {
+      "orifice_d_m": 0.012,
+      "muzzle_velocity_ms": 29.415965330093034,
+      "peak_barrel_force_N": 2127.8582141988804,
+      "dwell_time_ms": 36.678296581287626,
+      "kinetic_energy_J": 432.6495081506177,
+      "launch_efficiency_pct": 16.402623548416003
+    },
+    {
+      "orifice_d_m": 0.015,
+      "muzzle_velocity_ms": 33.32091456519575,
+      "peak_barrel_force_N": 2137.9468884478392,
+      "dwell_time_ms": 33.71565996936602,
+      "kinetic_energy_J": 555.1416737305371,
+      "launch_efficiency_pct": 21.04655088864587
+    },
+    {
+      "orifice_d_m": 0.018,
+      "muzzle_velocity_ms": 35.63135959764964,
+      "peak_barrel_force_N": 2145.546928870469,
+      "dwell_time_ms": 32.25510434533451,
+      "kinetic_energy_J": 634.7968933885096,
+      "launch_efficiency_pct": 24.066442410772044
+    }
+  ]
+}

@@ -1,42 +1,28 @@
-Refactor gen_doc.py and regenerate analysis outputs
+﻿Rev4 analysis update: RK45 solver, critical unit fixes, and EDD-aligned conclusions
 
-1) Converted free-form payload scenario paragraphs into a structured table for clarity.
-2) Replaced appendix file listing with a one-column table to avoid auto-numbering in Word.
-3) Removed leading hyphen causing unintended list formatting in final document.
-4) Ensured OMML equation insertions remain unchanged and preserved.
-5) Kept existing simulation engine logic intact; no numerical changes were made.
-6) Validated syntax using `python -m py_compile scripts/gen_doc.py`.
-7) Regenerated parametric sweep CSV and JSON outputs via the script.
-8) Rebuilt matplotlib plots (velocity, peak force, impulse) and saved PNGs.
-9) Wrote `outputs/flange_check.json` summarizing worst-case bolt checks.
-10) Wrote `outputs/analysis_summary.json` with references to generated artifacts.
-11) Embedded generated plots and drawing previews into the master DOCX.
-12) Preserved transient simulation parameters and default orifice set.
-13) Added a concise representative-scenarios table to the DOCX.
-14) Converted appendix listing into a proper DOCX table for stable formatting.
-15) Performed minimal refactor only in `scripts/gen_doc.py`; other scripts unchanged.
-16) Left `scripts/gen_doc_pandoc.py` and drawing scripts untouched.
-17) Ensured outputs directory is populated and non-empty after run.
-18) Saved master document to `docs/pneumatic_launcher_analysis_complete.docx`.
-19) If DOCX was open during save, a fallback atomic-write was attempted.
-20) This commit focuses on presentation fixes and does not change core math.
-21) Recommended next tasks: add polygon collision fit checks and DXF layering.
-22) Noted: pandoc-first pipeline remains preferred for OMML reliability.
-23) Tests run: syntax check only; no unit tests were present to run.
-24) Files modified: `scripts/gen_doc.py`; files created under `outputs/` and `docs/`.
-25) Please verify DOCX headings and tables in Word to confirm formatting.
-26) For reproducibility: run `python scripts/gen_doc.py` then inspect outputs/.
-27) Author: Automated commit by development assistant (local agent).
-28) Reviewers: engineering team for validation and CAD team for DXF review.
-29) Backups: outputs are generated; consider archiving `docs/` for release.
-30) End of technical notes.
+This commit upgrades the launcher analysis package and report artifacts to reflect
+the latest physics workflow and documentation corrections requested during review.
 
-- Regenerated all parametric sweep results at 10 bar gauge (11 bar abs) working pressure
-- Updated orifice sizing analysis: 10 mm minimum required for 15–25 m/s at 1.0 L chamber
-- Updated QEV Cv recommendation: Cv ≥ 2.0 for 10 mm orifice (was ≥ 1.5 for 8 mm)
-- All muzzle velocity, peak force, and dwell time tables now reflect latest ODE simulation
-- Added explicit formulas for orifice area and Cv relationship in documentation
-- Verified all outputs and DOCX are consistent with latest code and requirements
-- Ensured all plots and summary tables are regenerated and embedded in the report
-- Documented all calculation sources and cross-referenced with manufacturer datasheets
-- Improved traceability between code, outputs, and engineering design document
+Simulation and tooling updates:
+- Add scripts/solve_launcher_rk45.py using scipy.integrate.solve_ivp(method='RK45').
+- Implement Redlich-Kwong EOS with Newton-Raphson compressibility factor solver.
+- Implement both choked and unchoked valve flow equations with gamma=1.30.
+- Use requested ODE state set [x, v, m_c] and produce nominal + sweep outputs.
+- Generate outputs/rk45_launcher_results.json, rk45_velocity_vs_orifice.csv,
+  and rk45_velocity_vs_orifice.png for verification and traceability.
+
+Report generator and content corrections:
+- Update scripts/gen_doc_pandoc.py to include RK45 compliance section and EDD summary.
+- Fix critical chamber-volume wording from 1.0 mL to 1.0 L (0.0010 m^3).
+- Fix conclusion wording to "charged to 10 bar gauge with 1.0 L chamber volume".
+- Add updated EDD summary table including recommended 8-10 mm orifice range,
+  8 mm and 10 mm velocities, peak-g estimate, and launch-efficiency status.
+- Keep markdown and DOCX generation in sync via the pandoc pipeline.
+
+Regenerated artifacts:
+- outputs/pneumatic_launcher_analysis.md
+- docs/pneumatic_launcher_analysis_complete.docx
+
+Verification snapshot:
+- RK45 sweep trend confirmed from ~15.721 m/s at 6 mm to ~35.631 m/s at 18 mm.
+- Nominal RK45 case (12 mm): v=29.416 m/s, KE=432.650 J, eta=16.403%.
