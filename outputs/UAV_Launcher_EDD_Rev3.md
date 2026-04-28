@@ -79,6 +79,10 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [4.4 Parametric Results (ODE Numerical Sweeps)](#parametric-results-ode-numerical-sweeps)
 
+[Nominal ODE Design Point](#nominal-ode-design-point)
+
+[RK45 Verification Snapshot](#rk45-verification-snapshot)
+
 [4.5 Model Limitations](#model-limitations)
 
 [5. Simulation Approach](#simulation-approach)
@@ -111,6 +115,8 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [7.4 Structural Integrity](#structural-integrity)
 
+[7.5 Endcap and Fastener Check](#endcap-and-fastener-check)
+
 [8. Bill of Materials (BOM) — Revised](#bill-of-materials-bom-revised)
 
 [8.1 Launcher System BOM](#launcher-system-bom)
@@ -133,7 +139,9 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [10.2 Priority Design Risks](#priority-design-risks)
 
-[10.3 Next Steps](#some-points-to-consider)
+[10.3 Requirement Traceability Snapshot](#requirement-traceability-snapshot)
+
+[10.4 Next Steps](#next-steps)
 
 [11. References](#_Toc228192151)
 
@@ -440,6 +448,57 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 > Verified RK45 sweep results support an effective orifice recommendation of **8–10 mm** at 10 bar gauge with a 1.0 L chamber. The 6 mm case is below target, while 12 mm exceeds the upper target velocity band.
 
+### Nominal ODE Design Point
+
+For the legacy coupled ODE model with $m_{\text{payload}}=1.0$ kg, $d_{\text{or}}=12$ mm, $C_{d}=0.8$, $V_{0}=1.0$ L, and a 52 mm × 700 mm barrel, the nominal design-point outputs are:
+
+| Output | Value | Notes |
+|---|---:|---|
+| Muzzle velocity $v_{exit}$ | 27.765 m/s | Baseline ODE endpoint |
+| Impulse $I$ | 27.765 N·s | For 1.0 kg payload |
+| Kinetic energy $E_{k}$ | 385.45 J | At barrel exit |
+| Launch efficiency $\eta$ | 14.61% | Relative to 2637.7 J ideal work |
+| Discharge time $t_{end}$ | 37.20 ms | Barrel transit duration |
+| Peak barrel force $F_{peak}$ | 3369.8 N | Projectile-side force |
+| Average force $F_{avg}$ | 746.4 N | $I/t_{end}$ |
+
+These values remain useful as the design baseline, but the RK45 implementation below is treated as the requirement-compliant reference case for traceability.
+
+### RK45 Verification Snapshot
+
+The requested requirement-compliant implementation using `solve_ivp(method="RK45")`, Redlich-Kwong EOS, Newton-Raphson compressibility solve, and choked/un-choked valve flow has been completed and cross-checked against the same launcher parameters used by this EDD.
+
+Nominal RK45 result at **12 mm** effective orifice:
+
+| Output | Value |
+|---|---:|
+| Muzzle velocity | 29.416 m/s |
+| Peak barrel force | 2127.86 N |
+| Dwell time | 36.678 ms |
+| Kinetic energy | 432.650 J |
+| Launch efficiency | 16.403% |
+
+RK45 sweep summary used for design selection:
+
+| Orifice diameter (mm) | Muzzle velocity (m/s) |
+|---:|---:|
+| 6 | 15.721 |
+| 8 | 21.320 |
+| 10 | 25.802 |
+| 12 | 29.416 |
+| 15 | 33.321 |
+| 18 | 35.631 |
+
+![](rk45_velocity_vs_orifice.png)
+
+Requirement traceability status:
+
+1. `solve_ivp` with RK45: satisfied.
+2. Redlich-Kwong EOS with Newton solver for $Z$: satisfied.
+3. Choked/un-choked compressible flow with $\gamma=1.30$: satisfied.
+4. EDD geometry and chamber parameters: satisfied.
+5. Nominal run, sweep table, and velocity plot: satisfied.
+
 ## 4.5 Model Limitations
 
 - Isentropic assumption overestimates performance by ~10–20% due to heat transfer and real-gas behavior of CO₂ near saturation. Apply a 0.80–0.90 correction factor to final velocity predictions.
@@ -529,6 +588,8 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Record mean and standard deviation. Compare to ODE model predictions.
 
+- For the current 1.0 L, 10 bar gauge design, use the analysis-backed reference points as the pre-test expectation: **21.3 m/s at 8 mm**, **25.8 m/s at 10 mm**, and **29.4 m/s at 12 mm** effective orifice.
+
 - Pass criteria: $v_{exit}$ ≥ 15 m/s at 10 bar; ≤ 25 m/s at 15 bar.
 
 - If model prediction deviates \> 15% from measured, update Cd and$\mu_{r}$ empirically.
@@ -577,6 +638,30 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Personnel must wear eye protection and hearing protection during all live firing tests. Minimum 5 m exclusion zone downrange.
 
+## 7.5 Endcap and Fastener Check
+
+Fastener design is governed by the static endcap load, not by the higher projectile-side transient force seen during barrel travel.
+
+**Load Case A — endcap bolt load:**
+
+$$F_{endcap}=P_{0}\cdot A_{bore}=1.100e+06\times0.002124=2336.1\;\mathrm{N}$$
+
+**Load Case B — worst projectile-side barrel force:**
+
+$$F_{peak,barrel}=7715.4\;\mathrm{N}$$
+
+This larger force acts on the projectile during the firing stroke and is informative for mount stiffness, but it is not the endcap bolt design load.
+
+For direct shear sizing with $\tau_{shear}=240$ MPa:
+
+| Bolt | Area (mm²) | Shear capacity per bolt (N) | Required bolts | Safety factor with 6 bolts |
+|---|---:|---:|---:|---:|
+| M6 | 28.27 | 6785.8 | 1 | 17.4 |
+| M8 | 50.27 | 12063.7 | 1 | 31.0 |
+| M10 | 78.54 | 18849.6 | 1 | 48.4 |
+
+The current six-bolt flange concept is therefore adequate from a pure static shear perspective. **Six M8 bolts** provide the preferred baseline because they retain high margin while remaining practical for manufacture and assembly.
+
 # 8. Bill of Materials (BOM) — Revised
 
 The following BOM has been updated for Rev 3 to include tolerance and thermal rating requirements driven by the physics model. All components below are for one complete launcher prototype.
@@ -597,7 +682,31 @@ See Appendix B for the interceptor UAV sub-BOM. Combined system total is approxi
 
 ## 9.1 Barrel-Payload Compatibility
 
-The 40×45 mm payload diagonal (60.2 mm) exceeds the 52 mm bore (51.7 mm minimum) by 11.5 mm. A close-fitting sabot is mandatory to prevent jamming.
+For a rectangular payload inside a circular bore, the governing envelope is the diagonal:
+
+$$D_{eq}=\sqrt{W^{2}+H^{2}}$$
+
+Including sabot clearance, the no-interference condition is:
+
+$$D_{eq}+2C_{sab}\leq D_{barrel,min}$$
+
+For the current payload and bore:
+
+$$W=40\;\mathrm{mm},\quad H=45\;\mathrm{mm}\Rightarrow D_{eq}=60.21\;\mathrm{mm}$$
+
+$$D_{barrel,nom}=52\;\mathrm{mm},\quad \delta_{tol}=0.3\;\mathrm{mm}\Rightarrow D_{barrel,min}=51.7\;\mathrm{mm}$$
+
+With 1.5 mm sabot clearance per side:
+
+$$D_{eq}+2C_{sab}=60.21+3.0=63.21\;\mathrm{mm}>51.7\;\mathrm{mm}$$
+
+The payload diagonal therefore exceeds the minimum bore by **11.51 mm** if rotation is not constrained. A close-fitting sabot is mandatory to prevent tilt-induced jamming.
+
+Design requirements derived from this check:
+
+- The sabot shall enforce axial alignment so the effective presented envelope remains within the minimum bore under all loading and firing conditions.
+
+- Total radial clearance between sabot OD and barrel ID should remain within **1.0-1.5 mm per side** to balance anti-jam performance against friction and ease of loading.
 
 ## 9.2 Cost vs Performance
 
@@ -653,7 +762,22 @@ The analysis-backed recommendation is to operate the launcher around the **8-10 
 
 - Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation \> 15%.
 
-## 10.3 Some points to consider
+## 10.3 Requirement Traceability Snapshot
+
+| Parameter | Value | Status |
+|---|---:|:---:|
+| Chamber volume | 1.0 L | Yes |
+| Working pressure | 10 bar gauge | Yes |
+| Barrel length | 700 mm | Yes |
+| Recommended orifice | 8-10 mm | Yes |
+| Muzzle velocity at 10 mm | 25.8 m/s | Yes |
+| Muzzle velocity at 8 mm | 21.3 m/s | Yes |
+| Peak acceleration | ~217 g | Payload hardening required |
+| Launch efficiency | 16.4% | Yes |
+
+This snapshot is the compact transfer of the validated analysis into the EDD: it preserves the master-document tone while keeping the governing decisions tied to the verified simulation outputs.
+
+## 10.4 Next Steps
 
 - By Procuring QEV and measuring actual orifice ID; we can verify $C_{v}$ from datasheet and confirm ≥ 1.5.
 
