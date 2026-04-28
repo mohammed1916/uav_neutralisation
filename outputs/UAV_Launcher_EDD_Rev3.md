@@ -357,14 +357,7 @@ Accordingly, **1.0 L** remains the recommended chamber size because it provides 
 
 ## 3.4 Valve System
 
-Valve selection is the most critical design decision. The valve must pass sufficient mass flow (high Cv) to sustain barrel pressure during the payload's dwell time (~20–40 ms). Critically: Cv determines mass flow rate capacity, not exit velocity directly. Velocity is an emergent result of the full coupled ODE system (Section 4).
-
-| **Valve Type** | **Cv** | **Response Time** | **Cost** | **Suitability** |
-|----|----|----|----|----|
-| Quick Exhaust Valve (QEV) | 1.5–4.0 | \< 5 ms | \$8–20 | Recommended |
-| Poppet valve (direct-act) | 0.5–1.5 | 5–20 ms | \$15–35 | Acceptable |
-| Globe solenoid valve | 0.1–0.5 | 10–50 ms | \$25+ | Not recommended alone |
-| Diaphragm valve | 2.0–5.0 | \< 10 ms | \$30–60 | Alternative to QEV |
+The recommended valve system is a **pilot-operated Quick Exhaust Valve (QEV)**. This is the preferred option for the current launcher because it can deliver the required mass flow quickly enough to keep the design within the target launch-velocity band. As throughout this EDD, valve performance should be judged by effective orifice and flow capacity, not by valve name alone.
 
 ### Recommended Configuration: QEV + Pilot Solenoid
 
@@ -372,7 +365,9 @@ Valve selection is the most critical design decision. The valve must pass suffic
 
 - A small solenoid valve (or manual pushbutton) acts as the pilot, sending a brief pressure pulse to actuate the QEV poppet.
 
-- Cv requirement: Cv ≥ 1.5 for a 52 mm bore barrel at 10 bar.
+- Recommended effective orifice: **8-10 mm**.
+
+- Cv requirement: **Cv ≥ 1.5** for a 52 mm bore barrel at 10 bar.
 
 - The QEV exhaust port faces the barrel inlet for maximum flow efficiency.
 
