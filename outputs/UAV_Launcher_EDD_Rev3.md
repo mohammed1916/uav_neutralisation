@@ -334,15 +334,8 @@ Applying the real-gas correction (Z ≈ 0.97) already used elsewhere in this EDD
 | 12 g cartridge | 12 g | No | 0 |
 | 88 g cartridge | 88 g | Yes | ~4 |
 
-**Representative Minimum CO₂ Mass for 1 kg Payload**
+> **Note:** Each shot consumes the entire chamber volume (~20 g CO₂ at 10 bar gauge). The pilot-operated QEV opens fully and dumps the whole charge with every firing cycle — partial-fill operation is not possible. Therefore the 12 g cartridge is not usable for this design, and CO₂ consumption is approximately **20 g per shot regardless of target launch velocity**. Achievable velocity is controlled by orifice size, not by how much gas is loaded.
 
-Basis: launch efficiency η from the RK45 solver at 10 mm effective orifice; minimum gas work W_req = KE/η; minimum CO₂ mass = m_full × W_req/W_full.
-
-| Launch velocity | Min. KE (J) | W_req (J) | Minimum CO₂ mass |
-|---:|---:|---:|---:|
-| 15 m/s | 112.5 | 891.5 | 6.92 g |
-| 20 m/s | 200.0 | 1584.9 | 12.30 g |
-| 25 m/s | 312.5 | 2476.4 | 19.22 g |
 ## 3.2 Pressure Regulation
 
 - A two-stage regulator reduces 50–60 bar source to a stable 8–15 bar working pressure.
