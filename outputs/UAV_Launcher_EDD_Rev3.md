@@ -290,10 +290,7 @@ Using the ODE-based energy balance (Section 4), the minimum chamber volume requi
 
 Valve selection is the most critical design decision. The valve must pass sufficient mass flow (high Cv) to sustain barrel pressure during the payload's dwell time (~20–40 ms). Critically: Cv determines mass flow rate capacity, not exit velocity directly. Velocity is an emergent result of the full coupled ODE system (Section 4).
 
-| **Valve Type** | 
-``` math
-\mathbf{C}_{\mathbf{v}}
-``` | **Response Time** | **Cost** | **Suitability** |
+| **Valve Type** | **Cv** | **Response Time** | **Cost** | **Suitability** |
 |----|----|----|----|----|
 | Quick Exhaust Valve (QEV) | 1.5–4.0 | \< 5 ms | \$8–20 | Recommended |
 | Poppet valve (direct-act) | 0.5–1.5 | 5–20 ms | \$15–35 | Acceptable |
@@ -368,11 +365,11 @@ However, this geometric isentropic relation is NOT applied directly as P(x). Ins
 
 - Volume increase due to payload displacement: $\Delta V = A_{bore} \times \Delta x$
 
-- Mass loss due to outflow through the valve$:\ \Delta mₒᵤₜ\  = \ ḟ(Cv,\ P_{chamber},\ P_{downstream},\ T)\  \times \ \Delta t$
+- Mass loss due to outflow through the valve: $\Delta m_{out} = \dot{m}(C_v, P_{chamber}, P_{downstream}, T)\cdot\Delta t$
 
-- Combined via ideal gas law: $P(t + \Delta t)\  = \ \lbrack m(t + \Delta t)\  \times \ R\  \times \ T\rbrack\ /\ V(t + \Delta t)$
+- Combined via ideal gas law: $P(t + \Delta t) = \dfrac{m(t + \Delta t)\,R\,T}{V(t + \Delta t)}$
 
-> The naive form $P(x) = P^{0} \times \left( V^{0}\text{/}\left( V^{0} + A \times x \right) \right)^{\gamma}$ is only correct for a closed, fixed-mass chamber with no outflow. In this system the valve is open, and mass is leaving the chamber during transit, so the volume-only isentropic relation overestimates retained pressure by 15–30%. The correct update accounts for both volume change and mass loss simultaneously.
+> The naive form $P(x) = P^{0} \times \left( \dfrac{V^{0}}{V^{0} + A\,x} \right)^{\gamma}$ is only correct for a closed, fixed-mass chamber with no outflow. In this system the valve is open, and mass is leaving the chamber during transit, so the volume-only isentropic relation overestimates retained pressure by 15–30%. The correct update accounts for both volume change and mass loss simultaneously.
 
 ## 4.2 Layer B: Valve Mass Flow Model
 
@@ -380,7 +377,7 @@ The valve is modelled as a compressible orifice using the ISA/IEC 60534 standard
 
 ### Choked Flow Condition
 
-> $Choked\ if:$ $P_{downstream}\text{/}P_{upstream} < \left( 2\text{/}(\gamma + 1) \right)^{\left( \gamma\text{/}(\gamma - 1) \right)}$
+> $\text{Choked if: }\dfrac{P_{downstream}}{P_{upstream}} < \left(\dfrac{2}{\gamma+1}\right)^{\gamma/(\gamma-1)}$
 
 For CO₂ (γ = 1.30): choked if P₂/P₁ \< 0.546
 
@@ -388,17 +385,11 @@ At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.1
 
 ### Choked mass flow (sonic throat)
 
-> 
-> ``` math
-> m\dot{}_{choked} = Cd \times A_{orifice} \times P^{1} \times \sqrt{\left( \gamma\text{/}\left( R \times T^{1} \right) \right)} \times \left( 2\text{/}(\gamma + 1) \right)^{\left( (\gamma + 1)\text{/}\left( 2(\gamma - 1) \right) \right)}
-> ```
+> $$\dot{m}_{choked}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{\gamma}{R\,T_1}}\left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}}$$
 
 ### Subsonic mass flow
 
-> 
-> ``` math
-> m\dot{}_{subsonic} \propto Cv \times \sqrt{\left( \left( P^{12} - P^{22} \right)\text{/}(T \times SG) \right)}\lbrack ISApneumaticflowequation\rbrack
-> ```
+> $$\dot{m}_{subsonic}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{2\gamma}{R\,T_1\,(\gamma-1)}\left[\left(\frac{P_2}{P_1}\right)^{2/\gamma}-\left(\frac{P_2}{P_1}\right)^{(\gamma+1)/\gamma}\right]}$$
 
 The valve $C_{v}$ is used to determine the orifice effective area for substitution into the choked-flow formula. This is the correct bridge between the $C_{v}$ datasheet value and the thermodynamic mass flow rate.
 
@@ -410,27 +401,17 @@ The payload motion is governed by Newton's second law. The net force is the gas 
 
 ### ODE System (Correct Primary Model)
 
-> 
-> ``` math
-> dv\text{/}dt = \left\lbrack P(t) \times A_{bore} - F_{friction}(v) \right\rbrack\text{/}m
-> ```
+> $$\frac{dv}{dt}=\frac{P(t)\,A_{bore}-F_{friction}(v)}{m}$$
 >
-> ``` math
-> dx/dt\  = \ v
-> ```
+> $$\frac{dx}{dt}=v$$
 >
-> ``` math
-> dP\text{/}dt = f\left( m_{gas}(t),V(t),valveflow,\gamma \right)\lbrack fromLayerA + B\rbrack
-> ```
+> $$\frac{dP}{dt}=f\!\left(m_{gas}(t),V(t),\text{valve flow},\gamma\right)\quad\text{(from Layers A and B)}$$
 
 These three equations are solved simultaneously at each timestep. The state vector is $[v,x,P,m_{gas}]$. Standard numerical integration (RK4 or similar) converges with $\Delta t = 0.1$ ms.
 
 ### Friction Model
 
-> 
-> ``` math
-> F_{friction}(v) = \mu_{r} \times P(t) \times A_{bore}\lbrack velocity - independent,pressure - scaled\rbrack
-> ```
+> $$F_{friction}(v)=\mu_r\,P(t)\,A_{bore}\quad\text{(velocity-independent, pressure-scaled baseline)}$$
 
 Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in the bore. Initial estimate: $\mu_{r}\, = \, 0.10$ (i.e., 10% of driving force lost to friction). Must be empirically calibrated in T3 testing.
 
@@ -438,12 +419,12 @@ Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in th
 
 The following table summarizes muzzle velocity predictions from the ODE model, corroborated by the parametric sweep in the analysis document. Design target is 15–25 m/s at 10 bar.
 
-| **Orifice Dia (mm)** | **Chamber Vol (L)** | **Cd** | **Predicted** $\mathbf{v}_{\mathbf{exit}}$**(m/s)** | **Peak Force (N)** | **Dwell Time (ms)** |
+| **Orifice Dia (mm)** | **Chamber Vol (L)** | **Cd** | **Predicted** $\mathbf{v}_{\mathbf{exit}}$ **(m/s)** | **Peak Force (N)** | **Dwell Time (ms)** |
 |----|----|----|----|----|----|
 | 6 | 0.5–1.2 | 0.6–0.8 | ~7.6–10.2 m/s | 3118–3388 | 64–81 |
 | 8 | 0.5–1.2 | 0.6–0.8 | ~13.5–17.0 m/s | 3641–3953 | 44–52 |
 | 10 | 0.5–1.2 | 0.6–0.8 | ~18.6–22.5 m/s | 4181–4546 | 37–41 |
-| Recommended: 8 mm orifice, 1.0 L, Cd=0.7 | → 18.5 m/s | within target | peak 3651 N | 47.9 ms dwell | Acceptable |
+| 8 (recommended) | 1.0 | 0.7 | ~18.5 m/s | 3651 | 47.9 |
 
 > An 8 mm effective orifice diameter ($C_{d}$ = 0.7 assumed) at 10 bar pressure achieves the 15–25 m/s target with a 1.0 L chamber. A 6 mm orifice is flow-limited and falls short. A 10 mm orifice exceeds the upper target velocity at high Cd values — verify chamber pressure is within the 8–15 bar operating range.
 
@@ -457,7 +438,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - CO₂ at high flow rates exhibits real-gas deviation from ideal gas. Redlich-Kwong or Peng-Robinson EOS improves accuracy for P \> 8 bar. γ = 1.30 is a useful first approximation.
 
-- Lumped model assumes uniform chamber pressure. Valid for chamber $L\text{/}D\  < \ 3$. If chamber is elongated, 1D distributed model may be needed.
+- Lumped model assumes uniform chamber pressure. Valid for chamber $L/D < 3$. If chamber is elongated, 1D distributed model may be needed.
 
 > This ODE model provides a first-order design estimate with ±15% accuracy. Empirical calibration from T2 (valve timing) and T3 (muzzle velocity) tests is mandatory before field deployment. Correlate model predictions with measured data and update friction and Cd empirical parameters.
 
@@ -465,7 +446,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 ## 5.1 MATLAB / Simulink (Recommended First Step)
 
-- Implement the coupled ODE system: $dv\text{/}dt,\ dx\text{/}dt,\ dP\text{/}dt$ as three state variables.
+- Implement the coupled ODE system: $dv/dt,\ dx/dt,\ dP/dt$ as three state variables.
 
 - Simulate valve response as a first-order lag (τ = 3–10 ms) using a transfer function block.
 
