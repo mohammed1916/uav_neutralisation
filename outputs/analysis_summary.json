@@ -1,7 +1,13 @@
 {
   "W_ideal_J": 2637.684800078208,
   "P0_abs_Pa": 1100000.0,
+  "V0_m3": 0.001,
   "barrel_area_m2": 0.0021237166338267,
+  "barrel_length_m": 0.7,
+  "sim_muzzle_v_ms": 27.765076770346383,
+  "sim_impulse_Ns": 27.765076770346383,
+  "sim_t_end_s": 0.03720000000000004,
+  "sim_peak_F_N": 3369.8488355506797,
   "transient_report": null,
   "structural_report": null,
   "parametric_csv": "C:\\Users\\BBBS-AI-01\\d\\uav_neutralisation\\outputs\\parametric_sweep.csv",
