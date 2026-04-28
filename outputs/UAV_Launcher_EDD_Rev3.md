@@ -319,7 +319,30 @@ Real-gas correction (Z ≈ 0.97 at Tr = 0.964, Pr = 0.149 from Redlich-Kwong EOS
 | 88 g      | 88 g     | Yes                               | ~4 (with ~8 g reserve) |
 
 Conclusion is correct: **12 g \< 20 g → insufficient. 88 g → ~4 shots.** The 12 g cartridge cannot produce even one full charge. 88 g cartridges are required. The 12 g size is only viable for chambers ≤ 0.5 L at ≤ 6 bar.
+### CO₂ Consumption and Source Sizing
 
+The chamber fill mass for the selected launcher is:
+
+$$
+m_{fill}=\frac{P_{abs}V}{R_{spec}T}=\frac{(11\times10^{5})\times0.001}{188.92\times293.15}\approx 0.01986\;\mathrm{kg}=19.86\;\mathrm{g}
+$$
+
+Applying the real-gas correction (Z ≈ 0.97) already used elsewhere in this EDD gives an actual full-shot fill mass of approximately **20.48 g CO₂**. Basis: ideal-gas law and Redlich-Kwong EOS as implemented in `scripts/solve_launcher_rk45.py`.
+
+| Cartridge | CO₂ mass | Can fill 1.0 L chamber to 10 bar gauge? | Full shots |
+|---|---:|---|---:|
+| 12 g cartridge | 12 g | No | 0 |
+| 88 g cartridge | 88 g | Yes | ~4 |
+
+**Representative Minimum CO₂ Mass for 1 kg Payload**
+
+Basis: launch efficiency η from the RK45 solver at 10 mm effective orifice; minimum gas work W_req = KE/η; minimum CO₂ mass = m_full × W_req/W_full.
+
+| Launch velocity | Min. KE (J) | W_req (J) | Minimum CO₂ mass |
+|---:|---:|---:|---:|
+| 15 m/s | 112.5 | 891.5 | 6.92 g |
+| 20 m/s | 200.0 | 1584.9 | 12.30 g |
+| 25 m/s | 312.5 | 2476.4 | 19.22 g |
 ## 3.2 Pressure Regulation
 
 - A two-stage regulator reduces 50–60 bar source to a stable 8–15 bar working pressure.
@@ -370,6 +393,24 @@ The recommended valve system is a **pilot-operated Quick Exhaust Valve (QEV)**. 
 - Cv requirement: **Cv ≥ 1.5** for a 52 mm bore barrel at 10 bar.
 
 - The QEV exhaust port faces the barrel inlet for maximum flow efficiency.
+
+### Response-Time Calculation for the Selected QEV
+
+The total launcher response is approximated by:
+
+$$
+t_{total}=t_{QEV}+t_{dwell}
+$$
+
+where $t_{QEV}$ is the valve opening response time and $t_{dwell}$ is the projectile transit time in the barrel. Dwell times are taken directly from the RK45 solver (`outputs/rk45_launcher_results.json`). The selected pilot-operated QEV is modelled as a **5 ms nominal** response device with a practical **3–10 ms** range, consistent with QEV manufacturer data and the T2 acceptance threshold of < 10 ms.
+
+| Metric | 8 mm orifice | 10 mm orifice |
+|---|---:|---:|
+| Projectile dwell time (RK45) | 46.63 ms | 40.32 ms |
+| Nominal total response (5 ms QEV) | 51.63 ms | 45.32 ms |
+| Total response range (3–10 ms QEV) | 49.63–56.63 ms | 43.32–50.32 ms |
+
+Both recommended orifice cases keep the total trigger-to-exit response below **57 ms**, well within the semi-autonomous deployment window.
 
 ### Cv Role in the Model (IMPORTANT CORRECTION)
 
