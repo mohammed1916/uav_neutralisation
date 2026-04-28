@@ -2,7 +2,7 @@
 
 **Date**: April 28, 2026
 **Document**: Change tracking for all substitutions, alternatives, and validations
-**Status**: ✅ Implementation Ready
+**Status**: [READY] Implementation Ready
 
 ---
 
@@ -23,7 +23,7 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ### 1. CO₂ 88g Cartridge
 
-**CHANGE STATUS**: ❌ **NO CHANGE REQUIRED** (design point valid)
+**CHANGE STATUS**: [NO CHANGE] **NO CHANGE REQUIRED** (design point valid)
 
 | Aspect  | Original (Rev 2)                                                         | Current (Rev 3) | Notes                                                                                                                                                                                                                                                                                                                    |
 | ------- | ------------------------------------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -37,7 +37,7 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ### 2. Pressure Regulator
 
-**CHANGE STATUS**: ⚠️ **NO MATERIAL CHANGE; VERIFICATION REQUIRED**
+**CHANGE STATUS**: [VERIFY] **NO MATERIAL CHANGE; VERIFICATION REQUIRED**
 
 | Aspect           | Original (Rev 2)                                                                                    | Current (Rev 3)  | Notes                                                                                                                                                                                                                                                                                                                   |
 | ---------------- | --------------------------------------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -53,14 +53,14 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ---
 
-### 3. Quick Exhaust Valve (QEV) ⭐ **CRITICAL SUBSTITUTION**
+### 3. Quick Exhaust Valve (QEV) [CRITICAL] **CRITICAL SUBSTITUTION**
 
-**CHANGE STATUS**: 🔴 **SUBSTITUTED** (material incompatibility)
+**CHANGE STATUS**: [SUBSTITUTED] **SUBSTITUTED** (material incompatibility)
 
 | Aspect                    | Original (Rev 2)                                                                                              | Current (Rev 3)                                                                                                          | Notes                                                                                                                                                                                        |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Product (OLD)**   | **Airmax AQEV 3/4" BSP; Al pressure die-cast body; ≥8 mm effective orifice; 10 bar WP; Nitrile seals** | **→ REPLACED**                                                                                                    | ❌**PROBLEM**: NBR (Nitrile) seals harden <−15°C. CO₂ expansion at orifice cools barrel to −10°C to −20°C. Nitrile seal failure = no valve closure → loss of pressure control. |
-| **Product (NEW)**   | N/A                                                                                                           | **SMC AQ2110A-N02; 3/4" porting; ≥8 mm effective orifice; 10 bar WP; PTFE-rated diaphragm seals (−40°C rated)** | ✅**SOLUTION**: SMC AQ-series guarantees PTFE/FKM seals rated −40°C. Compatible with CO₂ sub-zero duty. Maintains seal integrity at barrel cooling temps (−10°C to −20°C).      |
+| **Product (OLD)**   | **Airmax AQEV 3/4" BSP; Al pressure die-cast body; ≥8 mm effective orifice; 10 bar WP; Nitrile seals** | **→ REPLACED**                                                                                                    | [PROBLEM] NBR (Nitrile) seals harden <−15°C. CO₂ expansion at orifice cools barrel to −10°C to −20°C. Nitrile seal failure = no valve closure → loss of pressure control. |
+| **Product (NEW)**   | N/A                                                                                                           | **SMC AQ2110A-N02; 3/4" porting; ≥8 mm effective orifice; 10 bar WP; PTFE-rated diaphragm seals (−40°C rated)** | [SOLUTION] SMC AQ-series guarantees PTFE/FKM seals rated −40°C. Compatible with CO₂ sub-zero duty. Maintains seal integrity at barrel cooling temps (−10°C to −20°C).      |
 | Price (OLD)               | ₹345–420                                                                                                    | N/A                                                                                                                      | Original price (Airmax) — no longer recommended                                                                                                                                             |
 | Price (NEW)               | N/A                                                                                                           | ₹3,500–4,500                                                                                                           | Cost increase of ₹3,155–4,080 due to seal material upgrade.**Justified**: Seal material is safety-critical; NBR failure = system failure.                                            |
 | Supplier                  | Airmax Pneumatics (Ahmedabad)                                                                                 | SMC India (Bengaluru) or Moglix.com                                                                                      | Moglix enables centralized B2B ordering; SMC direct ensures datasheet availability.                                                                                                          |
@@ -78,7 +78,7 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ### 4. Pilot Solenoid Valve
 
-**CHANGE STATUS**: ✅ **NO CHANGE; VALIDATION ADDED**
+**CHANGE STATUS**: [OK] **NO CHANGE; VALIDATION ADDED**
 
 | Aspect           | Original (Rev 2)                                                  | Current (Rev 3)          | Notes                                                                                                                                                                                                                                             |
 | ---------------- | ----------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -97,7 +97,7 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ### 5. Pressure Safety Relief Valve (PRV)
 
-**CHANGE STATUS**: ✅ **NO CHANGE; VERIFICATION CRITICAL**
+**CHANGE STATUS**: [OK] **NO CHANGE; VERIFICATION CRITICAL**
 
 | Aspect       | Original (Rev 2)                                              | Current (Rev 3)                 | Notes                                                                                                                                                                                                                                                                                                                                                                                        |
 | ------------ | ------------------------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -115,15 +115,15 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ---
 
-### 6. Barrel Tube ⭐ **CRITICAL SPECIFICATION CHANGE**
+### 6. Barrel Tube [CRITICAL] **CRITICAL SPECIFICATION CHANGE**
 
-**CHANGE STATUS**: 🟡 **SPECIFICATION TIGHTENED** (tolerance requirement clarified)
+**CHANGE STATUS**: [CLARIFIED] **SPECIFICATION TIGHTENED** (tolerance requirement clarified)
 
 | Aspect                                     | Original (Rev 2)                    | Current (Rev 3)                                                                                                                                  | Notes                                                                                                                                                                                                                                                                                                                               |
 | ------------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Material**                         | 6061-T6 Al round tube               | Same                                                                                                                                             | No change to material.                                                                                                                                                                                                                                                                                                              |
 | **Bore diameter (ID)**               | 52 mm                               | Same                                                                                                                                             | No change.                                                                                                                                                                                                                                                                                                                          |
-| **Bore tolerance (OLD)**             | ±0.3 mm (stated vaguely)           | **±0.3 mm (EXPLICIT; requires honing)**                                                                                                   | ⚠️**CRITICAL CHANGE**: Original BOM said "±0.3 mm" but did NOT specify procurement method. Standard **mill tolerance is ±1 mm**, which is **INSUFFICIENT** for sabot fit (sabot OD 52±0.3 mm). **Clarification**: Must be achieved via **precision honing service**, NOT standard tube sourcing. |
+| **Bore tolerance (OLD)**             | ±0.3 mm (stated vaguely)           | **±0.3 mm (EXPLICIT; requires honing)**                                                                                                   | [CHANGE] Original BOM said "±0.3 mm" but did NOT specify procurement method. Standard **mill tolerance is ±1 mm**, which is **INSUFFICIENT** for sabot fit (sabot OD 52±0.3 mm). **Clarification**: Must be achieved via **precision honing service**, NOT standard tube sourcing. |
 | **Bore tolerance (NEW requirement)** | N/A                                 | **52 mm ID ±0.3 mm (±0.1 mm preferred); honed; Ra < 0.8 μm surface finish**                                                             | Explicit honing specification. Requires contact with precision machine shops (Saidapet/Ambattur, Chennai). Honing adds ₹700–1,500 to raw tube cost (~₹200–300).                                                                                                                                                                 |
 | **Wall thickness**                   | 3 mm (OD 58 mm stated)              | 3 mm (OD 56 mm corrected)                                                                                                                        | **CORRECTION**: Original listed "58 mm OD"; correct OD for 3 mm wall on 52 mm ID is **56 mm OD** (52 + 2×2 mm wall). Corrected in new spec.                                                                                                                                                                            |
 | **Length**                           | 700 mm                              | 700 mm                                                                                                                                           | No change.                                                                                                                                                                                                                                                                                                                          |
@@ -147,7 +147,7 @@ This document tracks all changes made to the BOM during the material substitutio
 
 ### 7. Aluminium Frame Stock
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect  | Original (Rev 2)                                                                  | Current (Rev 3)      | Notes                                           |
 | ------- | --------------------------------------------------------------------------------- | -------------------- | ----------------------------------------------- |
@@ -159,9 +159,9 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 
 ---
 
-### 8. Charge Chamber ⭐ **DESIGN FINALIZED WITH MANDATORY TEST**
+### 8. Charge Chamber [CRITICAL] **DESIGN FINALIZED WITH MANDATORY TEST**
 
-**CHANGE STATUS**: 🟡 **SPECIFICATION CLARIFIED** (Option A locked; hydrostatic test added)
+**CHANGE STATUS**: [CLARIFIED] **SPECIFICATION CLARIFIED** (Option A locked; hydrostatic test added)
 
 | Aspect                                                           | Original (Rev 2)                                                                                                                 | Current (Rev 3)                                                                                                                                                                                                                                            | Notes                                                                                                                                                                                                                                                                                  |
 | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -169,7 +169,7 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 | **Option A (CHOSEN)**                                      | Hydraulic cylinder (mention: source 50 mm bore, cost ₹800–1,500)                                                               | **50 mm bore × 500 mm hydraulic cylinder (6061-T6 Al or steel, 3 mm wall, class ≥22.5 bar test pressure) + 2× threaded Al 6061-T6 endcaps (M20×1.5 or 1/4" NPT ports)**                                                                          | Specification expanded: bore, length, material grade, wall thickness all locked. Endcap threads specified (M20×1.5 or NPT equivalents).                                                                                                                                               |
 | **Option B (MENTIONED BUT NOT RECOMMENDED FOR PROTOTYPE)** | Custom-machined Al chamber (~₹1,500–2,500)                                                                                     | Deferred to Rev 2                                                                                                                                                                                                                                          | Noted as upgrade path after first prototype validation. Cost: ₹2,500–3,500. Lead time: 2–3 weeks.**Not chosen for first prototype due to lead time.**                                                                                                                         |
 | **Volume verification**                                    | "1.0 L volume" (design requirement)                                                                                              | ~0.5 L (endcaps) + 1.0 L (50 mm bore × 500 mm tube) =**1.0 L minimum (VERIFIED)**                                                                                                                                                                   | **NEW**: Explicit volume calculation. π × (0.025)² × 0.5 = 0.000981 m³ ≈ 1.0 L ✓                                                                                                                                                                                          |
-| **Hydrostatic test**                                       | Not mentioned in original                                                                                                        | **MANDATORY: 22.5 bar water, 5 min hold, signed test cert (ADDED AS CRITICAL GATE T1)**                                                                                                                                                              | ⚠️**NEW REQUIREMENT**: Chamber must be hydrostatically tested to 1.5× working pressure (22.5 bar) BEFORE any gas pressurization. **Non-negotiable safety gate**. Test report must document: date, chamber ID, gauge reading at 22.5 bar, hold time, result (PASS/FAIL). |
+| **Hydrostatic test**                                       | Not mentioned in original                                                                                        | **MANDATORY: 22.5 bar water, 5 min hold, signed test cert (ADDED AS CRITICAL GATE T1)**                                                                                                                                                              | [REQUIREMENT] Chamber must be hydrostatically tested to 1.5× working pressure (22.5 bar) BEFORE any gas pressurization. **Non-negotiable safety gate**. Test report must document: date, chamber ID, gauge reading at 22.5 bar, hold time, result (PASS/FAIL). |
 | **Price (OLD)**                                            | ₹800–10,000 est. (wide range; Option B worst-case)                                                                             | ₹1,200–2,000 (Option A locked)                                                                                                                                                                                                                           | **Cost reduction**: Range narrowed from ₹800–10,000 to ₹1,200–2,000 by locking Option A. Clear scope reduces worst-case cost.                                                                                                                                                |
 | **Sourcing**                                               | "Hydraulic cylinder / IndiaMART" (vague)                                                                                         | **Cylinder**: Moglix.com or IndiaMART (search "50mm bore 500mm hydraulic cylinder"). **Endcaps**: Machine shop (Saidapet/Ambattur) or Hindalco distributor. **Hydrostatic test**: Engineering lab or machine shop with hydrostatic pump. | Specific suppliers and sourcing path provided.                                                                                                                                                                                                                                         |
 
@@ -184,7 +184,7 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 
 ### 9. Pressure Gauge (Monitoring)
 
-**CHANGE STATUS**: ✅ **NO CHANGE; ALTERNATIVES NOTED**
+**CHANGE STATUS**: [OK] **NO CHANGE; ALTERNATIVES NOTED**
 
 | Aspect        | Original (Rev 2)                                                                               | Current (Rev 3)              | Notes                                                                                                                                                                             |
 | ------------- | ---------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -204,7 +204,7 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 
 ### 10. Pressure Transducer (Test use — T3 campaign only)
 
-**CHANGE STATUS**: ✅ **NO CHANGE; OPTIONAL**
+**CHANGE STATUS**: [OK] **NO CHANGE; OPTIONAL**
 
 | Aspect   | Original (Rev 2)                                                    | Current (Rev 3) | Notes                                                                                                                                                                                                                 |
 | -------- | ------------------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -223,7 +223,7 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 
 ### 11. Manual Pilot Valve (Pushbutton)
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect   | Original (Rev 2)                                                            | Current (Rev 3) | Notes                                                                                                                            |
 | -------- | --------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -242,7 +242,7 @@ No issues identified. Standard sourcing from IndiaMART or local hardware shops (
 
 ### 12. Brass Fittings + PTFE Tape
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect          | Original (Rev 2)                                                                          | Current (Rev 3)      | Notes                                                                                                     |
 | --------------- | ----------------------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -257,7 +257,7 @@ No alternatives — standard brass fittings widely available from industrial sup
 
 ### 13. Arduino Nano (clone) + Relay Module
 
-**CHANGE STATUS**: ✅ **NO CHANGE; OPTIONAL (AUTONOMOUS MODE ONLY)**
+**CHANGE STATUS**: [OK] **NO CHANGE; OPTIONAL (AUTONOMOUS MODE ONLY)**
 
 | Aspect                         | Original (Rev 2)                                         | Current (Rev 3)            | Notes                                                                                                                                                                                 |
 | ------------------------------ | -------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -277,7 +277,7 @@ No alternatives — standard brass fittings widely available from industrial sup
 
 ### 14. 3S LiPo Battery (11.1V, Launcher)
 
-**CHANGE STATUS**: ✅ **NO CHANGE; OPTIONAL (AUTONOMOUS MODE ONLY)**
+**CHANGE STATUS**: [OK] **NO CHANGE; OPTIONAL (AUTONOMOUS MODE ONLY)**
 
 | Aspect   | Original (Rev 2)                                                              | Current (Rev 3) | Notes                                                                                                                                                                    |
 | -------- | ----------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -296,7 +296,7 @@ No alternatives — standard brass fittings widely available from industrial sup
 
 ### 15. Arming Key Switch
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect  | Original (Rev 2)                                                                       | Current (Rev 3)         | Notes                                                                                                                                            |
 | ------- | -------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -309,12 +309,12 @@ No alternatives — standard industrial key switch. Widely available.
 
 ### 16. Payload Sabot
 
-**CHANGE STATUS**: ✅ **NO CHANGE; PRINT SPECIFICATION CRITICAL**
+**CHANGE STATUS**: [OK] **NO CHANGE; PRINT SPECIFICATION CRITICAL**
 
 | Aspect          | Original (Rev 2)                                                      | Current (Rev 3)                                             | Notes                                                                                                                                                                                                                                                                                                                                                    |
 | --------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Material        | 3D-printed PETG or Nylon; 52 mm OD ±0.3 mm; custom geometry; 2 units | Same                                                        | Specification unchanged. 3ding.in or local FDM bureau ₹200–500 (print cost).                                                                                                                                                                                                                                                                           |
-| OD tolerance    | 52 mm ±0.3 mm (design target)                                        | 52 mm ±0.3 mm**⚠️ CRITICAL VERIFICATION REQUIRED** | **NEW ACTION**: After printing, **measure actual sabot OD with calipers at 3 points** (front, mid, rear). All readings must be 52.0±0.2 mm (slightly tighter than design to allow smooth loading in 52±0.3 mm barrel). If any reading <51.8 mm or >52.2 mm, reject and reprint. **This prevents sabot binding or blowby in barrel.** |
+| OD tolerance    | 52 mm ±0.3 mm (design target)                                        | 52 mm ±0.3 mm [VERIFY] CRITICAL VERIFICATION REQUIRED | **NEW ACTION**: After printing, **measure actual sabot OD with calipers at 3 points** (front, mid, rear). All readings must be 52.0±0.2 mm (slightly tighter than design to allow smooth loading in 52±0.3 mm barrel). If any reading <51.8 mm or >52.2 mm, reject and reprint. **This prevents sabot binding or blowby in barrel.** |
 | Material choice | PETG or Nylon                                                         | **Nylon PA12 PREFERRED** (CLARIFIED)                  | **NEW**: Nylon preferred over PETG for this application (lower friction, better bore tolerance holding). PETG acceptable as secondary.                                                                                                                                                                                                             |
 | Qty             | 2 units                                                               | 2 units                                                     | Standard: 2 sabot designs (slightly different geometry) for initial testing + data gathering. Keep spares.                                                                                                                                                                                                                                               |
 | Price           | ₹200–500                                                            | ₹200–500                                                  | No change. Budget includes 1–2 reprint iterations.                                                                                                                                                                                                                                                                                                      |
@@ -328,14 +328,14 @@ No alternatives — standard industrial key switch. Widely available.
 
 ---
 
-### 17. O-Ring / Seal Kit ⭐ **CRITICAL MATERIAL SUBSTITUTION**
+### 17. O-Ring / Seal Kit [CRITICAL] **CRITICAL MATERIAL SUBSTITUTION**
 
-**CHANGE STATUS**: 🔴 **SUBSTITUTED** (material incompatibility)
+**CHANGE STATUS**: [SUBSTITUTED] **SUBSTITUTED** (material incompatibility)
 
 | Aspect                           | Original (Rev 2)                                                                | Current (Rev 3)                                                                                                                                                                                                           | Notes                                                                                                                                                                          |
 | -------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Product (OLD)**          | **AASONS Nitrile O-ring assortment; 100+ metric pieces; amazon.in ₹649** | **→ REPLACED**                                                                                                                                                                                                     | ❌**PROBLEM**: Nitrile (NBR) hardening <−15°C. CO₂ expansion cools to −20°C. Nitrile seals fail = pressure loss, no firing. Hydrostatic test WILL leak at cold.     |
-| **Product (NEW)**          | N/A                                                                             | **PTFE O-ring assortment; 200+ metric sizes (M2–M10); −60°C to +200°C rated; ASTM D2000**                                                                                                                       | ✅**SOLUTION**: PTFE seals rated −60°C maintain integrity at −20°C barrel cooling. All seals downstream of regulator MUST be PTFE.                                   |
+| **Product (OLD)**          | **AASONS Nitrile O-ring assortment; 100+ metric pieces; amazon.in ₹649** | **→ REPLACED**                                                                                                                                                                                                     | [PROBLEM] NBR (Nitrile) hardening <−15°C. CO₂ expansion cools to −20°C. Nitrile seals fail = pressure loss, no firing. Hydrostatic test WILL leak at cold.     |
+| **Product (NEW)**          | N/A                                                                             | **PTFE O-ring assortment; 200+ metric sizes (M2–M10); −60°C to +200°C rated; ASTM D2000**                                                                                                                       | [SOLUTION] PTFE seals rated −60°C maintain integrity at −20°C barrel cooling. All seals downstream of regulator MUST be PTFE.                                   |
 | **Supplier (OLD)**         | Amazon.in (AASONS brand)                                                        | N/A                                                                                                                                                                                                                       | Original link provided Nitrile assortment only.                                                                                                                                |
 | **Supplier (NEW)**         | N/A                                                                             | **amazon.in** (search "PTFE o-ring assortment metric") — Aasons PTFE 100-piece kit ~₹450–550. **Alternative**: IndiaMART (search "PTFE O-ring assorted") — various suppliers 200+ piece kits ~₹400–600. | Multiple sources now available. Aasons brand also makes PTFE version.                                                                                                          |
 | **Price (OLD)**            | ₹649                                                                           | N/A                                                                                                                                                                                                                       | Original Nitrile price — no longer recommended.                                                                                                                               |
@@ -359,7 +359,7 @@ No alternatives — standard industrial key switch. Widely available.
 
 ### 18. PU Pneumatic Tubing 6 mm
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect          | Original (Rev 2)                                                            | Current (Rev 3)           | Notes                                                                                                                                                                                                                                                                                   |
 | --------------- | --------------------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -374,7 +374,7 @@ No alternatives — standard pneumatic tubing, widely available.
 
 ### 19. Silicone Wiring Harness
 
-**CHANGE STATUS**: ✅ **NO CHANGE; COLD-TEMP REQUIREMENT EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; COLD-TEMP REQUIREMENT EMPHASIZED**
 
 | Aspect             | Original (Rev 2)                                                                                     | Current (Rev 3)                   | Notes                                                                                                                                                                                                                                                                                               |
 | ------------------ | ---------------------------------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -392,7 +392,7 @@ No alternatives — silicone wiring is mandatory; no cost premium over standard 
 
 ### 20. Carbon Fibre Frame
 
-**CHANGE STATUS**: ✅ **NO CHANGE; SOURCING CLARIFIED**
+**CHANGE STATUS**: [OK] **NO CHANGE; SOURCING CLARIFIED**
 
 | Aspect    | Original (Rev 2)                                                                        | Current (Rev 3)                   | Notes                                                                                                                                                                     |
 | --------- | --------------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -406,7 +406,7 @@ No alternatives — standard FPV quadcopter frame market.
 
 ### 21. AIO FC + 4-in-1 ESC
 
-**CHANGE STATUS**: ✅ **NO CHANGE; VIBRATION MOUNTING EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; VIBRATION MOUNTING EMPHASIZED**
 
 | Aspect         | Original (Rev 2)                                                                      | Current (Rev 3) | Notes                                                                                                                                                                                                                                                                                                                                    |
 | -------------- | ------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -421,7 +421,7 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ### 22. Brushless Motors × 4
 
-**CHANGE STATUS**: ✅ **NO CHANGE; SPARES EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; SPARES EMPHASIZED**
 
 | Aspect     | Original (Rev 2)                                                                    | Current (Rev 3)                            | Notes                                                                                                                                                                                                                                    |
 | ---------- | ----------------------------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -442,7 +442,7 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ### 23. 3-inch Propellers
 
-**CHANGE STATUS**: ✅ **NO CHANGE**
+**CHANGE STATUS**: [OK] **NO CHANGE**
 
 | Aspect  | Original (Rev 2)                                                           | Current (Rev 3)      | Notes                                                                                                                                                |
 | ------- | -------------------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -462,7 +462,7 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ### 24. FPV Camera
 
-**CHANGE STATUS**: ✅ **NO CHANGE; DAMPING MOUNT EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; DAMPING MOUNT EMPHASIZED**
 
 | Aspect     | Original (Rev 2)                                                     | Current (Rev 3) | Notes                                                                                                                                                                                                                                               |
 | ---------- | -------------------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -482,7 +482,7 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ### 25. 3S LiPo (UAV)
 
-**CHANGE STATUS**: ✅ **NO CHANGE; CG CONSIDERATION EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; CG CONSIDERATION EMPHASIZED**
 
 | Aspect    | Original (Rev 2)                                           | Current (Rev 3)                | Notes                                                                                                                                                                                                                                                                                                                                  |
 | --------- | ---------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -501,16 +501,16 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ---
 
-### 26. Vision / Comms Board ⭐ **FALLBACK OPTION ADDED**
+### 26. Vision / Comms Board [CRITICAL] **FALLBACK OPTION ADDED**
 
-**CHANGE STATUS**: 🟡 **FALLBACK OPTION INTRODUCED** (primary unavailable)
+**CHANGE STATUS**: [FALLBACK_ADDED] **FALLBACK OPTION INTRODUCED** (primary unavailable)
 
 | Aspect                                       | Original (Rev 2)                                                                | Current (Rev 3)                                                                                                                                                                                                                           | Notes                                                                                                                                                                                                                                                                                                                         |
 | -------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **PRIMARY (if available)**             | **OpenMV H7 Plus (STM32H743II, 480 MHz, 256 KB RAM, 5–15 ms inference)** | Same specification                                                                                                                                                                                                                        | **Current status**: OUT OF STOCK on Robu.in (as of April 2026). Official openmv.io distributor: typically 2–4 week lead time for India delivery. **Action required**: Contact openmv.io to confirm restock timeline. If ≤2 weeks, order now. If >2 weeks, commit to fallback.                                   |
 | **PRIMARY price**                      | ₹6,500–12,270                                                                 | ₹6,500–12,270                                                                                                                                                                                                                           | No change to price (if/when available).                                                                                                                                                                                                                                                                                       |
 | **PRIMARY supplier**                   | Robu.in (out of stock) or openmv.io distributor                                 | https://openmv.io/products/openmv-h7-plus or verify India distributor                                                                                                                                                                     | Robu.in currently out of stock. Check official openmv.io for authorized India distributors.                                                                                                                                                                                                                                   |
-| **FALLBACK (if unavailable >2 weeks)** | N/A                                                                             | **ESP32-S3 (Espressif dual-core 240 MHz, 8 MB FLASH, WiFi+BLE, telemetry relay only)**                                                                                                                                              | ✅**SOLUTION**: ESP32-S3 available immediately (~₹600–700 on amazon.in / Robu.in). **Trade-off**: No on-board vision detection; only telemetry relay (WiFi comms + UAV position tracking). Latency ~80–200 ms (unsuitable for autonomous real-time target tracking, suitable for manual telemetry + recovery). |
+| **FALLBACK (if unavailable >2 weeks)** | N/A                                                                             | **ESP32-S3 (Espressif dual-core 240 MHz, 8 MB FLASH, WiFi+BLE, telemetry relay only)**                                                                                                                                              | [SOLUTION] ESP32-S3 available immediately (~₹600–700 on amazon.in / Robu.in). **Trade-off**: No on-board vision detection; only telemetry relay (WiFi comms + UAV position tracking). Latency ~80–200 ms (unsuitable for autonomous real-time target tracking, suitable for manual telemetry + recovery). |
 | **FALLBACK price**                     | N/A                                                                             | ₹500–700                                                                                                                                                                                                                                | Cost savings: ₹11,500–12,000 if fallback used (major cost reduction).                                                                                                                                                                                                                                                       |
 | **FALLBACK supplier**                  | N/A                                                                             | amazon.in (search "ESP32-S3 development board") or Robu.in (immediate stock)                                                                                                                                                              | Available within 2–3 days.                                                                                                                                                                                                                                                                                                   |
 | **FALLBACK capability**                | N/A                                                                             | **Telemetry relay only** (NOT vision detection). UAV equipped with FPV camera (RunCam Nano 4) for pilot feedback; ESP32-S3 handles WiFi position telemetry to ground station. Manual interception only (no autonomous target lock). |                                                                                                                                                                                                                                                                                                                               |
@@ -521,11 +521,11 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 | Capability                                | OpenMV H7 Plus                           | ESP32-S3                                                 |
 | ----------------------------------------- | ---------------------------------------- | -------------------------------------------------------- |
-| **On-board vision processing**      | ✅ YES (STM32H743 480 MHz)               | ❌ NO                                                    |
+| **On-board vision processing**      | [YES] STM32H743 480 MHz              | [NO]                                                    |
 | **Object detection inference time** | **5–15 ms** (real-time)           | **80–200 ms** (too slow for autonomous targeting) |
-| **WiFi communication**              | ❌ NO (requires external module)         | ✅ YES (built-in)                                        |
-| **Telemetry relay**                 | Manual (would need separate WiFi module) | ✅ YES (trivial, built-in)                               |
-| **First prototype suitable**        | ✅ YES (if available in time)            | ✅ YES (immediate stock, manual telemetry only)          |
+| **WiFi communication**              | [NO] Requires external module        | [YES] Built-in                                        |
+| **Telemetry relay**                 | Manual (would need separate WiFi module) | [YES] Trivial, built-in                               |
+| **First prototype suitable**        | [YES] If available in time           | [YES] Immediate stock, manual telemetry only          |
 | **Cost**                            | ₹6,500–12,270                          | ₹500–700                                               |
 
 **Alternatives**:
@@ -543,7 +543,7 @@ No alternatives — 20×20 mm F4/F7 AIO is standard in 3-inch FPV frame market.
 
 ### 27. Anti-vibration Hardware
 
-**CHANGE STATUS**: ✅ **NO CHANGE; LAUNCH-SHOCK ISOLATION EMPHASIZED**
+**CHANGE STATUS**: [OK] **NO CHANGE; LAUNCH-SHOCK ISOLATION EMPHASIZED**
 
 | Aspect  | Original (Rev 2)                                                                       | Current (Rev 3) | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------- | -------------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -557,37 +557,37 @@ No alternatives — vibration isolation is standard FPV practice; no cost premiu
 
 ## Summary of All Changes
 
-### Changes Made (GREEN ✅ / YELLOW 🟡 / RED 🔴):
+### Changes Made (GREEN [OK] / YELLOW [CLARIFIED] / RED [SUBSTITUTED]):
 
 | Component                         | Change Type                         | Original                                 | New                                                                                                     | Rationale                                                         | Cost Impact                                        |
 | --------------------------------- | ----------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------- |
-| **CO₂ Cartridge**          | ✅ No change                        | Umarex 88g M16×1.5                      | Same                                                                                                    | Verified compatible                                               | ₹0                                                |
-| **Pressure Regulator**      | ✅ Verify only                      | Airmax 0–42 bar −20°C                 | Same (verify seal material)                                                                             | Request datasheet confirmation                                    | ₹0                                                |
-| **QEV**                     | 🔴**SUBSTITUTED**             | **Airmax AQEV (NBR seals)**        | **SMC AQ2110A-N02 (PTFE seals)**                                                                  | **NBR fails <−15°C; PTFE required for CO₂ duty**         | **+₹3,155–4,080**                          |
-| **Pilot Solenoid**          | ✅ Validate only                    | Generic 12V DC                           | Same (verify −20°C rating)                                                                            | Request cold-temp datasheet                                       | ₹0                                                |
-| **PRV**                     | ✅ Verify only                      | Brass 18 bar set                         | Same (confirm set point)                                                                                | Verify 18 bar (not range)                                         | ₹0                                                |
-| **Barrel Tube**             | 🟡**SPECIFICATION CLARIFIED** | ±0.3 mm (vague)                         | **±0.3 mm via honing (explicit); Ra < 0.8 μm; cert required**                                   | **Mill tolerance insufficient; require precision service**  | **+₹700–1,500**                            |
-| **Aluminium Frame**         | ✅ No change                        | 25×25 mm 6061 Al bar                    | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
-| **Charge Chamber**          | 🟡**OPTION A LOCKED**         | "Option A or B" (choice)                 | **Option A: 50 mm hydraulic cylinder + Al caps + hydrostatic test (MANDATORY)**                   | **Clarify design; add safety test gate**                    | **Cost stabilized ₹1,200–2,000**           |
-| **Pressure Gauge**          | ✅ No change                        | JIVTO 0–25 bar                          | Same (offer local suppliers alternative)                                                                | Standard sourcing                                                 | ₹0 (or −₹1,500 if local supplier used)          |
-| **Pressure Transducer**     | ✅ No change                        | M5200 0–20 bar                          | Same (optional, defer to T3)                                                                            | Test instrumentation                                              | ₹0                                                |
-| **Manual Pilot Valve**      | ✅ No change                        | Janatics 3/2 1/4" NPT                    | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
-| **Brass Fittings**          | ✅ No change                        | 1/4" + 3/4" NPT fittings                 | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
-| **Arduino Nano + Relay**    | ✅ No change                        | CH340G clone + relay                     | Same (optional, autonomous only)                                                                        | Cost-optimized                                                    | ₹0                                                |
-| **3S LiPo (Launcher)**      | ✅ No change                        | 1000–1500 mAh 30C+                      | Same (optional, autonomous only)                                                                        | Standard sourcing                                                 | ₹0                                                |
-| **Arming Key Switch**       | ✅ No change                        | Panel-mount SPST 12V                     | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
-| **Sabot**                   | ✅ Validate only                    | 3D-printed PETG 52 mm OD                 | Same (**verify caliper: 52±0.2 mm after print**)                                                 | Add QC check                                                      | ₹0                                                |
-| **O-Ring Kit**              | 🔴**SUBSTITUTED**             | **AASONS Nitrile 100-piece ₹649** | **PTFE assortment 200+ pieces ₹400–650**                                                        | **NBR fails <−15°C; PTFE required for CO₂ duty**         | **₹0 to −₹250 (cost neutral or cheaper)** |
-| **PU Tubing**               | ✅ No change                        | 6 mm OD × 4 mm ID 15 bar                | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
-| **Silicone Wiring**         | ✅ Emphasized                       | 22 AWG −40°C rated                     | Same (**mandate silicone, not PVC**)                                                              | Cold-duty requirement                                             | ₹0                                                |
-| **Carbon Fibre Frame**      | ✅ No change                        | 3-inch folding quadcopter                | Same (clarify pricing: ₹1,200–1,800, not ₹10,000)                                                    | Standard sourcing                                                 | ₹0                                                |
-| **AIO FC + ESC**            | ✅ Emphasized                       | SpeedyBee F405 Mini                      | Same (**add vibration damping mount requirement**)                                                | Launch-shock protection                                           | ₹0 (damping cost ~₹200 included elsewhere)       |
-| **Brushless Motors**        | ✅ Verified                         | BetaFPV 1103 6000KV                      | Same (**verify 2 mm shaft; buy 2 spares**)                                                        | Standard sourcing + spares                                        | ₹0                                                |
-| **Propellers**              | ✅ No change                        | Gemfan 3016 3-inch                       | Same (**buy 2 sets = 8 total**)                                                                   | Standard sourcing                                                 | ₹0                                                |
-| **FPV Camera**              | ✅ Emphasized                       | RunCam Nano 4                            | Same (**add TPU damped mount requirement**)                                                       | Launch-shock protection                                           | ₹0 (mount cost ~₹100–200 included)              |
-| **3S LiPo (UAV)**           | ✅ Emphasized                       | 300–450 mAh strip format                | Same (**mandate strip format for CG alignment**)                                                  | Stability requirement                                             | ₹0                                                |
-| **Vision / Comms Board**    | 🟡**FALLBACK ADDED**          | **OpenMV H7 Plus ₹6,500–12,270** | **PRIMARY (if available): OpenMV H7 Plus \| FALLBACK (if delayed >2 weeks): ESP32-S3 ₹500–700** | **Availability risk; fallback enables immediate prototype** | **−₹11,500–12,000 if fallback used**      |
-| **Anti-vibration Hardware** | ✅ Emphasized                       | M2 nylon + silicone + foam               | Same (**mandate vibration isolation for IMU**)                                                    | Launch-shock protection                                           | ₹0                                                |
+| **CO₂ Cartridge**          | [OK] No change                        | Umarex 88g M16×1.5                      | Same                                                                                                    | Verified compatible                                               | ₹0                                                |
+| **Pressure Regulator**      | [OK] Verify only                      | Airmax 0–42 bar −20°C                 | Same (verify seal material)                                                                             | Request datasheet confirmation                                    | ₹0                                                |
+| **QEV**                     | [SUBSTITUTED] **SUBSTITUTED**             | **Airmax AQEV (NBR seals)**        | **SMC AQ2110A-N02 (PTFE seals)**                                                                  | **NBR fails <−15°C; PTFE required for CO₂ duty**         | **+₹3,155–4,080**                          |
+| **Pilot Solenoid**          | [OK] Validate only                    | Generic 12V DC                           | Same (verify −20°C rating)                                                                            | Request cold-temp datasheet                                       | ₹0                                                |
+| **PRV**                     | [OK] Verify only                      | Brass 18 bar set                         | Same (confirm set point)                                                                                | Verify 18 bar (not range)                                         | ₹0                                                |
+| **Barrel Tube**             | [CLARIFIED] **SPECIFICATION CLARIFIED** | ±0.3 mm (vague)                         | **±0.3 mm via honing (explicit); Ra < 0.8 μm; cert required**                                   | **Mill tolerance insufficient; require precision service**  | **+₹700–1,500**                            |
+| **Aluminium Frame**         | [OK] No change                        | 25×25 mm 6061 Al bar                    | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
+| **Charge Chamber**          | [CLARIFIED] **OPTION A LOCKED**         | "Option A or B" (choice)                 | **Option A: 50 mm hydraulic cylinder + Al caps + hydrostatic test (MANDATORY)**                   | **Clarify design; add safety test gate**                    | **Cost stabilized ₹1,200–2,000**           |
+| **Pressure Gauge**          | [OK] No change                        | JIVTO 0–25 bar                          | Same (offer local suppliers alternative)                                                                | Standard sourcing                                                 | ₹0 (or −₹1,500 if local supplier used)          |
+| **Pressure Transducer**     | [OK] No change                        | M5200 0–20 bar                          | Same (optional, defer to T3)                                                                            | Test instrumentation                                              | ₹0                                                |
+| **Manual Pilot Valve**      | [OK] No change                        | Janatics 3/2 1/4" NPT                    | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
+| **Brass Fittings**          | [OK] No change                        | 1/4" + 3/4" NPT fittings                 | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
+| **Arduino Nano + Relay**    | [OK] No change                        | CH340G clone + relay                     | Same (optional, autonomous only)                                                                        | Cost-optimized                                                    | ₹0                                                |
+| **3S LiPo (Launcher)**      | [OK] No change                        | 1000–1500 mAh 30C+                      | Same (optional, autonomous only)                                                                        | Standard sourcing                                                 | ₹0                                                |
+| **Arming Key Switch**       | [OK] No change                        | Panel-mount SPST 12V                     | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
+| **Sabot**                   | [OK] Validate only                    | 3D-printed PETG 52 mm OD                 | Same (**verify caliper: 52±0.2 mm after print**)                                                 | Add QC check                                                      | ₹0                                                |
+| **O-Ring Kit**              | [SUBSTITUTED] **SUBSTITUTED**             | **AASONS Nitrile 100-piece ₹649** | **PTFE assortment 200+ pieces ₹400–650**                                                        | **NBR fails <−15°C; PTFE required for CO₂ duty**         | **₹0 to −₹250 (cost neutral or cheaper)** |
+| **PU Tubing**               | [OK] No change                        | 6 mm OD × 4 mm ID 15 bar                | Same                                                                                                    | Standard sourcing                                                 | ₹0                                                |
+| **Silicone Wiring**         | [OK] Emphasized                       | 22 AWG −40°C rated                     | Same (**mandate silicone, not PVC**)                                                              | Cold-duty requirement                                             | ₹0                                                |
+| **Carbon Fibre Frame**      | [OK] No change                        | 3-inch folding quadcopter                | Same (clarify pricing: ₹1,200–1,800, not ₹10,000)                                                    | Standard sourcing                                                 | ₹0                                                |
+| **AIO FC + ESC**            | [OK] Emphasized                       | SpeedyBee F405 Mini                      | Same (**add vibration damping mount requirement**)                                                | Launch-shock protection                                           | ₹0 (damping cost ~₹200 included elsewhere)       |
+| **Brushless Motors**        | [OK] Verified                         | BetaFPV 1103 6000KV                      | Same (**verify 2 mm shaft; buy 2 spares**)                                                        | Standard sourcing + spares                                        | ₹0                                                |
+| **Propellers**              | [OK] No change                        | Gemfan 3016 3-inch                       | Same (**buy 2 sets = 8 total**)                                                                   | Standard sourcing                                                 | ₹0                                                |
+| **FPV Camera**              | [OK] Emphasized                       | RunCam Nano 4                            | Same (**add TPU damped mount requirement**)                                                       | Launch-shock protection                                           | ₹0 (mount cost ~₹100–200 included)              |
+| **3S LiPo (UAV)**           | [OK] Emphasized                       | 300–450 mAh strip format                | Same (**mandate strip format for CG alignment**)                                                  | Stability requirement                                             | ₹0                                                |
+| **Vision / Comms Board**    | [FALLBACK_ADDED] **FALLBACK ADDED**          | **OpenMV H7 Plus ₹6,500–12,270** | **PRIMARY (if available): OpenMV H7 Plus \| FALLBACK (if delayed >2 weeks): ESP32-S3 ₹500–700** | **Availability risk; fallback enables immediate prototype** | **−₹11,500–12,000 if fallback used**      |
+| **Anti-vibration Hardware** | [OK] Emphasized                       | M2 nylon + silicone + foam               | Same (**mandate vibration isolation for IMU**)                                                    | Launch-shock protection                                           | ₹0                                                |
 
 ---
 
