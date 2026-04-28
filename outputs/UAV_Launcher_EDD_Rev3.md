@@ -119,11 +119,13 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [9. Design Trade-offs](#design-trade-offs)
 
-[9.1 Cost vs Performance](#cost-vs-performance)
+[9.1 Barrel-Payload Compatibility](#barrel-payload-compatibility)
 
-[9.2 CO₂ vs Compressed Air](#co₂-vs-compressed-air)
+[9.2 Cost vs Performance](#cost-vs-performance)
 
-[9.3 Manual vs Autonomous Triggering](#manual-vs-autonomous-triggering)
+[9.3 CO₂ vs Compressed Air](#co₂-vs-compressed-air)
+
+[9.4 Manual vs Autonomous Triggering](#manual-vs-autonomous-triggering)
 
 [10. Conclusion](#conclusion)
 
@@ -419,14 +421,14 @@ Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in th
 
 The following table summarizes muzzle velocity predictions from the ODE model, corroborated by the parametric sweep in the analysis document. Design target is 15–25 m/s at 10 bar.
 
-| **Orifice Dia (mm)** | **Chamber Vol (L)** | **Cd** | **Predicted** $\mathbf{v}_{\mathbf{exit}}$ **(m/s)** | **Peak Force (N)** | **Dwell Time (ms)** |
-|----|----|----|----|----|----|
-| 6 | 0.5–1.2 | 0.6–0.8 | ~7.6–10.2 m/s | 3118–3388 | 64–81 |
-| 8 | 0.5–1.2 | 0.6–0.8 | ~13.5–17.0 m/s | 3641–3953 | 44–52 |
-| 10 | 0.5–1.2 | 0.6–0.8 | ~18.6–22.5 m/s | 4181–4546 | 37–41 |
-| 8 (recommended) | 1.0 | 0.7 | ~18.5 m/s | 3651 | 47.9 |
+| Orifice (mm) | $v_{exit}$ (m/s) @ 10 bar | Status |
+|---:|---:|---|
+| 6 | 15.7 | Below target |
+| 8 | 21.3 | Within target ✓ |
+| 10 | 25.8 | Within target ✓ |
+| 12 | 29.4 | Above target |
 
-> An 8 mm effective orifice diameter ($C_{d}$ = 0.7 assumed) at 10 bar pressure achieves the 15–25 m/s target with a 1.0 L chamber. A 6 mm orifice is flow-limited and falls short. A 10 mm orifice exceeds the upper target velocity at high Cd values — verify chamber pressure is within the 8–15 bar operating range.
+> Verified RK45 sweep results support an effective orifice recommendation of **8–10 mm** at 10 bar gauge with a 1.0 L chamber. The 6 mm case is below target, while 12 mm exceeds the upper target velocity band.
 
 ## 4.5 Model Limitations
 
@@ -583,7 +585,11 @@ See Appendix B for the interceptor UAV sub-BOM. Combined system total is approxi
 
 # 9. Design Trade-offs
 
-## 9.1 Cost vs Performance
+## 9.1 Barrel-Payload Compatibility
+
+The 40×45 mm payload diagonal (60.2 mm) exceeds the 52 mm bore (51.7 mm minimum) by 11.5 mm. A close-fitting sabot is mandatory to prevent jamming.
+
+## 9.2 Cost vs Performance
 
 | **Decision** | **Low-Cost Option** | **High-Performance Option** | **Recommendation** |
 |----|----|----|----|
@@ -592,7 +598,7 @@ See Appendix B for the interceptor UAV sub-BOM. Combined system total is approxi
 | Barrel | Local 6061 Al tube (~₹800–1500) | Honed precision tube (~₹3k+) | Local, verify ID tolerance |
 | Trigger | Manual 3/2 valve (~₹840) | Solenoid-triggered (~₹1k–2k total) | **Manual for first prototype** |
 
-## 9.2 CO₂ vs Compressed Air
+## 9.3 CO₂ vs Compressed Air
 
 CO₂ is optimal for a first prototype due to availability and simplicity. Compressed air is preferred if:
 
@@ -602,7 +608,7 @@ CO₂ is optimal for a first prototype due to availability and simplicity. Compr
 
 - Operating temperature is below 5°C where CO₂ vapour pressure drops below 40 bar.
 
-## 9.3 Manual vs Autonomous Triggering
+## 9.4 Manual vs Autonomous Triggering
 
 Both modes can coexist using a simple relay: the solenoid is driven by either the fire control output OR a manual pushbutton. Autonomous triggering is required when reaction time \< 100 ms is needed (human RT is 150–300 ms).
 
@@ -614,10 +620,10 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 |----|----|
 | Gas source | 88 g CO₂ cartridge with 2-stage regulator (10 bar WP) |
 | Chamber volume | 1.0 L; 6061-T6 aluminium; 22.5 bar test pressure |
-| QEV orifice | ≥ mm effective orifice ID; Cv ≥ 1.5 |
+| QEV orifice | ≥ 8 mm effective orifice ID; Cv ≥ 1.5 |
 | Valve type | Quick Exhaust Valve + manual pushbutton pilot |
 | Barrel | 52 mm ID ±0.3 mm; 700 mm length; 6061-T6 Al |
-| Predicted $v_{exit}$ | 18–20 m/s at 10 bar (ODE model; ±15%) |
+| Predicted $v_{exit}$ | 21–26 m/s at 10 bar (ODE model; ±15%) |
 | System mass | \< 4 kg assembled |
 | Unit cost (prototype) | ~USD 250–300 |
 
