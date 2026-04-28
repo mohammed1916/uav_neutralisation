@@ -25,11 +25,17 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [1.3 Scope Limitations](#scope-limitations)
 
+[1.4 Governing Input Parameters](#governing-input-parameters)
+
+[1.5 Energy and Performance Envelope](#energy-and-performance-envelope)
+
 [2. System Architecture](#system-architecture)
 
 [2.2 Component Interaction](#component-interaction)
 
 [2.3 Signal & Control Flow](#signal-control-flow)
+
+[2.4 Engineering Drawing](#engineering-drawing)
 
 [3. Component-Level Design](#component-level-design)
 
@@ -82,6 +88,8 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 [Nominal ODE Design Point](#nominal-ode-design-point)
 
 [RK45 Verification Snapshot](#rk45-verification-snapshot)
+
+[Representative Sweep Plots](#representative-sweep-plots)
 
 [4.5 Model Limitations](#model-limitations)
 
@@ -143,6 +151,8 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [10.4 Next Steps](#next-steps)
 
+[10.5 Formula Quick Reference](#formula-quick-reference)
+
 [11. References](#_Toc228192151)
 
 [11.1 Technical Standards](#_Toc228192152)
@@ -199,6 +209,41 @@ This document defines the engineering design for a CO₂-based pneumatic launche
 
 - Structural mounting hardware design is indicative only.
 
+## 1.4 Governing Input Parameters
+
+The design and validation work in this EDD uses the following governing launcher inputs.
+
+| Parameter | Symbol | Value | Notes |
+|---|:---:|---:|---|
+| Charge chamber volume | $V_{0}$ | 1.0 L (0.0010 m³) | Accumulator tank design point |
+| Working pressure (gauge) | $P_{0,gauge}$ | 10.0 bar | Nominal regulated pressure |
+| Working pressure (absolute) | $P_{0}$ | 11.00 bar | Used for gas and load calculations |
+| Atmospheric pressure | $P_{atm}$ | 1.00 bar | Back-pressure reference |
+| Barrel internal diameter | $D$ | 52 mm | Drawing-derived bore |
+| Barrel length | $L$ | 700 mm | Nominal barrel length |
+| Bore area | $A_{bore}$ | 0.002124 m² | From 52 mm ID |
+| CO₂ specific gas constant | $R_{spec}$ | 188.92 J kg$^{-1}$ K$^{-1}$ | $R_{u}/M_{CO_2}$ |
+| Temperature | $T$ | 293.15 K | Ambient charge temperature |
+| Specific heat ratio | $\gamma$ | 1.30 | CO₂ compressible-flow value |
+| Discharge coefficient | $C_{d}$ | 0.8 default | Swept in the study |
+| Default orifice diameter | $d_{or}$ | 12 mm | Legacy nominal case |
+
+## 1.5 Energy and Performance Envelope
+
+The ideal isothermal expansion work available from the 1.0 L chamber charged to 10 bar gauge is:
+
+$$W=P_{0}\cdot V_{0}\cdot\ln\left(\frac{P_{0}}{P_{atm}}\right)=2637.7\;\mathrm{J}$$
+
+This is an upper bound only. Real launch performance is lower because of valve flow restriction, finite barrel length, friction, and real-gas behavior.
+
+For the legacy nominal ODE case at 12 mm effective orifice and $C_{d}=0.8$:
+
+- Muzzle velocity: **27.765 m/s**
+- Muzzle energy: **385.45 J**
+- Launch efficiency: **14.61%**
+
+For the requirement-compliant RK45 model, the recommended design band remains **8-10 mm** effective orifice, corresponding to approximately **21.3-25.8 m/s** at 10 bar gauge.
+
 # 2. System Architecture
 
 The launcher consists of six functional subsystems arranged in a linear pneumatic train:
@@ -222,6 +267,12 @@ The CO₂ cartridge supplies high-pressure gas (50–60 bar) which passes throug
 | 4 — Discharge | High-flow gas released into barrel | Barrel |
 | 5 — Launch | Payload exits barrel at 15–25 m/s | — |
 | 6 — Reset | CO₂ cartridge recharges chamber | Regulator |
+
+## 2.4 Engineering Drawing
+
+The current launcher arrangement used by this EDD is shown below.
+
+![Launcher assembly drawing](launcher_drawing.png)
 
 # 3. Component-Level Design
 
@@ -498,6 +549,34 @@ Requirement traceability status:
 3. Choked/un-choked compressible flow with $\gamma=1.30$: satisfied.
 4. EDD geometry and chamber parameters: satisfied.
 5. Nominal run, sweep table, and velocity plot: satisfied.
+
+### Representative Sweep Plots
+
+The following plots are carried into the EDD so that the master document contains the same visual evidence used in the analysis.
+
+**Muzzle velocity vs orifice diameter, $V_{c}=500$ mL**
+
+![](vel_vs_orifice_Vc_500uL.png)
+
+**Muzzle velocity vs orifice diameter, $V_{c}=800$ mL**
+
+![](vel_vs_orifice_Vc_800uL.png)
+
+**Muzzle velocity vs orifice diameter, $V_{c}=1000$ mL (nominal chamber)**
+
+![](vel_vs_orifice_Vc_1000uL.png)
+
+**Muzzle velocity vs orifice diameter, $V_{c}=1200$ mL**
+
+![](vel_vs_orifice_Vc_1200uL.png)
+
+**Peak barrel force vs orifice diameter, $V_{c}=1000$ mL**
+
+![](peakF_vs_orifice_Vc_1000uL.png)
+
+**Impulse vs orifice diameter, $V_{c}=1000$ mL**
+
+![](impulse_vs_orifice_Vc_1000uL.png)
 
 ## 4.5 Model Limitations
 
@@ -790,6 +869,23 @@ This snapshot is the compact transfer of the validated analysis into the EDD: it
 - Correlate ODE model with measured data; update empirical parameters Cd and $\mu_{r}$.
 
 - Document test results and revise design if $v_{exit}$ deviates \> 15% from prediction.
+
+## 10.5 Formula Quick Reference
+
+| Quantity | Formula | Reference value |
+|---|---|---|
+| Isothermal expansion work | $W=P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{atm})$ | $2637.7$ J |
+| Bore area | $A_{bore}=\pi(D/2)^{2}$ | $0.002124$ m² |
+| Real-gas pressure | $P_{real}=Z_{RK}\cdot(m/V)\cdot R_{u}T/M_{CO_2}$ | $Z_{RK}\approx0.97$ at 11 bar |
+| Hoop stress | $\sigma_{hoop}=P\,r/t$ | $9.5$ MPa at $t=3$ mm |
+| Minimum wall thickness | $t_{min}=P\cdot r\cdot SF/\sigma_{yield}$ | $0.311$ mm |
+| Endcap load | $F_{endcap}=P_{0}\cdot A_{bore}$ | $2336.1$ N |
+| Critical pressure ratio | $r_{crit}=(2/(\gamma+1))^{\gamma/(\gamma-1)}$ | $0.5457$ |
+| Choked mass-flow rate | $\dot{m}=C_{d}A_{or}P_{c}\sqrt{\gamma/(R_{spec}T)}\cdot(2/(\gamma+1))^{(\gamma+1)/[2(\gamma-1)]}$ | $0.2822$ kg/s at $t=0$ |
+| Impulse | $I=m_{payload}\cdot v_{exit}$ | $27.765$ N·s |
+| Average force | $F_{avg}=I/t_{end}$ | $746.4$ N |
+| Payload envelope | $D_{eq}=\sqrt{W^{2}+H^{2}}$ | $60.21$ mm |
+| Launch efficiency | $\eta=\tfrac{1}{2}mv^{2}/W$ | $14.61\%$ (legacy ODE) |
 
 # Appendix A — Interceptor UAV Payload Design Review
 
