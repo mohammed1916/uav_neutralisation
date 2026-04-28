@@ -15,149 +15,147 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 # Table of Contents
 
-# Contents
+[Table of Contents](#table-of-contents)
 
-[Table of Contents [2](#table-of-contents)](#table-of-contents)
+[1. System Overview](#system-overview)
 
-[1. System Overview [4](#system-overview)](#system-overview)
+[1.1 Purpose](#purpose)
 
-[1.1 Purpose [4](#purpose)](#purpose)
+[1.2 Key Performance Requirements](#key-performance-requirements)
 
-[1.2 Key Performance Requirements [4](#key-performance-requirements)](#key-performance-requirements)
+[1.3 Scope Limitations](#scope-limitations)
 
-[1.3 Scope Limitations [4](#scope-limitations)](#scope-limitations)
+[2. System Architecture](#system-architecture)
 
-[2. System Architecture [4](#system-architecture)](#system-architecture)
+[2.2 Component Interaction](#component-interaction)
 
-[2.2 Component Interaction [5](#component-interaction)](#component-interaction)
+[2.3 Signal & Control Flow](#signal-control-flow)
 
-[2.3 Signal & Control Flow [5](#signal-control-flow)](#signal-control-flow)
+[3. Component-Level Design](#component-level-design)
 
-[3. Component-Level Design [5](#component-level-design)](#component-level-design)
+[3.1 Gas Source](#gas-source)
 
-[3.1 Gas Source [5](#gas-source)](#gas-source)
+[CO₂ Cartridge](#co₂-cartridge)
 
-[CO₂ Cartridge [5](#co₂-cartridge)](#co₂-cartridge)
+[CO₂ vs Compressed Air Trade-off](#co₂-vs-compressed-air-trade-off)
 
-[CO₂ vs Compressed Air Trade-off [5](#co₂-vs-compressed-air-trade-off)](#co₂-vs-compressed-air-trade-off)
+[3.2 Pressure Regulation](#pressure-regulation)
 
-[3.2 Pressure Regulation [6](#pressure-regulation)](#pressure-regulation)
+[3.3 Charge Chamber](#charge-chamber)
 
-[3.3 Charge Chamber [6](#charge-chamber)](#charge-chamber)
+[Volume Estimation](#volume-estimation)
 
-[Volume Estimation [6](#volume-estimation)](#volume-estimation)
+[Material and Pressure Rating](#material-and-pressure-rating)
 
-[Material and Pressure Rating [6](#material-and-pressure-rating)](#material-and-pressure-rating)
+[3.4 Valve System](#valve-system)
 
-[3.4 Valve System [6](#valve-system)](#valve-system)
+[Recommended Configuration: QEV + Pilot Solenoid](#recommended-configuration-qev-pilot-solenoid)
 
-[Recommended Configuration: QEV + Pilot Solenoid [7](#recommended-configuration-qev-pilot-solenoid)](#recommended-configuration-qev-pilot-solenoid)
+[Cv Role in the Model (IMPORTANT CORRECTION)](#cv-role-in-the-model-important-correction)
 
-[Cv Role in the Model (IMPORTANT CORRECTION) [7](#cv-role-in-the-model-important-correction)](#cv-role-in-the-model-important-correction)
+[3.5 Trigger System](#trigger-system)
 
-[3.5 Trigger System [7](#trigger-system)](#trigger-system)
+[3.6 Barrel Design](#barrel-design)
 
-[3.6 Barrel Design [7](#barrel-design)](#barrel-design)
+[4. Physics & Modeling (Rev 3 — Coupled ODE Model)](#physics-modeling-rev-3-coupled-ode-model)
 
-[4. Physics & Modeling (Rev 3 — Coupled ODE Model) [8](#physics-modeling-rev-3-coupled-ode-model)](#physics-modeling-rev-3-coupled-ode-model)
+[4.0 Modeling Assumptions (Explicit)](#modeling-assumptions-explicit)
 
-[4.0 Modeling Assumptions (Explicit) [8](#modeling-assumptions-explicit)](#modeling-assumptions-explicit)
+[4.1 Layer A: Gas Supply Thermodynamics](#layer-a-gas-supply-thermodynamics)
 
-[4.1 Layer A: Gas Supply Thermodynamics [8](#layer-a-gas-supply-thermodynamics)](#layer-a-gas-supply-thermodynamics)
+[4.2 Layer B: Valve Mass Flow Model](#layer-b-valve-mass-flow-model)
 
-[4.2 Layer B: Valve Mass Flow Model [9](#layer-b-valve-mass-flow-model)](#layer-b-valve-mass-flow-model)
+[Choked Flow Condition](#choked-flow-condition)
 
-[Choked Flow Condition [9](#choked-flow-condition)](#choked-flow-condition)
+[Choked mass flow (sonic throat)](#choked-mass-flow-sonic-throat)
 
-[Choked mass flow (sonic throat) [9](#choked-mass-flow-sonic-throat)](#choked-mass-flow-sonic-throat)
+[Subsonic mass flow](#subsonic-mass-flow)
 
-[Subsonic mass flow [9](#subsonic-mass-flow)](#subsonic-mass-flow)
+[4.3 Layer C: Projectile Dynamics (Coupled ODE)](#layer-c-projectile-dynamics-coupled-ode)
 
-[4.3 Layer C: Projectile Dynamics (Coupled ODE) [9](#layer-c-projectile-dynamics-coupled-ode)](#layer-c-projectile-dynamics-coupled-ode)
+[ODE System (Correct Primary Model)](#ode-system-correct-primary-model)
 
-[ODE System (Correct Primary Model) [10](#ode-system-correct-primary-model)](#ode-system-correct-primary-model)
+[Friction Model](#friction-model)
 
-[Friction Model [10](#friction-model)](#friction-model)
+[4.4 Parametric Results (ODE Numerical Sweeps)](#parametric-results-ode-numerical-sweeps)
 
-[4.4 Parametric Results (ODE Numerical Sweeps) [10](#parametric-results-ode-numerical-sweeps)](#parametric-results-ode-numerical-sweeps)
+[4.5 Model Limitations](#model-limitations)
 
-[4.5 Model Limitations [10](#model-limitations)](#model-limitations)
+[5. Simulation Approach](#simulation-approach)
 
-[5. Simulation Approach [11](#simulation-approach)](#simulation-approach)
+[5.1 MATLAB / Simulink (Recommended First Step)](#matlab-simulink-recommended-first-step)
 
-[5.1 MATLAB / Simulink (Recommended First Step) [11](#matlab-simulink-recommended-first-step)](#matlab-simulink-recommended-first-step)
+[5.2 CFD — ANSYS Fluent / OpenFOAM (Advanced Only)](#cfd-ansys-fluent-openfoam-advanced-only)
 
-[5.2 CFD — ANSYS Fluent / OpenFOAM (Advanced Only) [11](#cfd-ansys-fluent-openfoam-advanced-only)](#cfd-ansys-fluent-openfoam-advanced-only)
+[5.3 Why Simulation Alone is Insufficient](#why-simulation-alone-is-insufficient)
 
-[5.3 Why Simulation Alone is Insufficient [11](#why-simulation-alone-is-insufficient)](#why-simulation-alone-is-insufficient)
+[6. Testing & Validation](#testing-validation)
 
-[6. Testing & Validation [11](#testing-validation)](#testing-validation)
+[6.1 Test Infrastructure](#test-infrastructure)
 
-[6.1 Test Infrastructure [11](#test-infrastructure)](#test-infrastructure)
+[6.2 Test Procedures](#test-procedures)
 
-[6.2 Test Procedures [12](#test-procedures)](#test-procedures)
+[T1: Pressure Containment Test (Hydrostatic)](#t1-pressure-containment-test-hydrostatic)
 
-[T1: Pressure Containment Test (Hydrostatic) [12](#t1-pressure-containment-test-hydrostatic)](#t1-pressure-containment-test-hydrostatic)
+[T2: Valve Response Time Test](#t2-valve-response-time-test)
 
-[T2: Valve Response Time Test [12](#t2-valve-response-time-test)](#t2-valve-response-time-test)
+[T3: Muzzle Velocity Test](#t3-muzzle-velocity-test)
 
-[T3: Muzzle Velocity Test [12](#t3-muzzle-velocity-test)](#t3-muzzle-velocity-test)
+[7. Safety Considerations](#safety-considerations)
 
-[7. Safety Considerations [12](#safety-considerations)](#safety-considerations)
+[7.1 Pressure Containment](#pressure-containment)
 
-[7.1 Pressure Containment [12](#pressure-containment)](#pressure-containment)
+[7.2 Valve Failure Modes](#valve-failure-modes)
 
-[7.2 Valve Failure Modes [13](#valve-failure-modes)](#valve-failure-modes)
+[7.3 CO₂ Thermal Effects](#co₂-thermal-effects)
 
-[7.3 CO₂ Thermal Effects [13](#co₂-thermal-effects)](#co₂-thermal-effects)
+[7.4 Structural Integrity](#structural-integrity)
 
-[7.4 Structural Integrity [13](#structural-integrity)](#structural-integrity)
+[8. Bill of Materials (BOM) — Revised](#bill-of-materials-bom-revised)
 
-[8. Bill of Materials (BOM) — Revised [13](#bill-of-materials-bom-revised)](#bill-of-materials-bom-revised)
+[8.1 Launcher System BOM](#launcher-system-bom)
 
-[8.1 Launcher System BOM [13](#launcher-system-bom)](#launcher-system-bom)
+[8.2 Interceptor UAV Payload BOM (Appendix B)](#interceptor-uav-payload-bom-appendix-b)
 
-[8.2 Interceptor UAV Payload BOM (Appendix B) [14](#interceptor-uav-payload-bom-appendix-b)](#interceptor-uav-payload-bom-appendix-b)
+[9. Design Trade-offs](#design-trade-offs)
 
-[9. Design Trade-offs [14](#design-trade-offs)](#design-trade-offs)
+[9.1 Cost vs Performance](#cost-vs-performance)
 
-[9.1 Cost vs Performance [14](#cost-vs-performance)](#cost-vs-performance)
+[9.2 CO₂ vs Compressed Air](#co₂-vs-compressed-air)
 
-[9.2 CO₂ vs Compressed Air [14](#co₂-vs-compressed-air)](#co₂-vs-compressed-air)
+[9.3 Manual vs Autonomous Triggering](#manual-vs-autonomous-triggering)
 
-[9.3 Manual vs Autonomous Triggering [14](#manual-vs-autonomous-triggering)](#manual-vs-autonomous-triggering)
+[10. Conclusion](#conclusion)
 
-[10. Conclusion [14](#conclusion)](#conclusion)
+[10.1 Optimal Configuration Summary](#optimal-configuration-summary)
 
-[10.1 Optimal Configuration Summary [14](#optimal-configuration-summary)](#optimal-configuration-summary)
+[10.2 Priority Design Risks](#priority-design-risks)
 
-[10.2 Priority Design Risks [15](#priority-design-risks)](#priority-design-risks)
+[10.3 Next Steps](#some-points-to-consider)
 
-[10.3 Next Steps [15](#some-points-to-consider)](#some-points-to-consider)
+[11. References](#_Toc228192151)
 
-[11. References [15](#_Toc228192151)](#_Toc228192151)
+[11.1 Technical Standards](#_Toc228192152)
 
-[11.1 Technical Standards [15](#_Toc228192152)](#_Toc228192152)
+[11.2 Pneumatic Components](#_Toc228192153)
 
-[11.2 Pneumatic Components [16](#_Toc228192153)](#_Toc228192153)
+[11.3 Engineering & Physics References](#_Toc228192154)
 
-[11.3 Engineering & Physics References [16](#_Toc228192154)](#_Toc228192154)
+[11.4 Simulation Resources](#_Toc228192155)
 
-[11.4 Simulation Resources [16](#_Toc228192155)](#_Toc228192155)
+[Appendix A — Revision History](#_Toc228192156)
 
-[Appendix A — Revision History [16](#_Toc228192156)](#_Toc228192156)
+[Appendix B — Interceptor UAV Payload Design Review](#appendix-a-interceptor-uav-payload-design-review)
 
-[Appendix B — Interceptor UAV Payload Design Review [16](#appendix-a-interceptor-uav-payload-design-review)](#appendix-a-interceptor-uav-payload-design-review)
+[B.1 Proposed 3-inch Foldable Quadcopter](#a.1-proposed-3-inch-foldable-quadcopter)
 
-[B.1 Proposed 3-inch Foldable Quadcopter [16](#a.1-proposed-3-inch-foldable-quadcopter)](#a.1-proposed-3-inch-foldable-quadcopter)
+[B.2 Proposed Specification Summary](#a.2-proposed-specification-summary)
 
-[B.2 Proposed Specification Summary [17](#a.2-proposed-specification-summary)](#a.2-proposed-specification-summary)
+[B.3 Technical Assessment — Correct Choices](#a.3-technical-assessment-correct-choices)
 
-[B.3 Technical Assessment — Correct Choices [17](#a.3-technical-assessment-correct-choices)](#a.3-technical-assessment-correct-choices)
+[B.4 Technical Assessment — Issues and Corrections](#a.4-technical-assessment-issues-and-corrections)
 
-[B.4 Technical Assessment — Issues and Corrections [17](#a.4-technical-assessment-issues-and-corrections)](#a.4-technical-assessment-issues-and-corrections)
-
-[B.5 Interceptor UAV BOM [17](#a.5-interceptor-uav-bom)](#a.5-interceptor-uav-bom)
+[B.5 Interceptor UAV BOM](#a.5-interceptor-uav-bom)
 
 # 1. System Overview
 
@@ -250,7 +248,7 @@ Each shot consumes all gas in the charge chamber (QEV dumps it to atmosphere). T
 m = \frac{P_{abs} \cdot V}{R_{spec} \cdot T} = \frac{(11 \times 10^{5}) \times 0.001}{188.92 \times 293.15} = \frac{1100}{55,397} \approx 19.9\text{ g}
 ```
 
-where $`R_{spec} = \frac{8314}{44.01} = 188.92\,\text{J/(kg·K)}`$ for CO₂.
+where $R_{spec} = \frac{8314}{44.01} = 188.92\,\text{J/(kg·K)}$ for CO₂.
 
 Real-gas correction (Z ≈ 0.97 at Tr = 0.964, Pr = 0.149 from Redlich-Kwong EOS): actual mass ≈ **20.3 g**. Ideal gas is within 2% — sufficient for cartridge sizing.
 
@@ -354,7 +352,7 @@ The following assumptions apply to all sub-models in this section:
 | No shock waves in barrel | Mach \< 0.3 for 20 m/s in 52 mm bore; subsonic regime holds |
 | Adiabatic expansion (isentropic baseline) | Valid for fast events (≤30 ms dwell); add 10–20% heat loss correction factor |
 | Valve modelled as compressible orifice | Cv-based ISA flow equation; choked flow condition checked explicitly |
-| CO₂ modelled with Redlich-Kwong EOS ($`T_{c}`$ = 304.13 K, $`P_{c}`$ = 7.377 MPa) | already implemented in simulation. Ideal gas with γ = 1.3 retained as a cross-check only. |
+| CO₂ modelled with Redlich-Kwong EOS ($T_{c}$ = 304.13 K, $P_{c}$ = 7.377 MPa) | already implemented in simulation. Ideal gas with γ = 1.3 retained as a cross-check only. |
 | Friction lumped as empirical coefficient | Must be measured from hardware; 0.10 is initial estimate only |
 | Valve response modelled as first-order lag (τ = 3–10 ms) | Based on QEV manufacturer specs; verify from T2 test |
 
@@ -364,17 +362,17 @@ The charge chamber is modelled as a closed control volume. Before valve opening,
 
 The pressure of gas remaining in the chamber after mass m_gas has escaped is governed by the energy equation for an open system. For the adiabatic (isentropic) baseline:
 
-> $`P(t)\  \times \ V(t)\hat{}\gamma\  = \ P₀\  \times \ V₀\hat{}\gamma`$ \[valid for single-phase ideal gas only\]
+> $P(t)\cdot V(t)^{\gamma}=P_{0}\cdot V_{0}^{\gamma}$ \[valid for single-phase ideal gas only\]
 
 However, this geometric isentropic relation is NOT applied directly as P(x). Instead, pressure is updated at each timestep by the combined effect of:
 
-- Volume increase due to payload displacement: $`\Delta V = A_{bore} \times \Delta x`$
+- Volume increase due to payload displacement: $\Delta V = A_{bore} \times \Delta x$
 
-- Mass loss due to outflow through the valve$`:\ \Delta mₒᵤₜ\  = \ ḟ(Cv,\ P_{chamber},\ P_{downstream},\ T)\  \times \ \Delta t`$
+- Mass loss due to outflow through the valve$:\ \Delta mₒᵤₜ\  = \ ḟ(Cv,\ P_{chamber},\ P_{downstream},\ T)\  \times \ \Delta t$
 
-- Combined via ideal gas law: $`P(t + \Delta t)\  = \ \lbrack m(t + \Delta t)\  \times \ R\  \times \ T\rbrack\ /\ V(t + \Delta t)`$
+- Combined via ideal gas law: $P(t + \Delta t)\  = \ \lbrack m(t + \Delta t)\  \times \ R\  \times \ T\rbrack\ /\ V(t + \Delta t)$
 
-> The naive form $`P(x) = P^{0} \times \left( V^{0}\text{/}\left( V^{0} + A \times x \right) \right)^{\gamma}`$ is only correct for a closed, fixed-mass chamber with no outflow. In this system the valve is open, and mass is leaving the chamber during transit, so the volume-only isentropic relation overestimates retained pressure by 15–30%. The correct update accounts for both volume change and mass loss simultaneously.
+> The naive form $P(x) = P^{0} \times \left( V^{0}\text{/}\left( V^{0} + A \times x \right) \right)^{\gamma}$ is only correct for a closed, fixed-mass chamber with no outflow. In this system the valve is open, and mass is leaving the chamber during transit, so the volume-only isentropic relation overestimates retained pressure by 15–30%. The correct update accounts for both volume change and mass loss simultaneously.
 
 ## 4.2 Layer B: Valve Mass Flow Model
 
@@ -382,11 +380,11 @@ The valve is modelled as a compressible orifice using the ISA/IEC 60534 standard
 
 ### Choked Flow Condition
 
-> $`Choked\ if:`$ $`P_{downstream}\text{/}P_{upstream} < \left( 2\text{/}(\gamma + 1) \right)^{\left( \gamma\text{/}(\gamma - 1) \right)}`$
+> $Choked\ if:$ $P_{downstream}\text{/}P_{upstream} < \left( 2\text{/}(\gamma + 1) \right)^{\left( \gamma\text{/}(\gamma - 1) \right)}$
 
 For CO₂ (γ = 1.30): choked if P₂/P₁ \< 0.546
 
-At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.10 ➡ flow Is choked at valve opening. Flow transitions to subsonic when $`P_{chamber}`$ drops below ~5.5 bar.
+At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.10 ➡ flow is choked at valve opening. Flow transitions to subsonic when $P_{chamber}$ drops below ~5.5 bar.
 
 ### Choked mass flow (sonic throat)
 
@@ -402,9 +400,9 @@ At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.1
 > m\dot{}_{subsonic} \propto Cv \times \sqrt{\left( \left( P^{12} - P^{22} \right)\text{/}(T \times SG) \right)}\lbrack ISApneumaticflowequation\rbrack
 > ```
 
-The valve $`C_{v}`$ is used to determine the orifice effective area for substitution into the choked-flow formula. This is the correct bridge between the $`C_{v}`$ datasheet value and the thermodynamic mass flow rate.
+The valve $C_{v}$ is used to determine the orifice effective area for substitution into the choked-flow formula. This is the correct bridge between the $C_{v}$ datasheet value and the thermodynamic mass flow rate.
 
-> $`C_{v}`$ alone does NOT predict exit velocity. It constrains the maximum available mass flow. Whether the system is flow-limited or pressure-limited depends on the ratio of valve $`C_{v}`$ to chamber volume to barrel dwell time. This ratio must be evaluated numerically.
+> $C_{v}$ alone does NOT predict exit velocity. It constrains the maximum available mass flow. Whether the system is flow-limited or pressure-limited depends on the ratio of valve $C_{v}$ to chamber volume to barrel dwell time. This ratio must be evaluated numerically.
 
 ## 4.3 Layer C: Projectile Dynamics (Coupled ODE)
 
@@ -425,7 +423,7 @@ The payload motion is governed by Newton's second law. The net force is the gas 
 > dP\text{/}dt = f\left( m_{gas}(t),V(t),valveflow,\gamma \right)\lbrack fromLayerA + B\rbrack
 > ```
 
-These three equations are solved simultaneously at each timestep. The state vector is $`\left\lbrack v,x,P,m_{gas} \right\rbrack.`$ Standard numerical integration (RK4 or similar) converges with $`\Delta t\  = \ 0.1`$ ms.
+These three equations are solved simultaneously at each timestep. The state vector is $[v,x,P,m_{gas}]$. Standard numerical integration (RK4 or similar) converges with $\Delta t = 0.1$ ms.
 
 ### Friction Model
 
@@ -434,20 +432,20 @@ These three equations are solved simultaneously at each timestep. The state vect
 > F_{friction}(v) = \mu_{r} \times P(t) \times A_{bore}\lbrack velocity - independent,pressure - scaled\rbrack
 > ```
 
-Where $`\mu_{r}`$ is the rolling/sliding resistance coefficient of the sabot in the bore. Initial estimate: $`\mu_{r}\, = \, 0.10`$ (i.e., 10% of driving force lost to friction). Must be empirically calibrated in T3 testing.
+Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in the bore. Initial estimate: $\mu_{r}\, = \, 0.10$ (i.e., 10% of driving force lost to friction). Must be empirically calibrated in T3 testing.
 
 ## 4.4 Parametric Results (ODE Numerical Sweeps)
 
 The following table summarizes muzzle velocity predictions from the ODE model, corroborated by the parametric sweep in the analysis document. Design target is 15–25 m/s at 10 bar.
 
-| **Orifice Dia (mm)** | **Chamber Vol (L)** | **Cd** | **Predicted** $`\mathbf{v}_{\mathbf{exit}}`$**(m/s)** | **Peak Force (N)** | **Dwell Time (ms)** |
+| **Orifice Dia (mm)** | **Chamber Vol (L)** | **Cd** | **Predicted** $\mathbf{v}_{\mathbf{exit}}$**(m/s)** | **Peak Force (N)** | **Dwell Time (ms)** |
 |----|----|----|----|----|----|
 | 6 | 0.5–1.2 | 0.6–0.8 | ~7.6–10.2 m/s | 3118–3388 | 64–81 |
 | 8 | 0.5–1.2 | 0.6–0.8 | ~13.5–17.0 m/s | 3641–3953 | 44–52 |
 | 10 | 0.5–1.2 | 0.6–0.8 | ~18.6–22.5 m/s | 4181–4546 | 37–41 |
 | Recommended: 8 mm orifice, 1.0 L, Cd=0.7 | → 18.5 m/s | within target | peak 3651 N | 47.9 ms dwell | Acceptable |
 
-> An 8 mm effective orifice diameter ($`C_{d}`$ = 0.7 assumed) at 10 bar pressure achieves the 15–25 m/s target with a 1.0 L chamber. A 6 mm orifice is flow-limited and falls short. A 10 mm orifice exceeds the upper target velocity at high Cd values — verify chamber pressure is within the 8–15 bar operating range.
+> An 8 mm effective orifice diameter ($C_{d}$ = 0.7 assumed) at 10 bar pressure achieves the 15–25 m/s target with a 1.0 L chamber. A 6 mm orifice is flow-limited and falls short. A 10 mm orifice exceeds the upper target velocity at high Cd values — verify chamber pressure is within the 8–15 bar operating range.
 
 ## 4.5 Model Limitations
 
@@ -455,11 +453,11 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Valve response time modelled as first-order lag (τ = 5 ms); real QEV onset causes brief pressure dip at barrel start. This reduces effective initial force by ~8–12%.
 
-- Friction coefficient $`\mu_{r}`$= 0.10 is an estimate. Must be measured by instrumented barrel test (T3) before final model calibration.
+- Friction coefficient $\mu_{r}$= 0.10 is an estimate. Must be measured by instrumented barrel test (T3) before final model calibration.
 
 - CO₂ at high flow rates exhibits real-gas deviation from ideal gas. Redlich-Kwong or Peng-Robinson EOS improves accuracy for P \> 8 bar. γ = 1.30 is a useful first approximation.
 
-- Lumped model assumes uniform chamber pressure. Valid for chamber $`L\text{/}D\  < \ 3`$. If chamber is elongated, 1D distributed model may be needed.
+- Lumped model assumes uniform chamber pressure. Valid for chamber $L\text{/}D\  < \ 3$. If chamber is elongated, 1D distributed model may be needed.
 
 > This ODE model provides a first-order design estimate with ±15% accuracy. Empirical calibration from T2 (valve timing) and T3 (muzzle velocity) tests is mandatory before field deployment. Correlate model predictions with measured data and update friction and Cd empirical parameters.
 
@@ -467,7 +465,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 ## 5.1 MATLAB / Simulink (Recommended First Step)
 
-- Implement the coupled ODE system: $`dv\text{/}dt,\ dx\text{/}dt,\ dP\text{/}dt`$ as three state variables.
+- Implement the coupled ODE system: $dv\text{/}dt,\ dx\text{/}dt,\ dP\text{/}dt$ as three state variables.
 
 - Simulate valve response as a first-order lag (τ = 3–10 ms) using a transfer function block.
 
@@ -483,7 +481,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - 2D axisymmetric model of barrel bore + projectile interface to assess blowby.
 
-- Compressible Navier-Stokes with $`k - \omega`$ SST turbulence model.
+- Compressible Navier-Stokes with $k - \omega$ SST turbulence model.
 
 - NOT recommended for initial design iteration — high computational cost for marginal benefit at this velocity regime.
 
@@ -491,7 +489,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - CO₂ phase change behavior (liquid-to-vapor at nozzle) is difficult to simulate without specialized EOS.
 
-- Valve $`C_{v}`$ specifications from datasheets have ±15–25% tolerance in practice.
+- Valve $C_{v}$ specifications from datasheets have ±15–25% tolerance in practice.
 
 - Seal friction and barrel bore dimensional tolerances are not captured in 1D models.
 
@@ -538,14 +536,11 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Record mean and standard deviation. Compare to ODE model predictions.
 
-- Pass criteria: $`v_{exit}`$ ≥ 15 m/s at 10 bar; ≤ 25 m/s at 15 bar.
+- Pass criteria: $v_{exit}$ ≥ 15 m/s at 10 bar; ≤ 25 m/s at 15 bar.
 
-- If model prediction deviates \> 15% from measured, update Cd and$`\mu_{r}`$ empirically.
+- If model prediction deviates \> 15% from measured, update Cd and$\mu_{r}$ empirically.
 
-<figure>
-<img src="UAV_Launcher_EDD_Rev3_media/media/image1.png" style="width:3.18056in;height:3.8749in" />
-<figcaption><p>Figure 1 Testing cases: The first input mentioned as “Model Prediction” refers to physics constraints mentioned above, which we must test. T1, T2, T3 are as defined in this section</p></figcaption>
-</figure>
+![Figure 1 - Testing cases: The first input mentioned as "Model Prediction" refers to physics constraints mentioned above, which we must test. T1, T2, T3 are as defined in this section](UAV_Launcher_EDD_Rev3_media/media/image1.png)
 
 # 7. Safety Considerations
 
@@ -585,7 +580,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Barrel exit must be directed in a safe zone; use a launch cage or ballistic backstop during ground testing.
 
-- Launcher body must be rigidly mounted. Recoil impulse estimate: $`F_{recoil}`$ ≈ m × v / $`t_{dwell}`$ ≈ 1 × 20 / 0.03 ≈ 667 N. Structural mounts must account for this.
+- Launcher body must be rigidly mounted. Recoil impulse estimate: $F_{recoil}$ ≈ m × v / $t_{dwell}$ ≈ 1 × 20 / 0.03 ≈ 667 N. Structural mounts must account for this.
 
 - Personnel must wear eye protection and hearing protection during all live firing tests. Minimum 5 m exclusion zone downrange.
 
@@ -641,7 +636,7 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 | QEV orifice | ≥ mm effective orifice ID; Cv ≥ 1.5 |
 | Valve type | Quick Exhaust Valve + manual pushbutton pilot |
 | Barrel | 52 mm ID ±0.3 mm; 700 mm length; 6061-T6 Al |
-| Predicted $`v_{exit}`$ | 18–20 m/s at 10 bar (ODE model; ±15%) |
+| Predicted $v_{exit}$ | 18–20 m/s at 10 bar (ODE model; ±15%) |
 | System mass | \< 4 kg assembled |
 | Unit cost (prototype) | ~USD 250–300 |
 
@@ -655,11 +650,11 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 
 - Risk 4 — Blowby in barrel: Machine barrel bore to ±0.3 mm tolerance on payload sabot. Tighter than Rev 2 (±0.5 mm) is based on friction model sensitivity.
 
-- Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $`\mu_{r}`$ if deviation \> 15%.
+- Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation \> 15%.
 
 ## 10.3 Some points to consider
 
-- By Procuring QEV and measuring actual orifice ID; we can verify $`C_{v}`$ from datasheet and confirm ≥ 1.5.
+- By Procuring QEV and measuring actual orifice ID; we can verify $C_{v}$ from datasheet and confirm ≥ 1.5.
 
 - Implement MATLAB ODE model: sweep orifice diameter (6–12 mm) × chamber volume (0.5–1.5 L) × barrel length (400–800 mm) at 10 bar.
 
@@ -667,9 +662,9 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 
 - Conduct T2 (valve response timing) and T3 (muzzle velocity) tests with 4 pressure conditions.
 
-- Correlate ODE model with measured data; update empirical parameters Cd and $`\mu_{r}`$.
+- Correlate ODE model with measured data; update empirical parameters Cd and $\mu_{r}$.
 
-- Document test results and revise design if $`v_{exit}`$ deviates \> 15% from prediction.
+- Document test results and revise design if $v_{exit}$ deviates \> 15% from prediction.
 
 # Appendix A — Interceptor UAV Payload Design Review
 
