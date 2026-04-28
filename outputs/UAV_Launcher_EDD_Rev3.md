@@ -275,7 +275,15 @@ Conclusion is correct: **12 g \< 20 g → insufficient. 88 g → ~4 shots.** Th
 
 ### Volume Estimation
 
-Using the ODE-based energy balance (Section 4), the minimum chamber volume required to achieve 20 m/s exit velocity at 10 bar and 40% system efficiency is 0.5 L. The recommended design point is 1.0 L to provide margin and account for mass flow losses through the valve.
+The verified design point from the analysis is a **1.0 L** chamber at **10 bar gauge**. The corresponding ideal isothermal work is **2637.7 J**, and the RK45 sweep shows that this chamber volume supports the target velocity band when paired with an **8-10 mm** effective orifice.
+
+At 10 bar gauge with a 1.0 L chamber, the RK45 sweep predicts:
+
+- **8 mm** orifice: **21.3 m/s**
+- **10 mm** orifice: **25.8 m/s**
+- **12 mm** orifice: **29.4 m/s**
+
+Accordingly, **1.0 L** remains the recommended chamber size because it provides margin while still supporting the required 15-25 m/s launch envelope with an appropriately sized valve orifice.
 
 ### Material and Pressure Rating
 
@@ -285,7 +293,7 @@ Using the ODE-based energy balance (Section 4), the minimum chamber volume requi
 | Working pressure      | 15 bar                                        |
 | Test pressure         | 22.5 bar (1.5× safety factor, per ASME B31.3) |
 | Burst pressure rating | 45+ bar (3× WP minimum)                       |
-| Wall thickness        | Min 5 mm for aluminium at this pressure       |
+| Wall thickness        | 3 mm selected; analytical minimum 0.311 mm at 11 bar abs |
 | End caps              | Threaded or welded; no press-fit only         |
 
 ## 3.4 Valve System
@@ -324,13 +332,15 @@ Valve selection is the most critical design decision. The valve must pass suffic
 
 ## 3.6 Barrel Design
 
-- Bore diameter: 52 mm ID (fits 1 kg payload with 3D-printed sabot at ±0.5 mm tolerance).
+- Bore diameter: 52 mm ID with ±0.3 mm tolerance target on finished bore.
 
 - Length: 700 mm nominal. Longer barrel increases dwell time and final velocity, but adds mass and bulk.
 
-- Material: 6061-T6 aluminium tube, 3 mm wall minimum at 15 bar WP.
+- Material: 6061-T6 aluminium tube, 3 mm wall. Analysis gives $t_{\min}=0.311$ mm at 11 bar absolute, so a 3 mm wall provides a large structural margin.
 
 - Barrel length vs velocity trade-off is swept numerically in the ODE model (Section 5.1).
+
+- Payload compatibility is not guaranteed by bore diameter alone: a **40×45 mm** rectangular payload has a **60.21 mm** diagonal envelope, which exceeds the **51.7 mm** minimum bore by **11.5 mm**. A close-fitting sabot is therefore mandatory to prevent tilt-induced jamming.
 
 # 4. Physics & Modeling (Rev 3 — Coupled ODE Model)
 
@@ -563,7 +573,7 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 - Barrel exit must be directed in a safe zone; use a launch cage or ballistic backstop during ground testing.
 
-- Launcher body must be rigidly mounted. Recoil impulse estimate: $F_{recoil}$ ≈ m × v / $t_{dwell}$ ≈ 1 × 20 / 0.03 ≈ 667 N. Structural mounts must account for this.
+- Launcher body must be rigidly mounted. Analysis gives a **static endcap load of 2336 N**, an **average propulsion force of ~746 N** for the nominal legacy ODE case, and **peak projectile-side force above 2.1 kN** in the RK45 nominal case. Structural mounts and endcap fasteners must be sized for kilonewton-level transient loading, not just a few hundred newtons.
 
 - Personnel must wear eye protection and hearing protection during all live firing tests. Minimum 5 m exclusion zone downrange.
 
@@ -627,6 +637,8 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 | System mass | \< 4 kg assembled |
 | Unit cost (prototype) | ~USD 250–300 |
 
+The analysis-backed recommendation is to operate the launcher around the **8-10 mm** effective orifice range. That band satisfies the target launch velocity without pushing the system into the clearly above-target 12 mm regime.
+
 ## 10.2 Priority Design Risks
 
 - Risk 1 — QEV orifice undersized: Verify effective orifice diameter ≥ 8 mm from datasheet before procurement. 6 mm orifice is flow-limited and cannot achieve \> 12 m/s per ODE model.
@@ -636,6 +648,8 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 - Risk 3 — Chamber overpressure: Install PRV; never bypass the regulator.
 
 - Risk 4 — Blowby in barrel: Machine barrel bore to ±0.3 mm tolerance on payload sabot. Tighter than Rev 2 (±0.5 mm) is based on friction model sensitivity.
+
+- Risk 4a — Payload geometric interference: The 40×45 mm payload diagonal exceeds the minimum bore by 11.5 mm if unconstrained. A sabot is mandatory; without it, yaw/roll can cause a hard jam during loading or launch.
 
 - Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation \> 15%.
 
