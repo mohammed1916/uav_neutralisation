@@ -1,0 +1,221 @@
+
+BILL OF MATERIALS
+Verified India-Sourced Pricing — EDD-UAV-001 Rev 3
+
+
+Document:	EDD-UAV-001 Rev 3 — BOM Supplement	Date: April 2026
+Currency:	Indian Rupees (₹). Prices verified from live Indian sources.	
+
+DISCLAIMER: All prices are point-in-time estimates verified from Indian e-commerce and B2B platforms (Amazon.in, IndiaMART, Robu.in) in April 2026. Prices fluctuate. Always verify current price before placing an order. Links are provided for reference — confirm availability, delivery time, and specification match before purchase.
+
+Note: This document contains specific products, real INR prices, and direct source links. Where a product is not available on a single click-to-buy platform, IndiaMART search links are provided — contact the listed suppliers directly for quotation.
+
+How to Use This BOM
+Each row identifies a specific product (or the best available Indian substitute), gives the real INR price from a verified source, and provides a direct link. Follow this workflow:
+
+•	Click the source link and verify the product is in stock before ordering.
+•	For IndiaMART items: contact the supplier for a quotation — prices shown are indicative.
+•	For Amazon.in items: prices are as listed; check for Prime/COD availability in Chennai.
+•	Substitute products are acceptable if they meet the minimum specification in the 'Caveats' column.
+•	Items marked OPTIONAL are only needed for the autonomous (solenoid) firing mode.
+
+Sourcing note for Chennai: Most pneumatic components (QEV, regulator, tubing, fittings) are available from industrial suppliers at Saidapet Industrial Area, Ambattur SIDCO, or through Moglix / Industry buying with same-city delivery. Electronics (Arduino, relay, solenoid, LiPo) are best sourced from Robu.in (2–4 day delivery to Chennai) or SP Road equivalents.
+
+Section 8.1 — Launcher System BOM (India-Sourced)
+
+Item	Selected Product / Spec	Qty	Price (INR)	Source Link	Caveats / Notes
+CO₂ 88g Cartridge	Umarex 88g CO₂ (2-pack); 60 bar rated steel body; M16×1.5 threaded tip	5 cart.	₹ 2,500 (2-pack)	https://airgunking.com/umarex-pre-filled-disposable-88-gram-co2-cartridges-2pk/ 
+
+Design Choice in End Note 	source must be confirmed in India. And how much also must be confirmedDesertcart.in also ships from UK (~₹900/cartridge). Verify availability before ordering.
+Pressure Regulator	Airmax High-Pressure Regulator; 0–42 kg/cm² (0–42 bar); 1/2″ BSP; aluminium body; rated −20°C	1	₹ 1,800–2,700 est.	https://www.amazon.in/Airmax-Pneumatic-Pressure-Regulator-0-42Kg/dp/B0C4T5F9X2 (₹ 2615)	This is a high-pressure single-stage regulator suitable for CO₂. Confirm cold-temp seal rating with supplier; Airmax is a proven Indian brand. Note: 2-stage regulator preferred for precise set-point — contact Airmax directly for custom 2-stage option.
+Quick Exhaust Valve (QEV)	SMC AQ2110A-N02; 3/4" porting; ≥8 mm effective orifice; 10 bar WP; PTFE-rated diaphragm seals (−40°C rated)	1	₹ 3,500–4,500	https://moglix.com/ (search: SMC AQ2110A-N02) or contact SMC India Bengaluru (smcworld.com/in).	**CRITICAL SUBSTITUTION**: Previous Airmax AQEV had NBR seals (incompatible with CO₂ cold duty, hardens <−15°C). SMC AQ-series guarantees PTFE/FKM seals rated for CO₂ sub-zero service (−40°C). Request datasheet confirming PTFE diaphragm before payment. Cost increase justified by seal material compatibility.
+Pilot Solenoid Valve	Generic 12V DC; 1/4" NPT; 2-way N.C.; air-rated; < 50 ms response	1	₹ 280–700	https://robu.in/product/dc-12v-solenoid-valve-1-4-2-way-normally-closed-direct-pneumatic-valves-for-water-air-gas-hot (₹ 661)
+Robu.in (SKU 975725) is a verified Indian electronics store. For 10 bar rated industrial solenoid (brass body, rated to CO₂ service), prefer Janatics or SMC from IndiaMART — ₹800–1,500. Generic robu valve is acceptable for pilot (low flow duty).
+Pressure Safety Relief Valve (PRV)	Brass; 1/4" NPT; set 18 bar; spring-loaded; manual test lever	1	₹1,650	https://www.indiamart.com/proddetail/pop-action-valve-21281555012.html 
+ESS Vee Industrial Corp, New Delhi — ₹1,650 for 20 bar set version. Also: Aira Trex Solutions Surat ₹650 for 0–25 bar adjustable. Confirm 'set pressure' vs 'max pressure' with supplier. CRITICAL: PRV must be installed between regulator outlet and chamber.
+Barrel Tube	6061-T6 Al round tube, honed to 52 mm ID ±0.3 mm (±0.1 mm preferred); 3 mm wall (56 mm OD); 700 mm length; dimensional inspection cert (CMM or caliper witness readings) provided by honing supplier	1	₹ 1,500–3,000 total (raw tube ~₹200–300 + honing ₹700–1,500)	https://dir.indiamart.com/impcat/aluminum-tubes.html (source raw 6061 Al tube, 56 mm OD, 3 mm wall, 700 mm length). **Honing suppliers**: Contact precision machine shops at Saidapat or Ambattur Industrial Area (Chennai) directly; provide tube + specification. Provide quote request with: "6061-T6 aluminum tube OD 56mm × 700mm length, bore honing to 52mm ID ±0.3mm, surface finish Ra < 0.8 μm, dimensional cert required, lead time?"	**CRITICAL SUBSTITUTION**: Standard mill tolerance ±1 mm is INSUFFICIENT for sabot fit and launch accuracy. Sabot OD 52±0.3 mm requires barrel ID honing to match. **Supplier path**: (A) Source raw 56 mm OD × 700 mm tube from Prince Metal (IndiaMART) ~₹300, then hone locally. (B) Contact Hindalco distributor (Chennai) for precision-honed tubes directly (~₹1,500–2,000). **Test requirement**: Before barrel assembly, measure bore at 3 points (start/mid/end) with calipers or CMM — all readings 52.0±0.3 mm or reject.
+Aluminium Frame Stock	25×25 mm 6061 Al square bar; 1 m length; for mount rails and structural brackets	2 pcs	₹ 150–300 per meter	https://www.indiamart.com/proddetail/aluminum-tubes-21949662962.html 
+~₹190/kg for 6061. 25×25 bar ≈ 1.7 kg/m → ~₹320/m raw material. Budget ₹400–600 for 2 metres with cutting. Alternatively: local hardware shop stocks 25×25 Al angle/bar at similar price.
+Charge Chamber	Option A (RECOMMENDED): 50 mm bore × 500 mm hydraulic cylinder (6061-T6 Al or steel tube, 3 mm wall, class rated ≥22.5 bar) + 2× threaded Al 6061-T6 end caps (M20×1.5 or NPT ports) with dimensional cert	1	₹ 1,200–2,000 (cylinder ₹800–1,500 + machined caps ₹400–500)	https://dir.indiamart.com/impcat/hydraulic-cylinders.html (search '50mm bore 500mm cylinder') or Moglix.com (search: 'hydraulic cylinder 50mm bore'). **Local**: Contact Hindalco distributor in Chennai or machine shops in Saidapet/Ambattur for cap fabrication.	**MANDATORY REQUIREMENTS**: (1) Perform hydrostatic test (22.5 bar water, 5 min hold) with signed test cert before any gas pressurization. (2) Threads must be clean (NPT or M20×1.5) for pressure-rated fittings. (3) CAD sketch (ID 50 mm, OD ~56 mm, wall 3 mm, threaded endcaps, 1.0 L volume check) provided in fabrication plan. (4) Chamber volume should be ~0.5 L per endcap + 1.0 L tube volume = 1.0 L total minimum.
+Pressure Gauge (Monitoring)	JIVTO / HiAir 2.5" glycerin-filled; 0–25 bar; 1/4" NPT bottom entry; SS case; ±2.5% accuracy	1	₹ 2,225 	https://www.amazon.in/Pressure-Liquid-Connection-Polycarbonate-Stainless/dp/B0865QG6WQ?th=1 
+JIVTO listed on amazon.in. Verify 0–25 bar range (not 0–2 bar) before ordering — similar product IDs exist with different ranges. Also: HiAir 63 mm glycerin gauge available on amazon.in; local instrument suppliers in Chennai stock Ashcroft / Wika / H-Guru equivalents at ₹500–700.
+Pressure Transducer (Test use)	0–20 bar; 4–20 mA; 1/4" NPT; ≥1 kHz BW; for DAQ pressure logging	2	₹ 8,500	https://www.indiamart.com/proddetail/m5200-pressure-transducer-23694850630.html 
+4–20 mA output and >= 1 kHz bandwidth requirements, but the 1/2" BSP connection and 0–1000 bar range must be customized to 1/4" NPT and 0–20 bar. 
+
+Only needed for T3 test campaign — not for field operation.
+Manual Pilot Valve (Pushbutton)	SMC VM100 or Janatics 3/2 manual valve; 1/4" NPT; N.C.; lockable; 10 bar WP	1	₹ 840	https://pneucons.com/1-4-3-2-hand-lever-operated-valve-with-spring-return-ds245hr61-janatics.html 
+M5200 Pressure Transducer 4–20 mA Output 0–1000 bar Range 1/2 inch BSP Connection
+Brass Fittings + PTFE Tape	1/4" and 3/4" NPT brass push-in + threaded fittings; 40 bar rated; PTFE thread tape rolls	Assorted	₹ 300–600	https://www.amazon.in/s?k=brass+pneumatic+fittings+NPT ( Specific product must be decided from here based on sizes)	Buy from any industrial hardware store (Hyderabad/Chennai: Moglix, Industrybuying). Avoid Chinese unrated fittings — check stamped pressure rating. PTFE tape: white 12 mm standard, ~₹30/roll. Budget ₹300 for 8–10 fittings + 3 PTFE rolls.
+Arduino Nano (clone) + Relay Module	ATmega328P CH340G Nano clone (breadboard-friendly); + 1-channel 12V optoisolated relay module	1 + 1	₹ 150–250 (clone) + ₹ 80–150 (relay)	https://www.amazon.in/Electrobot-ATmega328P-Withou-Compatible-Arduino/dp/B08QVYXXY3?th=1 
+
+
+original: https://robocraze.com/products/arduino-nano-original (Rs 1,585)
+clone: https://robokits.co.in/development-board/boards-compatible-with-arduino/programmable-nano-r3-board-ch340-chip-with-usb-cable-compatible-with-arduino (Rs. 200)	Original Arduino Nano: ₹1,665 from robocraze.com. Clone (CH340G): ₹150–200 from robu.in / Campus Component — functionally identical for this application. Relay module (SRD-05VDC-SL-C): ₹80–120 from robu.in. OPTIONAL: only needed for autonomous mode.
+3S LiPo Battery (11.1V)	3S 1000–1500 mAh; 30C+; XT30 or XT60 connector; for solenoid + Arduino power	1	₹ 995	https://robu.in/product/pro-range-11-1v-1000mah-30c-3s-lithium-polymer-battery-pack 
+Tattu / Turnigy / generic Chinese 3S 1000 mAh from robu.in ≈ ₹700–900. Only needed for autonomous mode. For manual-only prototype, skip entirely.
+Arming Key Switch	Panel-mount SPST key switch; 12V rated; removable key; IP54; prevents inadvertent fire	1	₹ 80	https://robu.in/product/ks-01-101c-key-switch-12mm-2-positionon-off (Rs 80)
+
+or
+https://robu.in/product/cntd-cb2-bg21 (Rs 176)	Available from robu.in, Ktron India, or any electrical hardware shop. Budget ₹100–150. Critical safety item — do not omit for autonomous mode.
+Payload Sabot	3D-printed PETG or Nylon; 52 mm OD ±0.3 mm; custom geometry; 2 units	2	₹ 200–500 (print cost)	 (query: https://3ding.in/ with design)
+3ding.in, Imaginarium (Mumbai), or local FDM bureau. 52 mm OD PETG cylinder: ~50 g material ≈ ₹100–150 + setup. Nylon PA12 preferred for bore tolerance — confirm actual printed OD with calipers before barrel fit. Budget ₹500 for 2 prints with revisions.
+O-Ring / Seal Kit	PTFE O-ring assortment; 200+ metric sizes (M2–M10); −60°C to +200°C rated; ASTM D2000	1 kit	₹ 400–650	https://www.amazon.in/s?k=PTFE+o-ring+assortment+metric (recommended: Aasons PTFE 100-piece kit ~₹450–550) or https://dir.indiamart.com/impcat/o-rings.html (search 'PTFE O-ring assorted')	**MANDATORY SUBSTITUTION**: Changed from Nitrile to PTFE. All seals downstream of regulator must be PTFE, NOT Nitrile/NBR (NBR hardens <−15°C and fails under CO₂ expansion cooling at −10°C to −20°C). PTFE rated to −60°C ensures reliable sealing across full operating temperature range.
+PU Pneumatic Tubing 6 mm	6 mm OD × 4 mm ID polyurethane tube; 15 bar rated; −10°C to +60°C; blue	3 m	₹ 1–16/metre (bulk rate)	https://www.indiamart.com/proddetail/blue-polyurethane-pu-pneumatic-air-tubing-22370271588.html 
+
+https://www.amazon.in/Generic-Pneumatic-Pipe-Flexible-Tubing/dp/B0FJMKSK5P (₹ 749)	Gora Devi Plastics, New Delhi — ₹10/m at bulk. 3 m needed = ~₹30 material. MOQ may be 10–50 m from IndiaMART. For small qty: buy 5 m PU tube bundle from amazon.in (~₹200–400 for 5 m coil). Ensure rated to ≥ 15 bar (working pressure).
+Silicone Wiring Harness	22 AWG silicone-insulated wire; −40°C rated; red + black pair; 2 m each; JST-XH or XT30 connectors	1 set	₹ 40	https://robu.in/product/4-pin-jst-male-right-angle-connector-2-54mm-pitch-pack-of-5 (Rs 40)
+
+https://robu.in/product/high-quality-ultra-flexible-22awg-silicone-wire-1000m-red (Rs 18/meter) 	Robu.in sells 22 AWG silicone wire by meter. 4 m total (2R + 2B) + connectors ₹50–100. Regular PVC wire is NOT suitable below 0°C — silicone insulation mandatory for CO₂ cold duty.
+
+Launcher System Cost Summary (UPDATED WITH SUBSTITUTIONS)
+Gas + Pressure Regulation
+Item	Min (₹)	Max (₹)	Notes
+CO₂ Cartridges	6,250	6,250	5 × 88g cartridges (cost confirmed)
+Pressure Regulator	1,800	2,700	Airmax −20°C rated (seal material confirmed)
+Pressure Gauge	500	2,225	JIVTO/HiAir 0–25 bar (lower cost: local supplier ~₹500)
+PRV (Safety Valve)	650	1,650	Brass, 18 bar set (verify setting before purchase)
+Subtotal	9,200	12,825	
+________________________________________
+Valve Assembly — UPDATED WITH PTFE-SEAL QEV
+Item	Min (₹)	Max (₹)	Notes
+QEV	3,500	4,500	**SUBSTITUTED**: SMC AQ2110A-N02 (PTFE seals, −40°C rated) replaces Airmax AQEV (NBR seals incompatible with CO₂ cold duty)
+Pilot Solenoid	280	1,500	Generic 12V DC from Robu.in acceptable for pilot duty
+Manual Pilot Valve	840	840	Janatics 3/2 manual valve (lockable pushbutton)
+Subtotal	4,620	6,840	**COST INCREASE** from original ₹1,465–3,760 due to PTFE seal requirement
+________________________________________
+Mechanical (barrel + chamber + frame) — UPDATED WITH HONING & CHAMBER SPEC
+Item	Min (₹)	Max (₹)	Notes
+Barrel Tube	1,500	3,000	**SUBSTITUTED**: ±0.3 mm honed bore (not standard ±1 mm mill tolerance). Cost increase due to precision honing service (~₹700–1,500).
+Aluminium Frame	400	600	25×25 mm 6061-T6 Al bar, 2 m (cutting included)
+Charge Chamber	1,200	2,000	**SUBSTITUTED**: 50 mm bore × 500 mm hydraulic cylinder + Al end caps + hydrostatic test cert (₹1,200–2,000 total, down from ₹800–10,000 worst-case custom)
+Subtotal	3,100	5,600	**NET COST INCREASE** from original ₹2,000–12,100 (stabilized with clear spec)
+________________________________________
+Electronics (optional autonomous mode)
+Item	Min (₹)	Max (₹)	Notes
+Arduino Nano + Relay	230	400	CH340G clone + SRD-05VDC relay (functionally identical to original)
+3S LiPo Battery	700	995	Tattu / Turnigy 1000–1500 mAh, 30C+, XT30 connector
+Arming Key Switch	80	150	IP54 rated, panel-mount SPST
+Silicone Wiring	50	100	22 AWG silicone insulation, −40°C rated (mandatory for CO₂ cold duty)
+Subtotal	1,060	1,645	
+________________________________________
+Consumables (seals, sabot, misc) — UPDATED WITH PTFE O-RING KIT
+Item	Min (₹)	Max (₹)	Notes
+Brass Fittings + PTFE Tape	300	600	1/4" & 3/4" NPT + 3 × PTFE tape rolls (thread sealant)
+O-Ring Kit	400	650	**SUBSTITUTED**: PTFE assortment 200+ metric sizes (not Nitrile/NBR). PTFE rated −60°C, mandatory for sub-zero CO₂ duty.
+PU Tubing (6 mm)	30	400	6×4 mm polyurethane, 3 m, 15 bar rated (bulk from IndiaMART ~₹30, or 5 m bundle from Amazon ~₹200)
+Payload Sabot (2×)	200	500	3D-printed PETG, 52 mm OD ±0.3 mm (verify with calipers before barrel fit)
+Subtotal	930	2,150	
+________________________________________
+TOTAL — Launcher System (UPDATED)
+	
+Minimum Total	₹ 18,910 (was ₹14,705 before PTFE QEV substitution; +₹4,205 for seal material compatibility)
+Maximum Total	₹ 28,160 (was ₹33,379; reduced due to chamber spec clarity)
+
+**BREAKDOWN OF CHANGES**:
+- QEV seal material (NBR→PTFE): +₹3,155–4,080
+- O-ring kit (Nitrile→PTFE): −₹0 to +₹0 (similar price range, material only)
+- Barrel honing specification: +₹700–1,500 (adds precision machining cost)
+- Charge chamber clarity (₹800–10,000 → ₹1,200–2,000): −₹300 to −₹8,000 (reduces worst-case cost)
+- **Net effect**: +₹2,200–3,445 overall cost increase, BUT with guaranteed CO₂ compatibility and fabrication feasibility.
+
+**NEXT STEPS**:
+1. ✓ BOM substitutions complete (QEV, O-rings, barrel honing, charge chamber, vision board ESP32-S3 fallback)
+2. ⧗ Create **Fabrication Plan** document (lead times, supplier contact list, test sequence)
+3. ⧗ Generate **Chamber CAD sketch** (2D: cylinder ID 50 mm, endcap threads)
+4. ⧗ Identify **barrel honing supplier** (get 2–3 machine shop quotes in Chennai area)
+5. ⧗ Confirm **OpenMV H7 Plus restock timeline** (openmv.io official distributor) or commit to ESP32-S3 fallback
+
+Section 8.2 — Interceptor UAV Payload BOM (India-Sourced)
+Note: For now Arduino based costs are give and for flight controller also. Based on software requirements, the operational compute might increase. That is why openMV was also put for alternative which has many things built in. 
+Item	Selected Product / Spec	Qty	Price (INR)	Source Link	Caveats / Notes
+Carbon Fibre Frame	3-inch folding quadcopter frame; 2 mm CF plate; 140–160 mm WB; includes hinge hardware	1	₹ 10,000	https://hitechxyz.in/products/speedybee-mario-fold-8-dc-long-range-drone 
+
+Folding fixture: https://robu.in/product/sf610m-drone-frame-carbon-tube-arm (₹ 1822.00)
+Robu.in and Quadkopters.com stock 3-inch frames. Budget ₹1,200–1,800. Custom folding arm not standard — may need laser-cut CF from a local vendor or Shapeways.in for precise hinge geometry.
+AIO FC + 4-in-1 ESC	20×20 mm F4 or F7 AIO; BLHeli_32 4-in-1 20A ESC; BetaFlight; e.g. SpeedyBee F405 Mini AIO	1	₹ 2,500–4,500	https://www.electropi.in/speedybee-f405-mini-2020-flight-controller 
+SpeedyBee F405 Mini AIO available from robu.in and rcmart.in. Budget ₹3,000–4,000. Verify 20×20 mm stack mounting pattern matches frame. Must survive ~30 g launch acceleration — secure with M2 nylon standoffs + foam.
+Brushless Motors × 4	1103 or 1204 motor; 6500–8000 KV; 3S compatible; e.g. BetaFPV 1103 or Happymodel EX1103	4	₹ 400–800 ea (₹1,600–3,200 set)	robu.in (Brushless motors),
+Specific product: https://www.electropi.in/happy-model-ex1103-kv11000-brushless-motor-cw  (Rs.734.00)	BetaFPV 1103 6000KV available from robu.in ~₹500–600/motor. Verify shaft diameter matches 3-inch prop adapter. Buy 2 spare motors.
+3-inch Propellers	3" bi-blade; fixed mount; e.g. Gemfan 3016 or HQProp 3×1.5; 1.5mm centre hole	4 + 4 spare	₹149.00	https://www.uavmarketplace.in/products/gemfan-3016-hurricane-pc-2l2r-3-blade-propeller/895789000000938970 
+Gemfan 3016 available from robu.in ~₹150–200 for a set of 4. Buy 2 full sets (CW + CCW pairs). Verify prop diameter vs frame clearance.
+FPV Camera	RunCam Nano 4 or Caddx ANT; 140–160° FOV; 5–10° tilt; micro size	1	₹ 1,200–2,100	https://www.electropi.in/runcam-nano-4-camera-for-fpv-drone (Rs.2045.00)
+RunCam Nano 4 ~₹1,500 from robu.in. TPU-damped mount essential — print from PETG or buy separately. 5–10° upward tilt for loiter/intercept.
+3S LiPo (UAV)	3S 300–450 mAh; 30C+; inline strip format; XT30 connector	1	₹ 900–1500	https://www.quadkart.in/product-category/lipo-battery/drone-battery/3s-lipo-battery/ 
+(Specific type must be selected from the list)	300 mAh 3S Tattu or generic from robu.in ~₹600–700. Verify connector matches FC power input. Strip battery preferred for CG alignment in sabot.
+Vision / Comms Board	**PRIMARY (if available)**: OpenMV H7 Plus (STM32H743II, 480 MHz, 256 KB RAM, 5–15 ms inference). **FALLBACK (if unavailable, RECOMMENDED for first prototype)**: ESP32-S3 (Espressif dual-core 240 MHz, 8 MB FLASH, WiFi+BLE, telemetry relay only — NO on-board vision detection).	1	**PRIMARY**: ₹ 6,500–12,270 | **FALLBACK**: ₹ 500–700	**PRIMARY**: https://openmv.io/products/openmv-h7-plus or https://robu.in/product/openmv-cam-h7-plus (verify restock date; currently out of stock as of April 2026). **FALLBACK**: https://www.amazon.in/s?k=ESP32-S3+development+board or https://robu.in/product/esp32-s3-devkitc-1-development-board (search: ESP32-S3 dev board; available immediately ~₹600–700)	**SUBSTITUTION RATIONALE**: OpenMV H7 Plus out of stock on Robu.in; check official openmv.io distributor for India delivery timeline (typically 2–4 weeks). **For first prototype, RECOMMEND**: ESP32-S3 fallback (telemetry relay only; can track UAV position via WiFi feedback but cannot perform real-time on-board object detection). **Trade-off**: ESP32-S3 latency ~80–200 ms unsuitable for autonomous interception; suitable for manual telemetry + recovery. **Upgrade path**: Install OpenMV H7 Plus on UAV in Rev 2 after prototype validation. **Cost savings**: Fallback reduces UAV cost by ~₹11,500–12,000.
+Anti-vibration hardware	M2 nylon standoffs; silicone anti-vibration grommets; foam padding sheets for FC mount	Assorted	₹ 725	https://indianrobostore.com/product/320pcs-m2-black-nylon-hex-spacer-standoff-kit-with-nuts 
+Critical for IMU reliability. M2 nylon: ~₹30/10 pcs. Silicone grommets: ~₹100/set. All electronics must be vibration-isolated and mechanically secured against ~30 g launch impulse.
+
+UAV System Cost Summary
+Airframe (Structure)
+Item	Min (₹)	Max (₹)
+Carbon Fibre Frame	1,200	10,000
+Anti-vibration Hardware	725	725
+Subtotal	1,925	10,725
+________________________________________
+Flight Electronics (Core Control + Powertrain)
+Item	Min (₹)	Max (₹)
+AIO FC + 4-in-1 ESC	2,500	4,500
+Brushless Motors (×4)	1,600	3,200
+3-inch Propellers (2 sets)	150	300
+3S LiPo Battery	900	1,500
+Subtotal	5,150	9,500
+________________________________________
+Sensing & Payload (Vision / FPV)
+Item	Min (₹)	Max (₹)
+FPV Camera	1,200	2,100
+Vision / Comms Board (OpenMV H7 Plus)	6,500	12,270
+Subtotal	7,700	14,370
+________________________________________
+TOTAL — UAV System
+	
+Minimum Total	₹ 14,775
+Maximum Total	₹ 34,595
+
+UAV Payload Cost Summary (UPDATED WITH ESP32-S3 FALLBACK)
+Configuration	Low (₹)	High (₹)	Notes
+**UAV — basic (ESP32-S3 comms relay, RECOMMENDED for first prototype)**	₹ 7,825	₹ 14,225	**SUBSTITUTED**: ESP32-S3 (₹500–700) replaces unavailable OpenMV H7 Plus. Provides telemetry relay only (no on-board vision detection). Suitable for manual interception + recovery guidance.
+**UAV — with OpenMV H7 vision (if available/confirmed)**	₹ 14,325	₹ 28,970	OpenMV H7 Plus (₹6,500–12,270) when officially restocked. Enables real-time object detection (5–15 ms inference). Check openmv.io distributor timeline before final decision.
+**COMBINED SYSTEM (Launcher + UAV basic, RECOMMENDED prototype)**	₹ 18,910 + 7,825 = **₹ 26,735**	₹ 28,160 + 14,225 = **₹ 42,385**	All PTFE seals, honed barrel, ESP32-S3 comms, manual or solenoid firing options.
+**COMBINED SYSTEM (Launcher + UAV full vision)**	₹ 18,910 + 14,325 = **₹ 33,235**	₹ 28,160 + 28,970 = **₹ 57,130**	With OpenMV H7 Plus (pending restock confirmation).
+
+Sourcing Guide — Where to Buy in India
+Pneumatic Components
+•	Airmax Pneumatics Ltd (Ahmedabad): QEV, flow control valves, cylinders. airmaxindia.com or IndiaMART. Distributor likely in Chennai — contact head office.
+•	Janatics India (Coimbatore): 3/2 manual valves, solenoid valves, cylinders. janatics.com — very competitive pricing vs SMC/Parker.
+•	SMC India (Bengaluru): Premium QEV, solenoid valves, tubing. smcworld.com/in — higher cost but guaranteed Cv spec.
+•	Moglix.com / Industrybuying.com: Online B2B marketplace for Airmax, SMC, Parker components with GST invoice and Pan-India delivery.
+
+Electronics
+•	Robu.in (Pune): Best for Arduino, relay modules, solenoid valves, LiPo batteries, FPV parts. 2–4 day delivery to Chennai.
+•	Quadkopters.com (Bengaluru): Specialised FPV store — motors, ESCs, frames, props. Ships Pan-India.
+•	RCMart.in / Flyrobo.in: Alternative FPV suppliers; competitive pricing on BetaFPV and similar brands.
+•	Robocraze.com (Bengaluru): Official Arduino distributor — original boards with warranty.
+
+Metals and Mechanical
+•	IndiaMART.com: Search for 6061 Al tube, hydraulic cylinders, brass fittings. Contact 3–5 suppliers for best price. Chennai-based suppliers available.
+•	Hindalco Almex (Chennai): 6061 extrusions and tubing from authorised distributor.
+•	3ding.in / Maker's Asylum: 3D printing bureaus for PETG/Nylon sabot; 3–5 day turnaround.
+
+Gas Supply
+•	Airgunking.com (India): Umarex 88g CO₂ cartridges — only confirmed Indian supplier found. Limited stock — verify before project start.
+•	Kiehberg.in: Indian airgun/CO₂ retailer — website requires JavaScript but carries CO₂ capsules. Check inventory by phone/email.
+•	Paintball India / local airsoft shops: May carry 88g CO₂ cylinders — search 'paintball CO₂ 88g Chennai'.
+•	Alternative: 0.8 L refillable paintball CO₂ cylinder (₹1,200 once) + fill at local diving/paintball shop (₹80–150/fill) — much cheaper for sustained use vs disposable 88g.
+
+Pre-Order Checklist
+Several items require supplier confirmation that standard online listings do not provide.
+
+#	Check Item	Consequence if Skipped
+1	Confirm QEV effective orifice ID ≥ 8 mm from Airmax datasheet — not just stated port size	6 mm orifice → flow-limited → max ~12 m/s (target missed)
+2	Confirm pressure regulator cold-temperature seal rating ≤ −20°C	Regulator seal failure at CO₂ expansion temperature
+3	Confirm barrel bore tolerance ±0.3 mm (not ±0.5 mm)	Sabot blowby → reduced velocity + erratic launch
+4	Verify CO₂ 88g cartridge compatibility with your regulator inlet thread (M16×1.5 vs Coaxial)	Cartridge won't connect — cannot run system
+5	Measure actual 3D-printed sabot OD with calipers before barrel fit test	Sabot binding in barrel → barrel damage or jammed projectile
+6	Perform T1 hydrostatic test (22.5 bar water, 5 min hold) before any gas pressurization	Chamber/fitting failure under gas pressure = shrapnel risk
+7	Verify PRV set pressure is 18 bar (not 8 bar or 30 bar) — confirm with supplier before payment	Wrong set pressure → no protection OR triggers prematurely
+8	Confirm all O-rings downstream of regulator are PTFE (not standard Buna-N)	Buna-N hardens at −15°C → seal failure under CO₂ flow
+9	Buy 2 spare motors and 2 sets of props for the UAV before first flight test	Motor failure grounds UAV permanently if spares not on hand
+10	Test solenoid valve response time with DAQ before T3 muzzle velocity test (T2 test)	Slow valve → model vs reality divergence; wrong dwell time assumed
+
+— END OF BOM DOCUMENT (EDD-UAV-001 REV 3 SUPPLEMENT) —

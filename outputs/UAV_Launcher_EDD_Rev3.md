@@ -4,12 +4,12 @@
 
 Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
-| **Document ID** | **EDD-UAV-001**                               |
-|-----------------|-----------------------------------------------|
-| Revision        | Rev 3 — Physics-Corrected (Coupled ODE Model) |
-| Date            | April 2026                                    |
-| Status          | Engineering Review Draft                      |
-| Replaces        | Rev 2 — Updated BOM (Closed-form model)       |
+| **Document ID** | **EDD-UAV-001**                          |
+| --------------------- | ---------------------------------------------- |
+| Revision              | Rev 3 — Physics-Corrected (Coupled ODE Model) |
+| Date                  | April 2026                                     |
+| Status                | Engineering Review Draft                       |
+| Replaces              | Rev 2 — Updated BOM (Closed-form model)       |
 
 > Rev 3 Change Summary: Section 4 (Physics & Modeling) has been fully rewritten. The prior closed-form velocity formula and geometric-only pressure decay equation have been replaced with a coupled three-layer ODE model (gas supply / valve flow / projectile dynamics). The BOM has been expanded with specific sourcing notes, tolerance requirements, and sub-zero rated components. All other sections are carried forward from Rev 2 with minor editorial corrections.
 
@@ -33,7 +33,7 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [2.2 Component Interaction](#component-interaction)
 
-[2.3 Signal & Control Flow](#signal-control-flow)
+[2.3 Signal &amp; Control Flow](#signal-control-flow)
 
 [2.4 Engineering Drawing](#engineering-drawing)
 
@@ -63,7 +63,7 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [3.6 Barrel Design](#barrel-design)
 
-[4. Physics & Modeling (Rev 3 — Coupled ODE Model)](#physics-modeling-rev-3-coupled-ode-model)
+[4. Physics &amp; Modeling (Rev 3 — Coupled ODE Model)](#physics-modeling-rev-3-coupled-ode-model)
 
 [4.0 Modeling Assumptions (Explicit)](#modeling-assumptions-explicit)
 
@@ -101,7 +101,7 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [5.3 Why Simulation Alone is Insufficient](#why-simulation-alone-is-insufficient)
 
-[6. Testing & Validation](#testing-validation)
+[6. Testing &amp; Validation](#testing-validation)
 
 [6.1 Test Infrastructure](#test-infrastructure)
 
@@ -159,7 +159,7 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [11.2 Pneumatic Components](#_Toc228192153)
 
-[11.3 Engineering & Physics References](#_Toc228192154)
+[11.3 Engineering &amp; Physics References](#_Toc228192154)
 
 [11.4 Simulation Resources](#_Toc228192155)
 
@@ -184,55 +184,53 @@ This document defines the engineering design for a CO₂-based pneumatic launche
 ## 1.1 Purpose
 
 - Provide rapid, repeatable launch of a ~1 kg payload.
-
 - Operate autonomously (solenoid trigger) or semi-manually (mechanical trigger).
-
 - Deploy in field environments without external power infrastructure.
 
 ## 1.2 Key Performance Requirements
 
-| **Parameter**          | **Value**          | **Notes**                |
-|------------------------|--------------------|--------------------------|
-| Launch velocity        | 15–25 m/s          | At barrel exit           |
-| Payload mass           | ~1 kg              | With sabot               |
+| **Parameter**    | **Value**     | **Notes**           |
+| ---------------------- | ------------------- | ------------------------- |
+| Launch velocity        | 15–25 m/s          | At barrel exit            |
+| Payload mass           | ~1 kg               | With sabot                |
 | Operational pressure   | 50–60 bar (source) | Regulated to 8–15 bar WP |
-| System mass (launcher) | \< 5 kg            | Field portable           |
-| Actuation type         | Manual + solenoid  | Dual-mode                |
-| Cost target            | \< USD 300         | Prototype unit           |
-| Recharge time          | \< 30 s            | Cartridge swap           |
+| System mass (launcher) | \< 5 kg             | Field portable            |
+| Actuation type         | Manual + solenoid   | Dual-mode                 |
+| Cost target            | \< USD 300          | Prototype unit            |
+| Recharge time          | \< 30 s             | Cartridge swap            |
 
 ## 1.3 Scope Limitations
 
 - This document covers the launcher only — not the interceptor UAV payload design (see Appendix B).
-
 - Flight trajectory, terminal guidance, and payload integration are out of scope.
-
 - Structural mounting hardware design is indicative only.
 
 ## 1.4 Governing Input Parameters
 
 The design and validation work in this EDD uses the following governing launcher inputs.
 
-| Parameter | Symbol | Value | Notes |
-|---|:---:|---:|---|
-| Charge chamber volume | $V_{0}$ | 1.0 L (0.0010 m³) | Accumulator tank design point |
-| Working pressure (gauge) | $P_{0,gauge}$ | 10.0 bar | Nominal regulated pressure |
-| Working pressure (absolute) | $P_{0}$ | 11.00 bar | Used for gas and load calculations |
-| Atmospheric pressure | $P_{atm}$ | 1.00 bar | Back-pressure reference |
-| Barrel internal diameter | $D$ | 52 mm | Drawing-derived bore |
-| Barrel length | $L$ | 700 mm | Nominal barrel length |
-| Bore area | $A_{bore}$ | 0.002124 m² | From 52 mm ID |
-| CO₂ specific gas constant | $R_{spec}$ | 188.92 J kg$^{-1}$ K$^{-1}$ | $R_{u}/M_{CO_2}$ |
-| Temperature | $T$ | 293.15 K | Ambient charge temperature |
-| Specific heat ratio | $\gamma$ | 1.30 | CO₂ compressible-flow value |
-| Discharge coefficient | $C_{d}$ | 0.8 default | Swept in the study |
-| Default orifice diameter | $d_{or}$ | 12 mm | Legacy nominal case |
+| Parameter                   |     Symbol     |                           Value | Notes                              |
+| --------------------------- | :-------------: | ------------------------------: | ---------------------------------- |
+| Charge chamber volume       |    $V_{0}$    |              1.0 L (0.0010 m³) | Accumulator tank design point      |
+| Working pressure (gauge)    | $P_{0,gauge}$ |                        10.0 bar | Nominal regulated pressure         |
+| Working pressure (absolute) |    $P_{0}$    |                       11.00 bar | Used for gas and load calculations |
+| Atmospheric pressure        |   $P_{atm}$   |                        1.00 bar | Back-pressure reference            |
+| Barrel internal diameter    |      $D$      |                           52 mm | Drawing-derived bore               |
+| Barrel length               |      $L$      |                          700 mm | Nominal barrel length              |
+| Bore area                   |  $A_{bore}$  |                    0.002124 m² | From 52 mm ID                      |
+| CO₂ specific gas constant  |  $R_{spec}$  | 188.92 J kg$^{-1}$ K$^{-1}$ | $R_{u}/M_{CO_2}$                 |
+| Temperature                 |      $T$      |                        293.15 K | Ambient charge temperature         |
+| Specific heat ratio         |   $\gamma$   |                            1.30 | CO₂ compressible-flow value       |
+| Discharge coefficient       |    $C_{d}$    |                     0.8 default | Swept in the study                 |
+| Default orifice diameter    |   $d_{or}$   |                           12 mm | Legacy nominal case                |
 
 ## 1.5 Energy and Performance Envelope
 
 The ideal isothermal expansion work available from the 1.0 L chamber charged to 10 bar gauge is:
 
-$$W=P_{0}\cdot V_{0}\cdot\ln\left(\frac{P_{0}}{P_{atm}}\right)=2637.7\;\mathrm{J}$$
+$$
+W=P_{0}\cdot V_{0}\cdot\ln\left(\frac{P_{0}}{P_{atm}}\right)=2637.7\;\mathrm{J}
+$$
 
 This is an upper bound only. Real launch performance is lower because of valve flow restriction, finite barrel length, friction, and real-gas behavior.
 
@@ -248,8 +246,7 @@ For the requirement-compliant RK45 model, the recommended design band remains **
 
 The launcher consists of six functional subsystems arranged in a linear pneumatic train:
 
-> 
-> ``` math
+> ```math
 > \mathbf{Gas\ Source\  \rightarrow \ Regulator\  \rightarrow \ Charge\ Chamber\  \rightarrow \ Pilot\ Valve\  \rightarrow \ Quick\ Exhaust\ Valve\ (QEV)\  \rightarrow \ Barrel}
 > ```
 
@@ -259,14 +256,14 @@ The CO₂ cartridge supplies high-pressure gas (50–60 bar) which passes throug
 
 ## 2.3 Signal & Control Flow
 
-| **Stage** | **Action** | **Component** |
-|----|----|----|
-| 1 — Pre-fire | Chamber charged to set pressure | Regulator + Chamber |
-| 2 — Command | Trigger signal sent (manual or electrical) | Pilot valve |
-| 3 — Actuation | Pilot pressure opens QEV main poppet | QEV |
-| 4 — Discharge | High-flow gas released into barrel | Barrel |
-| 5 — Launch | Payload exits barrel at 15–25 m/s | — |
-| 6 — Reset | CO₂ cartridge recharges chamber | Regulator |
+| **Stage** | **Action**                           | **Component** |
+| --------------- | ------------------------------------------ | ------------------- |
+| 1 — Pre-fire   | Chamber charged to set pressure            | Regulator + Chamber |
+| 2 — Command    | Trigger signal sent (manual or electrical) | Pilot valve         |
+| 3 — Actuation  | Pilot pressure opens QEV main poppet       | QEV                 |
+| 4 — Discharge  | High-flow gas released into barrel         | Barrel              |
+| 5 — Launch     | Payload exits barrel at 15–25 m/s         | —                  |
+| 6 — Reset      | CO₂ cartridge recharges chamber           | Regulator           |
 
 ## 2.4 Engineering Drawing
 
@@ -281,23 +278,20 @@ The current launcher arrangement used by this EDD is shown below.
 ### CO₂ Cartridge
 
 - Standard 12 g or 88 g CO₂ cylinders (paintball/SodaStream format).
-
 - Storage pressure: 50–60 bar at 20°C (saturated liquid/vapour phase).
-
 - Energy density is high relative to cost — ideal for intermittent use.
-
 - 88 g cylinder provides ~45 L of gas at atmospheric pressure; sufficient for multiple launches.
 
 ### CO₂ vs Compressed Air Trade-off
 
-| **Criterion** | **CO₂ Cartridge** | **Compressed Air Tank** |
-|----|----|----|
-| Working pressure | 50–60 bar (fixed) | Adjustable, 10–300 bar |
-| Cost | Low (~USD 1–3/cartridge) | Moderate (~USD 50–150 tank) |
-| Recharge method | Swap cartridge (\< 30 s) | Pump/compressor required |
-| Thermal effects | Gas cools on expansion (Joule-Thomson) | Minimal |
-| Field portability | Excellent | Moderate — tank bulk |
-| Recommendation | ✔ Preferred for prototype | Preferred for sustained ops |
+| **Criterion** | **CO₂ Cartridge**               | **Compressed Air Tank** |
+| ------------------- | -------------------------------------- | ----------------------------- |
+| Working pressure    | 50–60 bar (fixed)                     | Adjustable, 10–300 bar       |
+| Cost                | Low (~USD 1–3/cartridge)              | Moderate (~USD 50–150 tank)  |
+| Recharge method     | Swap cartridge (\< 30 s)               | Pump/compressor required      |
+| Thermal effects     | Gas cools on expansion (Joule-Thomson) | Minimal                       |
+| Field portability   | Excellent                              | Moderate — tank bulk         |
+| Recommendation      | ✔ Preferred for prototype             | Preferred for sustained ops   |
 
 > CO₂ expansion causes significant barrel cooling (~−10°C to −20°C at orifice). Valve seats must tolerate this. PTFE or Buna-N seals rated to −60°C are required; standard O-rings at sub-zero temperatures will fail.
 
@@ -305,7 +299,7 @@ The current launcher arrangement used by this EDD is shown below.
 
 Each shot consumes all gas in the charge chamber (QEV dumps it to atmosphere). The CO₂ mass required to fill the 1.0 L chamber to 10 bar gauge (11 bar absolute) at 20 °C is:
 
-``` math
+```math
 m = \frac{P_{abs} \cdot V}{R_{spec} \cdot T} = \frac{(11 \times 10^{5}) \times 0.001}{188.92 \times 293.15} = \frac{1100}{55,397} \approx 19.9\text{ g}
 ```
 
@@ -313,12 +307,13 @@ where $R_{spec}=\frac{R_u}{M_{CO_2}}=\frac{8.314}{0.04401}=188.92\,\mathrm{J\,kg
 
 Real-gas correction (Z ≈ 0.97 at Tr = 0.964, Pr = 0.149 from Redlich-Kwong EOS): actual mass ≈ **20.48 g**. Ideal-gas mass (19.86 g) is lower by about **3.1%**, which is acceptable for first-pass cartridge sizing.
 
-| Cartridge | CO₂ mass | Can fill 1.0 L chamber to 10 bar? | Full shots             |
-|-----------|----------|-----------------------------------|------------------------|
-| 12 g      | 12 g     | **No** — 12 g \< 20 g required    | 0                      |
-| 88 g      | 88 g     | Yes                               | ~4 (with ~8 g reserve) |
+| Cartridge | CO₂ mass | Can fill 1.0 L chamber to 10 bar?      | Full shots             |
+| --------- | --------- | -------------------------------------- | ---------------------- |
+| 12 g      | 12 g      | **No** — 12 g \< 20 g required | 0                      |
+| 88 g      | 88 g      | Yes                                    | ~4 (with ~8 g reserve) |
 
 Conclusion is correct: **12 g \< 20 g → insufficient. 88 g → ~4 shots.** The 12 g cartridge cannot produce even one full charge. 88 g cartridges are required. The 12 g size is only viable for chambers ≤ 0.5 L at ≤ 6 bar.
+
 ### CO₂ Consumption and Source Sizing
 
 The chamber fill mass for the selected launcher is:
@@ -329,21 +324,18 @@ $$
 
 Applying the real-gas correction (Z ≈ 0.97) already used elsewhere in this EDD gives an actual full-shot fill mass of approximately **20.48 g CO₂**. Basis: ideal-gas law and Redlich-Kwong EOS as implemented in `scripts/solve_launcher_rk45.py`.
 
-| Cartridge | CO₂ mass | Can fill 1.0 L chamber to 10 bar gauge? | Full shots |
-|---|---:|---|---:|
-| 12 g cartridge | 12 g | No | 0 |
-| 88 g cartridge | 88 g | Yes | ~4 |
+| Cartridge      | CO₂ mass | Can fill 1.0 L chamber to 10 bar gauge? | Full shots |
+| -------------- | --------: | --------------------------------------- | ---------: |
+| 12 g cartridge |      12 g | No                                      |          0 |
+| 88 g cartridge |      88 g | Yes                                     |         ~4 |
 
 > **Note:** Each shot consumes the entire chamber volume (~20 g CO₂ at 10 bar gauge). The pilot-operated QEV opens fully and dumps the whole charge with every firing cycle — partial-fill operation is not possible. Therefore the 12 g cartridge is not usable for this design, and CO₂ consumption is approximately **20 g per shot regardless of target launch velocity**. Achievable velocity is controlled by orifice size, not by how much gas is loaded.
 
 ## 3.2 Pressure Regulation
 
 - A two-stage regulator reduces 50–60 bar source to a stable 8–15 bar working pressure.
-
 - Eliminates pressure variability between shots (cartridge depletion effect).
-
 - Recommended: Clippard R32 or Parker R12 series. Set to 10 bar for nominal operations.
-
 - Cracking pressure must be above ambient by at least 2× safety margin.
 
 ## 3.3 Charge Chamber
@@ -362,14 +354,14 @@ Accordingly, **1.0 L** remains the recommended chamber size because it provides 
 
 ### Material and Pressure Rating
 
-| **Property**          | **Specification**                             |
-|-----------------------|-----------------------------------------------|
-| Material              | 6061-T6 Aluminium or Schedule 80 steel pipe   |
-| Working pressure      | 15 bar                                        |
-| Test pressure         | 22.5 bar (1.5× safety factor, per ASME B31.3) |
-| Burst pressure rating | 45+ bar (3× WP minimum)                       |
+| **Property**    | **Specification**                                  |
+| --------------------- | -------------------------------------------------------- |
+| Material              | 6061-T6 Aluminium or Schedule 80 steel pipe              |
+| Working pressure      | 15 bar                                                   |
+| Test pressure         | 22.5 bar (1.5× safety factor, per ASME B31.3)           |
+| Burst pressure rating | 45+ bar (3× WP minimum)                                 |
 | Wall thickness        | 3 mm selected; analytical minimum 0.311 mm at 11 bar abs |
-| End caps              | Threaded or welded; no press-fit only         |
+| End caps              | Threaded or welded; no press-fit only                    |
 
 ## 3.4 Valve System
 
@@ -378,13 +370,9 @@ The recommended valve system is a **pilot-operated Quick Exhaust Valve (QEV)**. 
 ### Recommended Configuration: QEV + Pilot Solenoid
 
 - QEV (e.g., SMC AQ-series, Parker, or Camozzi) is pilot-operated.
-
 - A small solenoid valve (or manual pushbutton) acts as the pilot, sending a brief pressure pulse to actuate the QEV poppet.
-
 - Recommended effective orifice: **8-10 mm**.
-
 - Cv requirement: **Cv ≥ 1.5** for a 52 mm bore barrel at 10 bar.
-
 - The QEV exhaust port faces the barrel inlet for maximum flow efficiency.
 
 ### Response-Time Calculation for the Selected QEV
@@ -397,10 +385,10 @@ $$
 
 where $t_{QEV}$ is the valve opening response time and $t_{dwell}$ is the projectile transit time in the barrel. Dwell times are taken directly from the RK45 solver (`outputs/rk45_launcher_results.json`). The selected pilot-operated QEV is modelled as a **5 ms nominal** response device with a practical **3–10 ms** range, consistent with QEV manufacturer data and the T2 acceptance threshold of < 10 ms.
 
-| Metric | 8 mm orifice | 10 mm orifice |
-|---|---:|---:|
-| Projectile dwell time (RK45) | 46.63 ms | 40.32 ms |
-| Nominal total response (5 ms QEV) | 51.63 ms | 45.32 ms |
+| Metric                              |    8 mm orifice |   10 mm orifice |
+| ----------------------------------- | --------------: | --------------: |
+| Projectile dwell time (RK45)        |        46.63 ms |        40.32 ms |
+| Nominal total response (5 ms QEV)   |        51.63 ms |        45.32 ms |
 | Total response range (3–10 ms QEV) | 49.63–56.63 ms | 43.32–50.32 ms |
 
 Both recommended orifice cases keep the total trigger-to-exit response below **57 ms**, well within the semi-autonomous deployment window.
@@ -411,23 +399,19 @@ Both recommended orifice cases keep the total trigger-to-exit response below **5
 
 ## 3.5 Trigger System
 
-| **Parameter**   | **Manual Trigger**     | **Solenoid Trigger**          |
-|-----------------|------------------------|-------------------------------|
-| Latency         | ~150–300 ms (human RT) | ~5–15 ms (electrical)         |
-| Reliability     | High (no electronics)  | Moderate (requires power)     |
-| Cost            | \$10–20                | \$15–30                       |
-| Recommended for | Prototype / semi-auto  | Autonomous / timed deployment |
+| **Parameter** | **Manual Trigger** | **Solenoid Trigger**    |
+| ------------------- | ------------------------ | ----------------------------- |
+| Latency             | ~150–300 ms (human RT)  | ~5–15 ms (electrical)        |
+| Reliability         | High (no electronics)    | Moderate (requires power)     |
+| Cost                | \$10–20                 | \$15–30                      |
+| Recommended for     | Prototype / semi-auto    | Autonomous / timed deployment |
 
 ## 3.6 Barrel Design
 
 - Bore diameter: 52 mm ID with ±0.3 mm tolerance target on finished bore.
-
 - Length: 700 mm nominal. Longer barrel increases dwell time and final velocity, but adds mass and bulk.
-
 - Material: 6061-T6 aluminium tube, 3 mm wall. Analysis gives $t_{\min}=0.311$ mm at 11 bar absolute, so a 3 mm wall provides a large structural margin.
-
 - Barrel length vs velocity trade-off is swept numerically in the ODE model (Section 5.1).
-
 - Payload compatibility is not guaranteed by bore diameter alone: a **40×45 mm** rectangular payload has a **60.21 mm** diagonal envelope, which exceeds the **51.7 mm** minimum bore by **11.5 mm**. A close-fitting sabot is therefore mandatory to prevent tilt-induced jamming.
 
 # 4. Physics & Modeling (Rev 3 — Coupled ODE Model)
@@ -442,16 +426,16 @@ This section has been fully rewritten for Rev 3. The previous closed-form veloci
 
 The following assumptions apply to all sub-models in this section:
 
-| **Assumption** | **Justification / Limitation** |
-|----|----|
-| 1D flow only (lumped model) | Valid for barrel L/D ≥ 5; neglects radial pressure gradients |
-| Uniform pressure in chamber at each timestep | Valid when sound transit time ≪ timestep (satisfied here) |
-| No shock waves in barrel | Mach \< 0.3 for 20 m/s in 52 mm bore; subsonic regime holds |
-| Adiabatic expansion (isentropic baseline) | Valid for fast events (≤30 ms dwell); add 10–20% heat loss correction factor |
-| Valve modelled as compressible orifice | Cv-based ISA flow equation; choked flow condition checked explicitly |
+| **Assumption**                                                               | **Justification / Limitation**                                                       |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| 1D flow only (lumped model)                                                        | Valid for barrel L/D ≥ 5; neglects radial pressure gradients                              |
+| Uniform pressure in chamber at each timestep                                       | Valid when sound transit time ≪ timestep (satisfied here)                                 |
+| No shock waves in barrel                                                           | Mach\< 0.3 for 20 m/s in 52 mm bore; subsonic regime holds                                 |
+| Adiabatic expansion (isentropic baseline)                                          | Valid for fast events (≤30 ms dwell); add 10–20% heat loss correction factor             |
+| Valve modelled as compressible orifice                                             | Cv-based ISA flow equation; choked flow condition checked explicitly                       |
 | CO₂ modelled with Redlich-Kwong EOS ($T_{c}$ = 304.13 K, $P_{c}$ = 7.377 MPa) | already implemented in simulation. Ideal gas with γ = 1.3 retained as a cross-check only. |
-| Friction lumped as empirical coefficient | Must be measured from hardware; 0.10 is initial estimate only |
-| Valve response modelled as first-order lag (τ = 3–10 ms) | Based on QEV manufacturer specs; verify from T2 test |
+| Friction lumped as empirical coefficient                                           | Must be measured from hardware; 0.10 is initial estimate only                              |
+| Valve response modelled as first-order lag (τ = 3–10 ms)                         | Based on QEV manufacturer specs; verify from T2 test                                       |
 
 ## 4.1 Layer A: Gas Supply Thermodynamics
 
@@ -464,9 +448,7 @@ The pressure of gas remaining in the chamber after mass m_gas has escaped is gov
 However, this geometric isentropic relation is NOT applied directly as P(x). Instead, pressure is updated at each timestep by the combined effect of:
 
 - Volume increase due to payload displacement: $\Delta V = A_{bore} \times \Delta x$
-
 - Mass loss due to outflow through the valve: $\Delta m_{out} = \dot{m}(C_v, P_{chamber}, P_{downstream}, T)\cdot\Delta t$
-
 - Combined via ideal gas law: $P(t + \Delta t) = \dfrac{m(t + \Delta t)\,R\,T}{V(t + \Delta t)}$
 
 > The naive form $P(x) = P^{0} \times \left( \dfrac{V^{0}}{V^{0} + A\,x} \right)^{\gamma}$ is only correct for a closed, fixed-mass chamber with no outflow. In this system the valve is open, and mass is leaving the chamber during transit, so the volume-only isentropic relation overestimates retained pressure by 15–30%. The correct update accounts for both volume change and mass loss simultaneously.
@@ -485,11 +467,15 @@ At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.1
 
 ### Choked mass flow (sonic throat)
 
-> $$\dot{m}_{choked}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{\gamma}{R\,T_1}}\left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}}$$
+> $$
+> \dot{m}_{choked}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{\gamma}{R\,T_1}}\left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}}
+> $$
 
 ### Subsonic mass flow
 
-> $$\dot{m}_{subsonic}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{2\gamma}{R\,T_1\,(\gamma-1)}\left[\left(\frac{P_2}{P_1}\right)^{2/\gamma}-\left(\frac{P_2}{P_1}\right)^{(\gamma+1)/\gamma}\right]}$$
+> $$
+> \dot{m}_{subsonic}=C_d\,A_{orifice}\,P_1\,\sqrt{\frac{2\gamma}{R\,T_1\,(\gamma-1)}\left[\left(\frac{P_2}{P_1}\right)^{2/\gamma}-\left(\frac{P_2}{P_1}\right)^{(\gamma+1)/\gamma}\right]}
+> $$
 
 The valve $C_{v}$ is used to determine the orifice effective area for substitution into the choked-flow formula. This is the correct bridge between the $C_{v}$ datasheet value and the thermodynamic mass flow rate.
 
@@ -501,17 +487,25 @@ The payload motion is governed by Newton's second law. The net force is the gas 
 
 ### ODE System (Correct Primary Model)
 
-> $$\frac{dv}{dt}=\frac{P(t)\,A_{bore}-F_{friction}(v)}{m}$$
+> $$
+> \frac{dv}{dt}=\frac{P(t)\,A_{bore}-F_{friction}(v)}{m}
+> $$
 >
-> $$\frac{dx}{dt}=v$$
+> $$
+> \frac{dx}{dt}=v
+> $$
 >
-> $$\frac{dP}{dt}=f\!\left(m_{gas}(t),V(t),\text{valve flow},\gamma\right)\quad\text{(from Layers A and B)}$$
+> $$
+> \frac{dP}{dt}=f\!\left(m_{gas}(t),V(t),\text{valve flow},\gamma\right)\quad\text{(from Layers A and B)}
+> $$
 
 These three equations are solved simultaneously at each timestep. The state vector is $[v,x,P,m_{gas}]$. Standard numerical integration (RK4 or similar) converges with $\Delta t = 0.1$ ms.
 
 ### Friction Model
 
-> $$F_{friction}(v)=\mu_r\,P(t)\,A_{bore}\quad\text{(velocity-independent, pressure-scaled baseline)}$$
+> $$
+> F_{friction}(v)=\mu_r\,P(t)\,A_{bore}\quad\text{(velocity-independent, pressure-scaled baseline)}
+> $$
 
 Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in the bore. Initial estimate: $\mu_{r}\, = \, 0.10$ (i.e., 10% of driving force lost to friction). Must be empirically calibrated in T3 testing.
 
@@ -519,12 +513,12 @@ Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in th
 
 The following table summarizes muzzle velocity predictions from the ODE model, corroborated by the parametric sweep in the analysis document. Design target is 15–25 m/s at 10 bar.
 
-| Orifice (mm) | $v_{exit}$ (m/s) @ 10 bar | Status |
-|---:|---:|---|
-| 6 | 15.7 | Below target |
-| 8 | 21.3 | Within target ✓ |
-| 10 | 25.8 | Within target ✓ |
-| 12 | 29.4 | Above target |
+| Orifice (mm) | $v_{exit}$ (m/s) @ 10 bar | Status           |
+| -----------: | --------------------------: | ---------------- |
+|            6 |                        15.7 | Below target     |
+|            8 |                        21.3 | Within target ✓ |
+|           10 |                        25.8 | Within target ✓ |
+|           12 |                        29.4 | Above target     |
 
 > Verified RK45 sweep results support an effective orifice recommendation of **8–10 mm** at 10 bar gauge with a 1.0 L chamber. The 6 mm case is below target, while 12 mm exceeds the upper target velocity band.
 
@@ -532,15 +526,15 @@ The following table summarizes muzzle velocity predictions from the ODE model, c
 
 For the legacy coupled ODE model with $m_{\text{payload}}=1.0$ kg, $d_{\text{or}}=12$ mm, $C_{d}=0.8$, $V_{0}=1.0$ L, and a 52 mm × 700 mm barrel, the nominal design-point outputs are:
 
-| Output | Value | Notes |
-|---|---:|---|
-| Muzzle velocity $v_{exit}$ | 27.765 m/s | Baseline ODE endpoint |
-| Impulse $I$ | 27.765 N·s | For 1.0 kg payload |
-| Kinetic energy $E_{k}$ | 385.45 J | At barrel exit |
-| Launch efficiency $\eta$ | 14.61% | Relative to 2637.7 J ideal work |
-| Discharge time $t_{end}$ | 37.20 ms | Barrel transit duration |
-| Peak barrel force $F_{peak}$ | 3369.8 N | Projectile-side force |
-| Average force $F_{avg}$ | 746.4 N | $I/t_{end}$ |
+| Output                        |       Value | Notes                           |
+| ----------------------------- | ----------: | ------------------------------- |
+| Muzzle velocity$v_{exit}$   |  27.765 m/s | Baseline ODE endpoint           |
+| Impulse$I$                  | 27.765 N·s | For 1.0 kg payload              |
+| Kinetic energy$E_{k}$       |    385.45 J | At barrel exit                  |
+| Launch efficiency$\eta$     |      14.61% | Relative to 2637.7 J ideal work |
+| Discharge time$t_{end}$     |    37.20 ms | Barrel transit duration         |
+| Peak barrel force$F_{peak}$ |    3369.8 N | Projectile-side force           |
+| Average force$F_{avg}$      |     746.4 N | $I/t_{end}$                   |
 
 These values remain useful as the design baseline, but the RK45 implementation below is treated as the requirement-compliant reference case for traceability.
 
@@ -550,24 +544,24 @@ The requested requirement-compliant implementation using `solve_ivp(method="RK45
 
 Nominal RK45 result at **12 mm** effective orifice:
 
-| Output | Value |
-|---|---:|
-| Muzzle velocity | 29.416 m/s |
-| Peak barrel force | 2127.86 N |
-| Dwell time | 36.678 ms |
-| Kinetic energy | 432.650 J |
-| Launch efficiency | 16.403% |
+| Output            |      Value |
+| ----------------- | ---------: |
+| Muzzle velocity   | 29.416 m/s |
+| Peak barrel force |  2127.86 N |
+| Dwell time        |  36.678 ms |
+| Kinetic energy    |  432.650 J |
+| Launch efficiency |    16.403% |
 
 RK45 sweep summary used for design selection:
 
 | Orifice diameter (mm) | Muzzle velocity (m/s) |
-|---:|---:|
-| 6 | 15.721 |
-| 8 | 21.320 |
-| 10 | 25.802 |
-| 12 | 29.416 |
-| 15 | 33.321 |
-| 18 | 35.631 |
+| --------------------: | --------------------: |
+|                     6 |                15.721 |
+|                     8 |                21.320 |
+|                    10 |                25.802 |
+|                    12 |                29.416 |
+|                    15 |                33.321 |
+|                    18 |                35.631 |
 
 ![](rk45_velocity_vs_orifice.png)
 
@@ -610,13 +604,9 @@ The following plots are carried into the EDD so that the master document contain
 ## 4.5 Model Limitations
 
 - Isentropic assumption overestimates performance by ~10–20% due to heat transfer and real-gas behavior of CO₂ near saturation. Apply a 0.80–0.90 correction factor to final velocity predictions.
-
 - Valve response time modelled as first-order lag (τ = 5 ms); real QEV onset causes brief pressure dip at barrel start. This reduces effective initial force by ~8–12%.
-
 - Friction coefficient $\mu_{r}$= 0.10 is an estimate. Must be measured by instrumented barrel test (T3) before final model calibration.
-
 - CO₂ at high flow rates exhibits real-gas deviation from ideal gas. Redlich-Kwong or Peng-Robinson EOS improves accuracy for P \> 8 bar. γ = 1.30 is a useful first approximation.
-
 - Lumped model assumes uniform chamber pressure. Valid for chamber $L/D < 3$. If chamber is elongated, 1D distributed model may be needed.
 
 > This ODE model provides a first-order design estimate with ±15% accuracy. Empirical calibration from T2 (valve timing) and T3 (muzzle velocity) tests is mandatory before field deployment. Correlate model predictions with measured data and update friction and Cd empirical parameters.
@@ -626,124 +616,95 @@ The following plots are carried into the EDD so that the master document contain
 ## 5.1 MATLAB / Simulink (Recommended First Step)
 
 - Implement the coupled ODE system: $dv/dt,\ dx/dt,\ dP/dt$ as three state variables.
-
 - Simulate valve response as a first-order lag (τ = 3–10 ms) using a transfer function block.
-
 - Use Simscape Fluids compressed gas library for valve and pipe blocks.
-
 - Parametric sweep: orifice diameter (6–12 mm) × chamber volume (0.5–1.5 L) × barrel length (400–800 mm).
-
 - Expected simulation time per run: \< 1 s. Sweep of 100 configurations: \< 2 min.
 
 ## 5.2 CFD — ANSYS Fluent / OpenFOAM (Advanced Only)
 
 - Use only if internal flow dynamics around the QEV orifice are critical.
-
 - 2D axisymmetric model of barrel bore + projectile interface to assess blowby.
-
 - Compressible Navier-Stokes with $k - \omega$ SST turbulence model.
-
 - NOT recommended for initial design iteration — high computational cost for marginal benefit at this velocity regime.
 
 ## 5.3 Why Simulation Alone is Insufficient
 
 - CO₂ phase change behavior (liquid-to-vapor at nozzle) is difficult to simulate without specialized EOS.
-
 - Valve $C_{v}$ specifications from datasheets have ±15–25% tolerance in practice.
-
 - Seal friction and barrel bore dimensional tolerances are not captured in 1D models.
-
 - Empirical validation is always the ground truth — simulation guides the design space but does not replace physical testing.
 
-# 6. Testing & Validation
+# 6. Proposed Testing & Validation
 
 ## 6.1 Test Infrastructure
 
-| **Instrument** | **Model / Spec** | **Purpose** |
-|----|----|----|
-| Pressure transducer | 0–20 bar, 4–20 mA, 1 kHz BW | Chamber P(t) measurement |
-| DAQ system | 10 kHz sample rate minimum | Capture pressure transient |
-| Optical gates (x2) | 1 mm beam, 0.1 ms resolution | Muzzle velocity |
-| High-speed camera | 1000 fps minimum | Optional sabot behavior |
-| Blast shield | 12 mm polycarbonate | Downrange safety |
-| Pressure relief valve | Set 18 bar, ASME rated | Overpressure protection |
+| **Instrument**  | **Model / Spec**        | **Purpose**          |
+| --------------------- | ----------------------------- | -------------------------- |
+| Pressure transducer   | 0–20 bar, 4–20 mA, 1 kHz BW | Chamber P(t) measurement   |
+| DAQ system            | 10 kHz sample rate minimum    | Capture pressure transient |
+| Optical gates (x2)    | 1 mm beam, 0.1 ms resolution  | Muzzle velocity            |
+| High-speed camera     | 1000 fps minimum              | Optional sabot behavior    |
+| Blast shield          | 12 mm polycarbonate           | Downrange safety           |
+| Pressure relief valve | Set 18 bar, ASME rated        | Overpressure protection    |
 
 ## 6.2 Test Procedures
 
 ### T1: Pressure Containment Test (Hydrostatic)
 
 - Fill chamber with water to 22.5 bar (1.5× WP). Hold for 5 minutes.
-
 - Inspect for leaks, deformation. Do not use gas for this test.
-
 - Pass criteria: zero visible leakage, no permanent deformation.
 
 ### T2: Valve Response Time Test
 
 - Connect pilot solenoid to signal generator with 50 ms pulse.
-
 - Monitor chamber pressure decay with 10 kHz DAQ.
-
 - Pass criteria: QEV response \< 10 ms from electrical signal to 10% pressure drop.
 
 ### T3: Muzzle Velocity Test
 
 - Load dummy payload (1 kg mass with known sabot) into barrel.
-
 - Set chamber to 8, 10, 12, 15 bar — four test conditions.
-
 - Fire and capture optical gate timing for each. Repeat 3 shots per condition.
-
 - Record mean and standard deviation. Compare to ODE model predictions.
-
 - For the current 1.0 L, 10 bar gauge design, use the analysis-backed reference points as the pre-test expectation: **21.3 m/s at 8 mm**, **25.8 m/s at 10 mm**, and **29.4 m/s at 12 mm** effective orifice.
-
 - Pass criteria: $v_{exit}$ ≥ 15 m/s at 10 bar; ≤ 25 m/s at 15 bar.
-
 - If model prediction deviates \> 15% from measured, update Cd and$\mu_{r}$ empirically.
 
-![Figure 1 - Testing cases: The first input mentioned as "Model Prediction" refers to physics constraints mentioned above, which we must test. T1, T2, T3 are as defined in this section](UAV_Launcher_EDD_Rev3_media/media/image1.png)
+![Figure 1 - Testing cases: The first input mentioned as ](UAV_Launcher_EDD_Rev3_media/media/image1.png)
 
 # 7. Safety Considerations
 
 ## 7.1 Pressure Containment
 
 - All pressure-carrying components must be rated to 3× maximum working pressure.
-
 - Use pressure relief valves (PRV) set at 1.2× WP on the chamber. PRV must be downstream of the regulator.
-
 - Never use PVC for chambers above 8 bar — catastrophic brittle failure risk.
-
 - Inspect all threaded fittings for correct engagement (minimum 5 full threads).
-
 - Mark all pressure-rated components with working pressure and inspection date.
 
 ## 7.2 Valve Failure Modes
 
-| **Failure Mode** | **Effect** | **Mitigation** |
-|----|----|----|
-| QEV poppet stuck open | Uncontrolled discharge | PRV upstream; blast shield |
-| Pilot solenoid coil short | Unintended fire | Arm/safe circuit; arming key |
-| Regulator failure (open) | Overpressure in chamber | PRV rated to 1.2× WP |
-| O-ring failure at fitting | Slow gas leak | Regular inspection; PTFE seals |
-| Cartridge neck fracture | Rapid gas release | Containment housing over cartridge |
+| **Failure Mode**    | **Effect**        | **Mitigation**               |
+| ------------------------- | ----------------------- | ---------------------------------- |
+| QEV poppet stuck open     | Uncontrolled discharge  | PRV upstream; blast shield         |
+| Pilot solenoid coil short | Unintended fire         | Arm/safe circuit; arming key       |
+| Regulator failure (open)  | Overpressure in chamber | PRV rated to 1.2× WP              |
+| O-ring failure at fitting | Slow gas leak           | Regular inspection; PTFE seals     |
+| Cartridge neck fracture   | Rapid gas release       | Containment housing over cartridge |
 
 ## 7.3 CO₂ Thermal Effects
 
 - CO₂ exits as a cold jet (~−20°C at the regulator outlet under high flow). Exposed skin contact causes cold burns.
-
 - Thermal contraction of aluminum at −20°C is ~0.46 mm/m — design clearances accordingly.
-
 - All seals downstream of the regulator must be PTFE, rated for sub-zero temperatures.
-
 - Allow 30 s warm-up time between rapid successive shots to prevent seal failure.
 
 ## 7.4 Structural Integrity
 
 - Barrel exit must be directed in a safe zone; use a launch cage or ballistic backstop during ground testing.
-
 - Launcher body must be rigidly mounted. Analysis gives a **static endcap load of 2336 N**, an **average propulsion force of ~746 N** for the nominal legacy ODE case, and **peak projectile-side force above 2.1 kN** in the RK45 nominal case. Structural mounts and endcap fasteners must be sized for kilonewton-level transient loading, not just a few hundred newtons.
-
 - Personnel must wear eye protection and hearing protection during all live firing tests. Minimum 5 m exclusion zone downrange.
 
 ## 7.5 Endcap and Fastener Check
@@ -752,21 +713,25 @@ Fastener design is governed by the static endcap load, not by the higher project
 
 **Load Case A — endcap bolt load:**
 
-$$F_{endcap}=P_{0}\cdot A_{bore}=1.100e+06\times0.002124=2336.1\;\mathrm{N}$$
+$$
+F_{endcap}=P_{0}\cdot A_{bore}=1.100e+06\times0.002124=2336.1\;\mathrm{N}
+$$
 
 **Load Case B — worst projectile-side barrel force:**
 
-$$F_{peak,barrel}=7715.4\;\mathrm{N}$$
+$$
+F_{peak,barrel}=7715.4\;\mathrm{N}
+$$
 
 This larger force acts on the projectile during the firing stroke and is informative for mount stiffness, but it is not the endcap bolt design load.
 
 For direct shear sizing with $\tau_{shear}=240$ MPa:
 
 | Bolt | Area (mm²) | Shear capacity per bolt (N) | Required bolts | Safety factor with 6 bolts |
-|---|---:|---:|---:|---:|
-| M6 | 28.27 | 6785.8 | 1 | 17.4 |
-| M8 | 50.27 | 12063.7 | 1 | 31.0 |
-| M10 | 78.54 | 18849.6 | 1 | 48.4 |
+| ---- | ----------: | --------------------------: | -------------: | -------------------------: |
+| M6   |       28.27 |                      6785.8 |              1 |                       17.4 |
+| M8   |       50.27 |                     12063.7 |              1 |                       31.0 |
+| M10  |       78.54 |                     18849.6 |              1 |                       48.4 |
 
 The current six-bolt flange concept is therefore adequate from a pure static shear perspective. **Six M8 bolts** provide the preferred baseline because they retain high margin while remaining practical for manufacture and assembly.
 
@@ -792,47 +757,54 @@ See Appendix B for the interceptor UAV sub-BOM. Combined system total is approxi
 
 For a rectangular payload inside a circular bore, the governing envelope is the diagonal:
 
-$$D_{eq}=\sqrt{W^{2}+H^{2}}$$
+$$
+D_{eq}=\sqrt{W^{2}+H^{2}}
+$$
 
 Including sabot clearance, the no-interference condition is:
 
-$$D_{eq}+2C_{sab}\leq D_{barrel,min}$$
+$$
+D_{eq}+2C_{sab}\leq D_{barrel,min}
+$$
 
 For the current payload and bore:
 
-$$W=40\;\mathrm{mm},\quad H=45\;\mathrm{mm}\Rightarrow D_{eq}=60.21\;\mathrm{mm}$$
+$$
+W=40\;\mathrm{mm},\quad H=45\;\mathrm{mm}\Rightarrow D_{eq}=60.21\;\mathrm{mm}
+$$
 
-$$D_{barrel,nom}=52\;\mathrm{mm},\quad \delta_{tol}=0.3\;\mathrm{mm}\Rightarrow D_{barrel,min}=51.7\;\mathrm{mm}$$
+$$
+D_{barrel,nom}=52\;\mathrm{mm},\quad \delta_{tol}=0.3\;\mathrm{mm}\Rightarrow D_{barrel,min}=51.7\;\mathrm{mm}
+$$
 
 With 1.5 mm sabot clearance per side:
 
-$$D_{eq}+2C_{sab}=60.21+3.0=63.21\;\mathrm{mm}>51.7\;\mathrm{mm}$$
+$$
+D_{eq}+2C_{sab}=60.21+3.0=63.21\;\mathrm{mm}>51.7\;\mathrm{mm}
+$$
 
 The payload diagonal therefore exceeds the minimum bore by **11.51 mm** if rotation is not constrained. A close-fitting sabot is mandatory to prevent tilt-induced jamming.
 
 Design requirements derived from this check:
 
 - The sabot shall enforce axial alignment so the effective presented envelope remains within the minimum bore under all loading and firing conditions.
-
 - Total radial clearance between sabot OD and barrel ID should remain within **1.0-1.5 mm per side** to balance anti-jam performance against friction and ease of loading.
 
 ## 9.2 Cost vs Performance
 
-| **Decision** | **Low-Cost Option** | **High-Performance Option** | **Recommendation** |
-|----|----|----|----|
-| Valve | Airmax QEV (≥8 mm orifice, ~₹400) | SMC / Parker QEV (~₹3k–5k) | Use Airmax if effective orifice ≥ 8 mm |
-| Chamber | Hydraulic cylinder (~₹800–1500) | Machined Al chamber (~₹2k–5k) | Hydraulic for prototype |
-| Barrel | Local 6061 Al tube (~₹800–1500) | Honed precision tube (~₹3k+) | Local, verify ID tolerance |
-| Trigger | Manual 3/2 valve (~₹840) | Solenoid-triggered (~₹1k–2k total) | **Manual for first prototype** |
+| **Decision** | **Low-Cost Option**           | **High-Performance Option**    | **Recommendation**                |
+| ------------------ | ----------------------------------- | ------------------------------------ | --------------------------------------- |
+| Valve              | Airmax QEV (≥8 mm orifice, ~₹400) | SMC / Parker QEV (~₹3k–5k)         | Use Airmax if effective orifice ≥ 8 mm |
+| Chamber            | Hydraulic cylinder (~₹800–1500)   | Machined Al chamber (~₹2k–5k)      | Hydraulic for prototype                 |
+| Barrel             | Local 6061 Al tube (~₹800–1500)   | Honed precision tube (~₹3k+)        | Local, verify ID tolerance              |
+| Trigger            | Manual 3/2 valve (~₹840)           | Solenoid-triggered (~₹1k–2k total) | **Manual for first prototype**    |
 
 ## 9.3 CO₂ vs Compressed Air
 
 CO₂ is optimal for a first prototype due to availability and simplicity. Compressed air is preferred if:
 
 - More than 10 launches per operational period are required.
-
 - Precise velocity control is required shot-to-shot.
-
 - Operating temperature is below 5°C where CO₂ vapour pressure drops below 40 bar.
 
 ## 9.4 Manual vs Autonomous Triggering
@@ -843,78 +815,68 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 
 ## 10.1 Optimal Configuration Summary
 
-| **Parameter** | **Selected Design Point** |
-|----|----|
-| Gas source | 88 g CO₂ cartridge with 2-stage regulator (10 bar WP) |
-| Chamber volume | 1.0 L; 6061-T6 aluminium; 22.5 bar test pressure |
-| QEV orifice | ≥ 8 mm effective orifice ID; Cv ≥ 1.5 |
-| Valve type | Quick Exhaust Valve + manual pushbutton pilot |
-| Barrel | 52 mm ID ±0.3 mm; 700 mm length; 6061-T6 Al |
-| Predicted $v_{exit}$ | 21–26 m/s at 10 bar (ODE model; ±15%) |
-| System mass | \< 4 kg assembled |
-| Unit cost (prototype) | ~USD 250–300 |
+| **Parameter**   | **Selected Design Point**                        |
+| --------------------- | ------------------------------------------------------ |
+| Gas source            | 88 g CO₂ cartridge with 2-stage regulator (10 bar WP) |
+| Chamber volume        | 1.0 L; 6061-T6 aluminium; 22.5 bar test pressure       |
+| QEV orifice           | ≥ 8 mm effective orifice ID; Cv ≥ 1.5                |
+| Valve type            | Quick Exhaust Valve + manual pushbutton pilot          |
+| Barrel                | 52 mm ID ±0.3 mm; 700 mm length; 6061-T6 Al           |
+| Predicted$v_{exit}$ | 21–26 m/s at 10 bar (ODE model; ±15%)                |
+| System mass           | \< 4 kg assembled                                      |
+| Unit cost (prototype) | ~USD 250–300                                          |
 
 The analysis-backed recommendation is to operate the launcher around the **8-10 mm** effective orifice range. That band satisfies the target launch velocity without pushing the system into the clearly above-target 12 mm regime.
 
 ## 10.2 Priority Design Risks
 
 - Risk 1 — QEV orifice undersized: Verify effective orifice diameter ≥ 8 mm from datasheet before procurement. 6 mm orifice is flow-limited and cannot achieve \> 12 m/s per ODE model.
-
 - Risk 2 — CO₂ seal degradation at low temperature: Use PTFE seals exclusively downstream of regulator.
-
 - Risk 3 — Chamber overpressure: Install PRV; never bypass the regulator.
-
 - Risk 4 — Blowby in barrel: Machine barrel bore to ±0.3 mm tolerance on payload sabot. Tighter than Rev 2 (±0.5 mm) is based on friction model sensitivity.
-
 - Risk 4a — Payload geometric interference: The 40×45 mm payload diagonal exceeds the minimum bore by 11.5 mm if unconstrained. A sabot is mandatory; without it, yaw/roll can cause a hard jam during loading or launch.
-
 - Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation \> 15%.
 
 ## 10.3 Requirement Traceability Snapshot
 
-| Parameter | Value | Status |
-|---|---:|:---:|
-| Chamber volume | 1.0 L | Yes |
-| Working pressure | 10 bar gauge | Yes |
-| Barrel length | 700 mm | Yes |
-| Recommended orifice | 8-10 mm | Yes |
-| Muzzle velocity at 10 mm | 25.8 m/s | Yes |
-| Muzzle velocity at 8 mm | 21.3 m/s | Yes |
-| Peak acceleration | ~217 g | Payload hardening required |
-| Launch efficiency | 16.4% | Yes |
+| Parameter                |        Value |           Status           |
+| ------------------------ | -----------: | :------------------------: |
+| Chamber volume           |        1.0 L |            Yes            |
+| Working pressure         | 10 bar gauge |            Yes            |
+| Barrel length            |       700 mm |            Yes            |
+| Recommended orifice      |      8-10 mm |            Yes            |
+| Muzzle velocity at 10 mm |     25.8 m/s |            Yes            |
+| Muzzle velocity at 8 mm  |     21.3 m/s |            Yes            |
+| Peak acceleration        |       ~217 g | Payload hardening required |
+| Launch efficiency        |        16.4% |            Yes            |
 
 This snapshot is the compact transfer of the validated analysis into the EDD: it preserves the master-document tone while keeping the governing decisions tied to the verified simulation outputs.
 
 ## 10.4 Next Steps
 
 - By Procuring QEV and measuring actual orifice ID; we can verify $C_{v}$ from datasheet and confirm ≥ 1.5.
-
 - Implement MATLAB ODE model: sweep orifice diameter (6–12 mm) × chamber volume (0.5–1.5 L) × barrel length (400–800 mm) at 10 bar.
-
 - Fabricate charge chamber from hydraulic cylinder or machined Al; perform T1 hydrostatic test.
-
 - Conduct T2 (valve response timing) and T3 (muzzle velocity) tests with 4 pressure conditions.
-
 - Correlate ODE model with measured data; update empirical parameters Cd and $\mu_{r}$.
-
 - Document test results and revise design if $v_{exit}$ deviates \> 15% from prediction.
 
 ## 10.5 Formula Quick Reference
 
-| Quantity | Formula | Reference value |
-|---|---|---|
-| Isothermal expansion work | $W=P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{atm})$ | $2637.7$ J |
-| Bore area | $A_{bore}=\pi(D/2)^{2}$ | $0.002124$ m² |
-| Real-gas pressure | $P_{real}=Z_{RK}\cdot(m/V)\cdot R_{u}T/M_{CO_2}$ | $Z_{RK}\approx0.97$ at 11 bar |
-| Hoop stress | $\sigma_{hoop}=P\,r/t$ | $9.5$ MPa at $t=3$ mm |
-| Minimum wall thickness | $t_{min}=P\cdot r\cdot SF/\sigma_{yield}$ | $0.311$ mm |
-| Endcap load | $F_{endcap}=P_{0}\cdot A_{bore}$ | $2336.1$ N |
-| Critical pressure ratio | $r_{crit}=(2/(\gamma+1))^{\gamma/(\gamma-1)}$ | $0.5457$ |
-| Choked mass-flow rate | $\dot{m}=C_{d}A_{or}P_{c}\sqrt{\gamma/(R_{spec}T)}\cdot(2/(\gamma+1))^{(\gamma+1)/[2(\gamma-1)]}$ | $0.2822$ kg/s at $t=0$ |
-| Impulse | $I=m_{payload}\cdot v_{exit}$ | $27.765$ N·s |
-| Average force | $F_{avg}=I/t_{end}$ | $746.4$ N |
-| Payload envelope | $D_{eq}=\sqrt{W^{2}+H^{2}}$ | $60.21$ mm |
-| Launch efficiency | $\eta=\tfrac{1}{2}mv^{2}/W$ | $14.61\%$ (legacy ODE) |
+| Quantity                  | Formula                                                                                             | Reference value                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- |
+| Isothermal expansion work | $W=P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{atm})$                                                       | $2637.7$ J                    |
+| Bore area                 | $A_{bore}=\pi(D/2)^{2}$                                                                           | $0.002124$ m²                |
+| Real-gas pressure         | $P_{real}=Z_{RK}\cdot(m/V)\cdot R_{u}T/M_{CO_2}$                                                  | $Z_{RK}\approx0.97$ at 11 bar |
+| Hoop stress               | $\sigma_{hoop}=P\,r/t$                                                                            | $9.5$ MPa at $t=3$ mm       |
+| Minimum wall thickness    | $t_{min}=P\cdot r\cdot SF/\sigma_{yield}$                                                         | $0.311$ mm                    |
+| Endcap load               | $F_{endcap}=P_{0}\cdot A_{bore}$                                                                  | $2336.1$ N                    |
+| Critical pressure ratio   | $r_{crit}=(2/(\gamma+1))^{\gamma/(\gamma-1)}$                                                     | $0.5457$                      |
+| Choked mass-flow rate     | $\dot{m}=C_{d}A_{or}P_{c}\sqrt{\gamma/(R_{spec}T)}\cdot(2/(\gamma+1))^{(\gamma+1)/[2(\gamma-1)]}$ | $0.2822$ kg/s at $t=0$      |
+| Impulse                   | $I=m_{payload}\cdot v_{exit}$                                                                     | $27.765$ N·s                 |
+| Average force             | $F_{avg}=I/t_{end}$                                                                               | $746.4$ N                     |
+| Payload envelope          | $D_{eq}=\sqrt{W^{2}+H^{2}}$                                                                       | $60.21$ mm                    |
+| Launch efficiency         | $\eta=\tfrac{1}{2}mv^{2}/W$                                                                       | $14.61\%$ (legacy ODE)        |
 
 # Appendix A — Interceptor UAV Payload Design Review
 
@@ -929,21 +891,15 @@ Folded envelope: 60 × 40 × 32 mm. Unfolded wheelbase: 140–160 mm. Target wei
 ## A.3 Technical Assessment — Correct Choices
 
 - 20×20 mm AIO FC+ESC stack is the established standard for sub-150 g craft. 1103–1204 motors are appropriate for 3-inch props.
-
 - RunCam Nano or equivalent micro-FPV camera; 140–160° FOV is standard. 5–10° camera tilt is correct for loiter/intercept.
-
 - TPU-damped camera mount is essential at 3-inch prop frequencies (8,000–15,000 RPM).
-
 - Inline battery placement is correct for CG management.
 
 ## A.4 Technical Assessment — Issues and Corrections
 
 - ESP32-S3 as primary vision board is questionable. It cannot run real-time object detection at useful frame rates (80–200 ms latency). Use OpenMV H7 (5–15 ms inference) if on-board vision is required. ESP32-S3 is acceptable for comms relay only.
-
 - 2S Li-ion strip battery may be underpowered. Thrust-to-weight ~2:1–2.7:1 is marginal for aggressive maneuvers. Recommend 3S LiPo (300–450 mAh) for 3:1+ thrust headroom and higher C-rating.
-
 - 32 mm folded height is not achievable with real hardware. Expect 38–45 mm. The 52 mm barrel ID provides adequate clearance for a 40–45 mm high sabot.
-
 - Launch survivability not addressed. Peak acceleration ~20–40 g during barrel transit. All electronics must be mechanically secured with foam padding and locked connectors.
 
 ## A.5 Interceptor UAV BOM
