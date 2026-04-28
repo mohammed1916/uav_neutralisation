@@ -248,7 +248,7 @@ Each shot consumes all gas in the charge chamber (QEV dumps it to atmosphere). T
 m = \frac{P_{abs} \cdot V}{R_{spec} \cdot T} = \frac{(11 \times 10^{5}) \times 0.001}{188.92 \times 293.15} = \frac{1100}{55,397} \approx 19.9\text{ g}
 ```
 
-where $R_{spec} = \frac{R_u}{M_{CO_2}} = \frac{8.314}{0.04401} = 188.92\,\text{J/(kg\cdot K)}$ for CO₂.
+where $R_{spec}=\frac{R_u}{M_{CO_2}}=\frac{8.314}{0.04401}=188.92\,\mathrm{J\,kg^{-1}\,K^{-1}}$ for CO₂.
 
 Real-gas correction (Z ≈ 0.97 at Tr = 0.964, Pr = 0.149 from Redlich-Kwong EOS): actual mass ≈ **20.48 g**. Ideal-gas mass (19.86 g) is lower by about **3.1%**, which is acceptable for first-pass cartridge sizing.
 
