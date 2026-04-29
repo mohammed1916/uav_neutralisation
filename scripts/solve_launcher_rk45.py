@@ -42,8 +42,10 @@ def z_rk_newton(P: float, T: float, z0: float = 1.0) -> float:
     Z = max(z0, 0.05)
     for _ in range(80):
         Vm = max(Z * R_U * T / P, 1e-9)
-        f = P - R_U * T / (Vm - B_RK) + A_RK / (Vm * (Vm + B_RK) * math.sqrt(T))
-        df = (R_U * T) / ((Vm - B_RK) ** 2) - A_RK * (2 * Vm + B_RK) / ((Vm * (Vm + B_RK)) ** 2 * math.sqrt(T))
+        f = P - R_U * T / (Vm - B_RK) + A_RK / \
+            (Vm * (Vm + B_RK) * math.sqrt(T))
+        df = (R_U * T) / ((Vm - B_RK) ** 2) - A_RK * (2 * Vm + B_RK) / \
+            ((Vm * (Vm + B_RK)) ** 2 * math.sqrt(T))
         if abs(df) < 1e-20:
             break
         Vm_new = Vm - f / df
@@ -83,10 +85,12 @@ def mass_flow_rate(Pc: float, Pb: float, T: float, A_or: float, Cd: float, gamma
     r_crit = critical_pressure_ratio(gamma)
 
     if pr <= r_crit:
-        factor = (2.0 / (gamma + 1.0)) ** ((gamma + 1.0) / (2.0 * (gamma - 1.0)))
+        factor = (2.0 / (gamma + 1.0)) ** ((gamma + 1.0) /
+                                           (2.0 * (gamma - 1.0)))
         return Cd * A_or * Pc * math.sqrt(gamma / (R_SPEC * T)) * factor
 
-    bracket = (2.0 * gamma / (gamma - 1.0)) * (pr ** (2.0 / gamma) - pr ** ((gamma + 1.0) / gamma))
+    bracket = (2.0 * gamma / (gamma - 1.0)) * \
+        (pr ** (2.0 / gamma) - pr ** ((gamma + 1.0) / gamma))
     if bracket <= 0.0:
         return 0.0
     return Cd * A_or * Pc / math.sqrt(R_SPEC * T) * math.sqrt(bracket)
@@ -102,7 +106,8 @@ def run_case(orifice_d: float, params: Params) -> dict:
     rho0 = P0_abs * M_CO2 / (Z0 * R_U * params.T)
     m_c0 = rho0 * params.V_chamber
 
-    rho_b0 = params.P_atm * M_CO2 / (z_rk_newton(params.P_atm, params.T) * R_U * params.T)
+    rho_b0 = params.P_atm * M_CO2 / \
+        (z_rk_newton(params.P_atm, params.T) * R_U * params.T)
     m_b0 = rho_b0 * V_dead
 
     def ode(t, y):
@@ -113,8 +118,10 @@ def run_case(orifice_d: float, params: Params) -> dict:
         m_c_eff = max(m_c, 0.0)
         m_b = max(m_b0 + (m_c0 - m_c_eff), 1e-12)
 
-        Pc = pressure_from_mass_volume_rk(m_c_eff, params.V_chamber, params.T, p_guess=P0_abs)
-        Pb = pressure_from_mass_volume_rk(m_b, V_b, params.T, p_guess=params.P_atm)
+        Pc = pressure_from_mass_volume_rk(
+            m_c_eff, params.V_chamber, params.T, p_guess=P0_abs)
+        Pb = pressure_from_mass_volume_rk(
+            m_b, V_b, params.T, p_guess=params.P_atm)
 
         mdot = mass_flow_rate(Pc, Pb, params.T, A_or, params.Cd, params.gamma)
         mdot = min(mdot, max(m_c_eff, 0.0) / 1e-4)
@@ -161,7 +168,8 @@ def run_case(orifice_d: float, params: Params) -> dict:
     for i in range(len(t)):
         V_b = A_bore * min(max(x[i], 0.0), params.L_barrel) + V_dead
         m_b = max(m_b0 + (m_c0 - max(mc[i], 0.0)), 1e-12)
-        Pb = pressure_from_mass_volume_rk(m_b, V_b, params.T, p_guess=params.P_atm)
+        Pb = pressure_from_mass_volume_rk(
+            m_b, V_b, params.T, p_guess=params.P_atm)
         pb_hist.append(Pb)
         f_hist.append(max((Pb - params.P_atm) * A_bore, 0.0))
 
@@ -206,7 +214,8 @@ def main():
     with open(csv_path, 'w', encoding='utf-8') as f:
         f.write('orifice_d_mm,muzzle_velocity_ms\n')
         for row in sweep:
-            f.write(f"{row['orifice_d_m']*1000:.1f},{row['muzzle_velocity_ms']:.6f}\n")
+            f.write(
+                f"{row['orifice_d_m']*1000:.1f},{row['muzzle_velocity_ms']:.6f}\n")
 
     x_mm = [r['orifice_d_m'] * 1000.0 for r in sweep]
     y_v = [r['muzzle_velocity_ms'] for r in sweep]

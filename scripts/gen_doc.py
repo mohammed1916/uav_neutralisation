@@ -99,7 +99,6 @@ masses = [0.2, 0.5, 1.0]  # kg
 efficiencies = [0.25, 0.5, 0.75]
 
 
-
 # ---- Additional structural and thrust calculations ----
 # Structural and material parameters (previously collected into a supplementary doc)
 mat_yield = 276e6  # Pa (approx for 6061-T6)
@@ -490,7 +489,8 @@ final_doc_path = None
 # ---- Generate complete analysis document via pandoc ----
 try:
     import importlib.util as _ilu
-    _spec = _ilu.spec_from_file_location('gen_doc_pandoc', os.path.join(BASE_DIR, 'gen_doc_pandoc.py'))
+    _spec = _ilu.spec_from_file_location(
+        'gen_doc_pandoc', os.path.join(BASE_DIR, 'gen_doc_pandoc.py'))
     _pandoc = _ilu.module_from_spec(_spec)
     _spec.loader.exec_module(_pandoc)
     _pandoc.main()
@@ -499,4 +499,3 @@ except Exception:
     import traceback
     traceback.print_exc()
     complete_path = None
-

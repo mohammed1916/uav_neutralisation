@@ -150,47 +150,48 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     rk45 = read_json(RK45_JSON) or {}
 
     # ── physical parameters ──────────────────────────────────────────────────
-    P0            = analysis.get('P0_abs_Pa',      1.1e6)
-    A_bore        = analysis.get('barrel_area_m2', math.pi * 0.026**2)
-    W_ideal       = analysis.get('W_ideal_J',      None)
-    V0            = analysis.get('V0_m3',          1.0e-3)
+    P0 = analysis.get('P0_abs_Pa',      1.1e6)
+    A_bore = analysis.get('barrel_area_m2', math.pi * 0.026**2)
+    W_ideal = analysis.get('W_ideal_J',      None)
+    V0 = analysis.get('V0_m3',          1.0e-3)
     barrel_length = analysis.get('barrel_length_m', 0.700)
-    Pf            = 1.0e5
+    Pf = 1.0e5
     if W_ideal is None:
         W_ideal = P0 * V0 * math.log(P0 / Pf)
     P0_gauge_bar = P0 / 1e5 - 1.0
-    r_barrel     = math.sqrt(A_bore / math.pi)
-    barrel_id    = 2.0 * r_barrel          # m
+    r_barrel = math.sqrt(A_bore / math.pi)
+    barrel_id = 2.0 * r_barrel          # m
 
     # gas constants (CO2)
-    R_u    = 8.31446
-    M_co2  = 0.04401
+    R_u = 8.31446
+    M_co2 = 0.04401
     R_spec = R_u / M_co2
-    gamma  = 1.3
-    T      = 293.15
+    gamma = 1.3
+    T = 293.15
 
     # material (6061-T6 aluminium)
-    mat_yield    = 276e6
+    mat_yield = 276e6
     mat_ultimate = 310e6
-    SF           = 3.0
-    allowable    = mat_yield / SF
-    t_req_hoop   = P0 * r_barrel / allowable
-    t_req_axial  = t_req_hoop / 2.0
-    common_t     = [2, 3, 5, 8]       # mm
+    SF = 3.0
+    allowable = mat_yield / SF
+    t_req_hoop = P0 * r_barrel / allowable
+    t_req_axial = t_req_hoop / 2.0
+    common_t = [2, 3, 5, 8]       # mm
 
     # Redlich–Kwong EOS constants
     Tc_co2 = 304.1282
-    Pc_RK  = 7.3773e6
-    a_RK   = 0.42748 * R_u**2 * Tc_co2**2 / Pc_RK
-    b_RK   = 0.08664 * R_u * Tc_co2 / Pc_RK
+    Pc_RK = 7.3773e6
+    a_RK = 0.42748 * R_u**2 * Tc_co2**2 / Pc_RK
+    b_RK = 0.08664 * R_u * Tc_co2 / Pc_RK
 
     # choked-flow factors
-    r_crit        = (2.0 / (gamma + 1.0))**(gamma / (gamma - 1.0))
-    choked_factor = (2.0 / (gamma + 1.0))**((gamma + 1.0) / (2.0 * (gamma - 1.0)))
-    A_or_12mm     = math.pi * (0.006)**2   # 12 mm orifice (r = 6 mm)
-    mdot_t0       = (0.8 * A_or_12mm * P0
-                     / math.sqrt(R_spec * T)
-                     * math.sqrt(gamma) * choked_factor)
+    r_crit = (2.0 / (gamma + 1.0))**(gamma / (gamma - 1.0))
+    choked_factor = (2.0 / (gamma + 1.0))**((gamma + 1.0) /
+                                            (2.0 * (gamma - 1.0)))
+    A_or_12mm = math.pi * (0.006)**2   # 12 mm orifice (r = 6 mm)
+    mdot_t0 = (0.8 * A_or_12mm * P0
+               / math.sqrt(R_spec * T)
+               * math.sqrt(gamma) * choked_factor)
 
     # nominal sim case (Vc=1.0 L, d_or=12 mm, Cd=0.8) — look up from sweep
     sim = None
@@ -208,43 +209,43 @@ def build_markdown(include_artifacts=False):  # noqa: C901
             'peak_F':   analysis.get('sim_peak_F_N',    0.0),
         }
     muzzle_v = sim.get('muzzle_v', 0.0)
-    impulse  = sim.get('impulse',  0.0)
-    t_end    = sim.get('t_end_s',  0.0)
-    peak_F   = sim.get('peak_F',   0.0)
-    sim_ke   = 0.5 * 1.0 * muzzle_v**2
-    eta      = sim_ke / W_ideal if W_ideal else 0.0
-    avg_F    = impulse / t_end if t_end > 0 else 0.0
+    impulse = sim.get('impulse',  0.0)
+    t_end = sim.get('t_end_s',  0.0)
+    peak_F = sim.get('peak_F',   0.0)
+    sim_ke = 0.5 * 1.0 * muzzle_v**2
+    eta = sim_ke / W_ideal if W_ideal else 0.0
+    avg_F = impulse / t_end if t_end > 0 else 0.0
 
     # flange data
-    F_endcap   = flange.get('endcap_static_F_N', P0 * A_bore)
-    worst      = flange.get('worst_case_sweep', {})
-    worst_F    = flange.get('worst_peak_barrel_F_N', 0.0)
-    assump     = flange.get('assumptions', {
+    F_endcap = flange.get('endcap_static_F_N', P0 * A_bore)
+    worst = flange.get('worst_case_sweep', {})
+    worst_F = flange.get('worst_peak_barrel_F_N', 0.0)
+    assump = flange.get('assumptions', {
         'n_bolts': 6, 'bolt_dia_m': 0.008, 'bolt_material_shear': 240e6})
-    n_bolts    = assump.get('n_bolts', 6)
-    bolt_d     = assump.get('bolt_dia_m', 0.008)
-    tau_shear  = assump.get('bolt_material_shear', 240e6)
-    A_bolt     = math.pi * (bolt_d / 2)**2
+    n_bolts = assump.get('n_bolts', 6)
+    bolt_d = assump.get('bolt_dia_m', 0.008)
+    tau_shear = assump.get('bolt_material_shear', 240e6)
+    A_bolt = math.pi * (bolt_d / 2)**2
     F_cap_bolt = A_bolt * tau_shear
     n_req_bolt = math.ceil(F_endcap / F_cap_bolt)
-    SF_bolts   = n_bolts * F_cap_bolt / F_endcap
+    SF_bolts = n_bolts * F_cap_bolt / F_endcap
 
     # payload geometry
-    W_p, H_p     = 40.0, 45.0
-    D_eq         = math.sqrt(W_p**2 + H_p**2)
-    C_sab        = 1.5
-    D_nom        = barrel_id * 1e3    # mm
-    D_tol        = 0.3
-    D_min        = D_nom - D_tol
-    check_val    = D_eq + 2 * C_sab
+    W_p, H_p = 40.0, 45.0
+    D_eq = math.sqrt(W_p**2 + H_p**2)
+    C_sab = 1.5
+    D_nom = barrel_id * 1e3    # mm
+    D_tol = 0.3
+    D_min = D_nom - D_tol
+    check_val = D_eq + 2 * C_sab
     interference = check_val - D_min
 
     # payload scenario grid
-    masses       = [0.2, 0.5, 1.0]
+    masses = [0.2, 0.5, 1.0]
     efficiencies = [0.25, 0.5, 0.75]
 
     # 3 mm wall safety factors (used in §4 and Conclusion)
-    t3_sf  = mat_yield    / (P0 * r_barrel / 0.003)
+    t3_sf = mat_yield / (P0 * r_barrel / 0.003)
     t3_sfu = mat_ultimate / (P0 * r_barrel / 0.003)
 
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
@@ -392,12 +393,12 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ln('|---:|---:|---:|---:|---|')
     for t_mm in common_t:
         t_m = t_mm * 1e-3
-        sh  = P0 * r_barrel / t_m
-        sfy = mat_yield    / sh
+        sh = P0 * r_barrel / t_m
+        sfy = mat_yield / sh
         sfu = mat_ultimate / sh
-        fs  = (f'${P0/1e6:.2f}\\times10^{{6}}'
-               f'\\times{r_barrel*1e3:.0f}\\times10^{{-3}}'
-               f'/{t_mm}\\times10^{{-3}}$')
+        fs = (f'${P0/1e6:.2f}\\times10^{{6}}'
+              f'\\times{r_barrel*1e3:.0f}\\times10^{{-3}}'
+              f'/{t_mm}\\times10^{{-3}}$')
         ln(f'| {t_mm} | {sh/1e6:.2f} | {sfy:.1f} | {sfu:.1f} | {fs} |')
     ln()
     ln(f'Standard 3\u00a0mm wall: SF\u00a0=\u00a0{t3_sf:.1f} vs yield '
@@ -552,8 +553,10 @@ def build_markdown(include_artifacts=False):  # noqa: C901
        ' | $v_{\\text{exit}}$ (m/s) | Impulse (N\u00b7s) | $t_{\\text{end}}$ (ms)'
        ' | $F_{\\text{peak}}$ (N) |')
     ln('|---:|---:|---:|---:|---:|---:|---:|')
-    keys_sw   = ['orifice_d_m', 'Vc_m3', 'Cd', 'muzzle_v', 'impulse', 't_end_s', 'peak_F']
-    scales_sw = [1e3,           1e6,     1.0,  1.0,        1.0,       1e3,       1.0]
+    keys_sw = ['orifice_d_m', 'Vc_m3', 'Cd',
+               'muzzle_v', 'impulse', 't_end_s', 'peak_F']
+    scales_sw = [1e3,           1e6,     1.0,
+                 1.0,        1.0,       1e3,       1.0]
     for row in (sweep or [])[:30]:
         vals = []
         for k, sc in zip(keys_sw, scales_sw):
@@ -603,7 +606,7 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ]
     for fname, caption, interp in plot_info:
         fpath = os.path.join(OUTPUTS_DIR, fname)
-        rel   = fname  # md file lives in outputs/, so bare filename resolves correctly
+        rel = fname  # md file lives in outputs/, so bare filename resolves correctly
         ln(f'### {caption}')
         ln()
         ln(f'*{interp}*')
@@ -637,9 +640,9 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ln('**Load Case B \u2014 peak barrel transit force (informational only; not the endcap load):**')
     ln()
     ln(f'$F_{{\\text{{peak,barrel}}}}={worst_F:.1f}$\u00a0N '
-       f'(worst sweep: $d_{{\\text{{or}}}}={worst.get("orifice_d_m",0)*1e3:.0f}$\u00a0mm, '
-       f'$V_{{c}}={worst.get("Vc_m3",0)*1e6:.0f}$\u00a0mL, '
-       f'$C_{{d}}={worst.get("Cd",0):.1f}$).')
+       f'(worst sweep: $d_{{\\text{{or}}}}={worst.get("orifice_d_m", 0)*1e3:.0f}$\u00a0mm, '
+       f'$V_{{c}}={worst.get("Vc_m3", 0)*1e6:.0f}$\u00a0mL, '
+       f'$C_{{d}}={worst.get("Cd", 0):.1f}$).')
     ln()
     ln('This force acts on the **projectile**, not the endcap bolts.')
     ln('Bolt design uses Load Case\u00a0A only.')
@@ -678,9 +681,9 @@ def build_markdown(include_artifacts=False):  # noqa: C901
        ' | $F_{\\text{cap}}$ (N) | $n_{\\text{req}}$ (Load\u00a0A) | SF with 6 bolts |')
     ln('|---|---:|---:|---:|---:|---:|')
     for bname, bd in [('M6', 6e-3), ('M8', 8e-3), ('M10', 10e-3)]:
-        Ab  = math.pi * (bd / 2)**2
-        Fc  = Ab * tau_shear
-        nr  = math.ceil(F_endcap / Fc)
+        Ab = math.pi * (bd / 2)**2
+        Fc = Ab * tau_shear
+        nr = math.ceil(F_endcap / Fc)
         sf6 = 6 * Fc / F_endcap
         ln(f'| {bname} | {bd*1e3:.0f} | {Ab*1e6:.2f} | {Fc:.1f} | {nr} | {sf6:.1f} |')
     ln()
@@ -743,9 +746,9 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ln()
     ln('| Quantity | Formula | Numerical result |')
     ln('|---|---|---|')
-    A_M8     = math.pi * (0.004)**2
+    A_M8 = math.pi * (0.004)**2
     F_cap_M8 = A_M8 * 240e6
-    v50      = math.sqrt(2 * 0.5 * W_ideal / 1.0)   # \eta=50%, m=1kg
+    v50 = math.sqrt(2 * 0.5 * W_ideal / 1.0)   # \eta=50%, m=1kg
     formula_rows = [
         ('Isothermal expansion work',
          r'$W = P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{f})$',
@@ -862,11 +865,11 @@ def build_markdown(include_artifacts=False):  # noqa: C901
 
         # Updated EDD summary from RK45 results
         v_8 = next((r.get('muzzle_velocity_ms', 0.0)
-                for r in sweep_rk45
-                if abs(r.get('orifice_d_m', 0.0) - 0.008) < 1e-9), 0.0)
+                    for r in sweep_rk45
+                    if abs(r.get('orifice_d_m', 0.0) - 0.008) < 1e-9), 0.0)
         v_10 = next((r.get('muzzle_velocity_ms', 0.0)
-                 for r in sweep_rk45
-                 if abs(r.get('orifice_d_m', 0.0) - 0.010) < 1e-9), 0.0)
+                     for r in sweep_rk45
+                     if abs(r.get('orifice_d_m', 0.0) - 0.010) < 1e-9), 0.0)
         peak_force_nom = nominal.get('peak_barrel_force_N', 0.0)
         peak_g_nom = peak_force_nom / 9.81  # m_payload = 1 kg
         eta_nom = nominal.get('launch_efficiency_pct', 0.0)
@@ -889,7 +892,7 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ln('# Conclusion')
     ln()
     ln(f'The {barrel_id*1e3:.0f}\u00a0mm \u00d7 {barrel_length*1e3:.0f}\u00a0mm pneumatic launcher '
-         f'charged to {P0_gauge_bar:.0f}\u00a0bar gauge with {V0*1e3:.1f}\u00a0L chamber volume '
+       f'charged to {P0_gauge_bar:.0f}\u00a0bar gauge with {V0*1e3:.1f}\u00a0L chamber volume '
        f'can accelerate a 1\u00a0kg payload to **{muzzle_v:.1f}\u00a0m/s** '
        f'in {t_end*1e3:.0f}\u00a0ms (launch efficiency {eta*100:.1f}\u00a0%).')
     ln(f'A 3\u00a0mm 6061-T6 barrel wall gives SF\u00a0=\u00a0{t3_sf:.1f} vs yield.')
@@ -901,7 +904,6 @@ def build_markdown(include_artifacts=False):  # noqa: C901
     ln()
 
     return '\n'.join(L) + '\n'
-
 
 
 def write_md(md_text, path):
