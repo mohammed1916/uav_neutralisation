@@ -4,15 +4,6 @@
 
 Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
-| **Document ID** | **EDD-UAV-001**                          |
-| --------------------- | ---------------------------------------------- |
-| Revision              | Rev 3 — Physics-Corrected (Coupled ODE Model) |
-| Date                  | April 2026                                     |
-| Status                | Engineering Review Draft                       |
-| Replaces              | Rev 2 — Updated BOM (Closed-form model)       |
-
-> Rev 3 Change Summary: Section 4 (Physics & Modeling) has been fully rewritten. The prior closed-form velocity formula and geometric-only pressure decay equation have been replaced with a coupled three-layer ODE model (gas supply / valve flow / projectile dynamics). The BOM has been expanded with specific sourcing notes, tolerance requirements, and sub-zero rated components. All other sections are carried forward from Rev 2 with minor editorial corrections.
-
 # Table of Contents
 
 [Table of Contents](#table-of-contents)
@@ -828,6 +819,10 @@ CO₂ is optimal for a first prototype due to availability and simplicity. Compr
 ## 9.4 Manual vs Autonomous Triggering
 
 Both modes can coexist using a simple relay: the solenoid is driven by either the fire control output OR a manual pushbutton. Autonomous triggering is required when reaction time \< 100 ms is needed (human RT is 150–300 ms).
+
+---
+
+
 
 # 10. Conclusion
 
