@@ -177,7 +177,7 @@ Autonomous / Semi-Manual Pneumatic Accelerator Platform
 
 [B.5 Interceptor UAV BOM](#a.5-interceptor-uav-bom)
 
-[Appendix C — Technical Justification & Performance Analysis](#appendix-c-technical-justification-performance-analysis)
+[Appendix C — Technical Justification &amp; Performance Analysis](#appendix-c-technical-justification-performance-analysis)
 
 [C.1 Executive Summary](#c1-executive-summary)
 
@@ -287,7 +287,7 @@ The CO₂ cartridge supplies high-pressure gas (50–60 bar) which passes throug
 
 The current launcher arrangement used by this EDD is shown below.
 
-![Launcher assembly drawing](launcher_drawing.png)
+![Launcher assembly drawing](launcher_drawing_v1.png)
 
 # 3. Component-Level Design
 
@@ -944,15 +944,15 @@ EDD-UAV-001 Rev 3 · April 2026 · PROTOTYPE PHASE
 
 This appendix provides the engineering rationale — including governing thermodynamic and ballistic equations with calculated values — demonstrating that the CO₂-powered pneumatic launcher defined in BOM EDD-UAV-001 Rev 3 will function as intended. The system stores compressed CO₂ at 10 bar in a 1.0-litre charge chamber and releases it through a Quick Exhaust Valve (QEV) into a 52 mm bore, 700 mm barrel to accelerate a sabot-encased interceptor UAV to a predicted muzzle velocity of 50–55 m/s with a structural safety factor exceeding 18 on all pressure-bearing components.
 
-| Parameter | Value | Limit / Spec |
-| --------- | ----- | ------------ |
-| Operating pressure | 10 bar gauge (1.0 MPa abs approx.) | ≤ 42 bar (regulator max) |
-| Chamber volume | ~0.982 L | ≥ 0.9 L (design) |
-| Predicted muzzle velocity | 50–55 m/s | — |
-| Peak propulsive force | 2,124 N | — |
-| Barrel safety factor (hoop) | 31.8 | ≥ 3.0 required |
-| Charge chamber SF | 33.1 | ≥ 3.0 required |
-| CO₂ consumed per shot | ~17.7 g | ≤ 88 g cartridge |
+| Parameter                   | Value                              | Limit / Spec              |
+| --------------------------- | ---------------------------------- | ------------------------- |
+| Operating pressure          | 10 bar gauge (1.0 MPa abs approx.) | ≤ 42 bar (regulator max) |
+| Chamber volume              | ~0.982 L                           | ≥ 0.9 L (design)         |
+| Predicted muzzle velocity   | 50–55 m/s                         | —                        |
+| Peak propulsive force       | 2,124 N                            | —                        |
+| Barrel safety factor (hoop) | 31.8                               | ≥ 3.0 required           |
+| Charge chamber SF           | 33.1                               | ≥ 3.0 required           |
+| CO₂ consumed per shot      | ~17.7 g                            | ≤ 88 g cartridge         |
 
 > **Cross-reference:** For the 1.0 kg test-mass scenario (ODE model), refer to Section 4 and Section 10.1. This appendix covers the lighter interceptor UAV scenario (m = 0.30 kg), which is the actual operational payload.
 
@@ -1093,13 +1093,13 @@ $$
 
 ### C.4.4 Energy Budget Summary
 
-| Energy Component | Value (J) | % of Theoretical |
-| ---------------- | --------- | ---------------- |
-| Theoretical expansion work (W) | 795 J | 100% |
-| QEV response & flow losses (~15%) | −64 J | −15% |
-| Seal friction & bore drag (~10%) | −53 J | −10% |
-| Thermal losses to barrel wall (~20%) | −79 J | −20% |
-| Kinetic energy delivered to payload | 437 J (at v ≈ 54 m/s) | 55% |
+| Energy Component                     | Value (J)              | % of Theoretical |
+| ------------------------------------ | ---------------------- | ---------------- |
+| Theoretical expansion work (W)       | 795 J                  | 100%             |
+| QEV response & flow losses (~15%)    | −64 J                 | −15%            |
+| Seal friction & bore drag (~10%)     | −53 J                 | −10%            |
+| Thermal losses to barrel wall (~20%) | −79 J                 | −20%            |
+| Kinetic energy delivered to payload  | 437 J (at v ≈ 54 m/s) | 55%              |
 
 ---
 
@@ -1159,12 +1159,12 @@ $$
 
 > ⚠ No gas pressurisation is permitted until a signed hydrostatic test report confirms PASS at 22.5 bar. This is a mandatory project gate (T1).
 
-| Component | σ_hoop (MPa) | σ_y (MPa) | SF | Status |
-| --------- | ----------- | --------- | -- | ------ |
-| Barrel tube (6061-T6, 10 bar abs) | 8.67 | 276 | 31.8 | ✓ PASS |
-| Charge chamber (6061-T6, 10 bar abs) | 8.33 | 276 | 33.1 | ✓ PASS |
-| Chamber at PRV relief (18 bar) | 15.0 | 276 | 18.4 | ✓ PASS |
-| Chamber at hydro test (22.5 bar) | 18.8 | 276 | 14.7 | ✓ PASS |
+| Component                            | σ_hoop (MPa) | σ_y (MPa) | SF   | Status  |
+| ------------------------------------ | ------------- | ---------- | ---- | ------- |
+| Barrel tube (6061-T6, 10 bar abs)    | 8.67          | 276        | 31.8 | ✓ PASS |
+| Charge chamber (6061-T6, 10 bar abs) | 8.33          | 276        | 33.1 | ✓ PASS |
+| Chamber at PRV relief (18 bar)       | 15.0          | 276        | 18.4 | ✓ PASS |
+| Chamber at hydro test (22.5 bar)     | 18.8          | 276        | 14.7 | ✓ PASS |
 
 ---
 
@@ -1172,12 +1172,12 @@ $$
 
 CO₂ expanding through the QEV orifice undergoes Joule-Thomson cooling. At the orifice and in the barrel immediately downstream, gas temperatures drop to −10°C to −20°C. This creates a material-incompatibility risk for standard Nitrile (NBR) seals, which harden and lose sealing ability below −15°C.
 
-| Seal Location | BOM Rev 2 Material | BOM Rev 3 Material | Low-Temp Rating | Status |
-| ------------- | ------------------ | ------------------ | --------------- | ------ |
-| QEV diaphragm | NBR (Nitrile) | PTFE (SMC AQ2110A) | −40°C | ✓ SUBSTITUTED |
-| O-Ring kit (all seals) | NBR assortment | PTFE assortment 200 pc | −60°C | ✓ SUBSTITUTED |
-| Regulator seals | Unknown (verify) | PTFE/FKM (to verify) | −20°C (rated) | ! VERIFY |
-| PU tubing (pilot line) | PU (−10°C rated) | Same (protected run) | −10°C | ! PROTECT |
+| Seal Location          | BOM Rev 2 Material | BOM Rev 3 Material     | Low-Temp Rating | Status         |
+| ---------------------- | ------------------ | ---------------------- | --------------- | -------------- |
+| QEV diaphragm          | NBR (Nitrile)      | PTFE (SMC AQ2110A)     | −40°C         | ✓ SUBSTITUTED |
+| O-Ring kit (all seals) | NBR assortment     | PTFE assortment 200 pc | −60°C         | ✓ SUBSTITUTED |
+| Regulator seals        | Unknown (verify)   | PTFE/FKM (to verify)   | −20°C (rated) | ! VERIFY       |
+| PU tubing (pilot line) | PU (−10°C rated) | Same (protected run)   | −10°C         | ! PROTECT      |
 
 Both critical substitutions (QEV and O-ring kit) prevent the most common failure mode in CO₂-powered pneumatic systems: seal hardening leading to loss of pressure control or catastrophic blowby.
 
@@ -1209,14 +1209,14 @@ A 52 mm OD sabot in a 52 mm +0.3/−0.3 mm bore (honed to Ra < 0.8 μm) provides
 
 Three independent safety mechanisms prevent over-pressurisation: (1) the regulator limits inlet pressure to 10 bar; (2) the PRV opens at 18 bar if the regulator sticks open; and (3) the structural safety factor at 18 bar is 18.4, providing a third margin before any structural limit is approached. The arming key switch prevents inadvertent electrical firing.
 
-| Risk | Mitigation in Rev 3 | Residual Risk |
-| ---- | ------------------- | ------------- |
-| Seal failure (cold CO₂) | PTFE seals throughout | LOW — PTFE rated to −40°C |
-| Over-pressure | Regulator + PRV at 18 bar | VERY LOW — dual protection + SF ≥ 18 |
-| Sabot blowby | Honed bore + caliper QC | LOW — controlled fit tolerance |
-| Launch-shock FC failure | Anti-vibration mount (BOM item 27) | LOW — standard FPV practice |
-| Vision board unavailable | ESP32-S3 fallback (BOM item 26) | LOW — telemetry mode enabled |
-| Inadvertent firing | Arming key switch (BOM item 15) | VERY LOW — key required |
+| Risk                     | Mitigation in Rev 3                | Residual Risk                          |
+| ------------------------ | ---------------------------------- | -------------------------------------- |
+| Seal failure (cold CO₂) | PTFE seals throughout              | LOW — PTFE rated to −40°C           |
+| Over-pressure            | Regulator + PRV at 18 bar          | VERY LOW — dual protection + SF ≥ 18 |
+| Sabot blowby             | Honed bore + caliper QC            | LOW — controlled fit tolerance        |
+| Launch-shock FC failure  | Anti-vibration mount (BOM item 27) | LOW — standard FPV practice           |
+| Vision board unavailable | ESP32-S3 fallback (BOM item 26)    | LOW — telemetry mode enabled          |
+| Inadvertent firing       | Arming key switch (BOM item 15)    | VERY LOW — key required               |
 
 ---
 
@@ -1224,15 +1224,16 @@ Three independent safety mechanisms prevent over-pressurisation: (1) the regulat
 
 The following actions are mandatory before any gas pressurisation (ordered by precedence):
 
-| # | Action | Owner | Gate |
-| - | ------ | ----- | ---- |
-| 1 | Confirm SMC AQ2110A-N02 datasheet: PTFE diaphragm material | Procurement | Before order |
-| 2 | Confirm Airmax regulator seal material: PTFE or FKM (not NBR) | Procurement | Before order |
-| 3 | Contact openmv.io for OpenMV H7+ restock; if > 2 weeks, order ESP32-S3 | Electronics lead | Week 1 |
-| 4 | Order barrel honing (3 quotes from Saidapet/Ambattur machine shops) | Fabrication | Week 1 |
-| 5 | Hydrostatic test chamber assembly to 22.5 bar, 5 min hold, signed cert | Test lead | T1 gate |
-| 6 | Caliper check all sabots: OD must be 52.0 ± 0.2 mm at 3 points | Fabrication | Before barrel fit |
-| 7 | Verify solenoid valve cold-temp rating ≥ −20°C | Procurement | Before order |
+| # | Action                                                                 | Owner            | Gate              |
+| - | ---------------------------------------------------------------------- | ---------------- | ----------------- |
+| 1 | Confirm SMC AQ2110A-N02 datasheet: PTFE diaphragm material             | Procurement      | Before order      |
+| 2 | Confirm Airmax regulator seal material: PTFE or FKM (not NBR)          | Procurement      | Before order      |
+| 3 | Contact openmv.io for OpenMV H7+ restock; if > 2 weeks, order ESP32-S3 | Electronics lead | Week 1            |
+| 4 | Order barrel honing (3 quotes from Saidapet/Ambattur machine shops)    | Fabrication      | Week 1            |
+| 5 | Hydrostatic test chamber assembly to 22.5 bar, 5 min hold, signed cert | Test lead        | T1 gate           |
+| 6 | Caliper check all sabots: OD must be 52.0 ± 0.2 mm at 3 points        | Fabrication      | Before barrel fit |
+| 7 | Verify solenoid valve cold-temp rating ≥ −20°C                      | Procurement      | Before order      |
+
 
 ---
 
