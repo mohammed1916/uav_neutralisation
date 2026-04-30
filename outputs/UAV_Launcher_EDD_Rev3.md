@@ -470,9 +470,17 @@ The valve is modelled as a compressible orifice using the ISA/IEC 60534 standard
 
 > $\text{Choked if: }\dfrac{P_{downstream}}{P_{upstream}} < \left(\dfrac{2}{\gamma+1}\right)^{\gamma/(\gamma-1)}$
 
-For CO₂ (γ = 1.30): choked if P₂/P₁ \< 0.546
+For CO₂ (γ = 1.30): choked if P₂/P₁ < 0.5457 (exact) ≈ 0.546.
 
-At initial conditions (P₁ = 10 bar, P₂ = 1 bar atmospheric): P₂/P₁ = 0.10 ➡ flow is choked at valve opening. Flow transitions to subsonic when $P_{chamber}$ drops below ~5.5 bar.
+At initial conditions (P₁ = 11 bar absolute, P₂ = 1 bar atmospheric): P₂/P₁ = 1/11 = **0.091** → flow is choked at valve opening.
+
+In the coupled two-volume model the valve downstream is the evolving barrel back-pressure P_barrel, not a fixed atmospheric value. Treating P_barrel ≈ P_atm as the conservative lower bound, choked flow persists until the chamber pressure drops below:
+
+$$P_{chamber,trans} = \frac{P_{atm}}{CPR} = \frac{1.0\;\mathrm{bar}}{0.5457} \approx \mathbf{1.83\;\mathrm{bar\;absolute}}$$
+
+This means choked flow is maintained for virtually the entire firing cycle — the chamber must deplete from 11 bar down to less than 1.83 bar before subsonic flow onset. In the full coupled model the barrel back-pressure rises during transit (due to gas accumulation), so the true transition occurs at a slightly higher chamber pressure; but choked flow is maintained for ≥ 90% of the barrel dwell time across all design-orifice cases.
+
+> **Correction note:** A value of ~5.5 bar was used in earlier drafts of this section. That figure was wrong — it arose from multiplying the *upstream* pressure by the CPR (10 bar × 0.546 ≈ 5.5 bar) instead of dividing the *downstream* pressure by the CPR (1 bar ÷ 0.546 = 1.83 bar). At P_chamber = 5.5 bar with P_barrel = 1 bar the ratio is 0.18 < 0.546, so the flow is **still choked** — contradicting the claimed transition.
 
 ### Choked mass flow (sonic throat)
 
