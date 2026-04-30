@@ -303,3 +303,134 @@ That is a materially different system class.
 4. A 14.3 mm valve is still mathematically consistent with a 50 ms dwell assumption. The correction is that this should be treated as a lower-bound estimate, not as the final answer.
 5. The structural design should not use static force alone. A force safety factor of 2 to 3 is appropriate to cover valve-opening shock, non-uniform loading, and modeling uncertainty.
 6. The 100 m operational range still depends on UAV self-propulsion. A purely ballistic 30 m/s launch is marginal even before aerodynamic drag is included.
+
+---
+
+## 8. Required Hardware and Settings (All Variants)
+
+This section gives the practical "what to buy / what to set" list for all four bore variants (120, 160, 200, 240 mm diameter).
+
+### 8.1 CO2 cartridge requirement and threading
+
+The gas consumption is pressure-case dependent (not bore dependent, for fixed 1.0 L chamber):
+
+| Pressure case | CO2 per shot | Shots from 88 g cartridge |
+| --- | ---: | ---: |
+| Recommended baseline (6.985 bar abs, 5.985 bar g) | 12.74 g | 6.9 |
+| Sensitivity low end (5.871 bar abs, 4.871 bar g) | 10.71 g | 8.2 |
+| Sensitivity high end (8.617 bar abs, 7.617 bar g) | 15.72 g | 5.6 |
+| Legacy-efficiency check (13.779 bar abs, 12.779 bar g) | 25.13 g | 3.5 |
+
+Recommended supply interface:
+
+1. Use a commercial CO2 adapter/regulator inlet rather than cutting cylinder threads directly in launcher parts.
+2. If using paintball-style bottles, use ASA 5/8-18 UNF inlet hardware.
+3. If using industrial CO2 cylinder outlet, use CGA-320 regulator inlet and adapt downstream to BSP/NPT process ports.
+4. If using 88 g cartridge adapters, use the matching OEM adapter thread standard for that cartridge family (do not assume one universal thread).
+
+Recommended thread engagement in aluminium parts:
+
+1. Metric threads in 6061-T6: at least 1.5 x major diameter engagement.
+2. For M16x1.5 equivalent joints: at least 12 mm engagement (8 or more full turns).
+3. For M10 flange bolts into 6061-T6: at least 15 mm engagement.
+
+### 8.2 Regulator setpoint and port standard
+
+Regulator type and settings:
+
+| Pressure case | Regulator setpoint (bar g) | Regulator class |
+| --- | ---: | --- |
+| Baseline | 6.0 bar g | CO2-compatible diaphragm regulator, relieving type |
+| Sensitivity envelope | 5.0 to 8.0 bar g | Same regulator body, adjusted setpoint |
+| Legacy-efficiency check | 12.8 bar g | Higher-pressure regulator class (not preferred for portable build) |
+
+Port/thread recommendation on launcher plumbing side:
+
+1. Use G1/4 BSPP (preferred) or 1/4 NPT consistently across regulator, PRV, QEV pilot manifold, and gauge blocks.
+2. Do not mix BSP and NPT on the same sealing face.
+3. Use metal-to-metal rated fittings and thread sealant compatible with CO2 service.
+
+### 8.3 PRV (pressure relief valve) setpoint
+
+| Operating case | Working pressure (bar g) | PRV cracking setpoint (bar g) |
+| --- | ---: | ---: |
+| Baseline | 6.0 | 7.0 |
+| Sensitivity envelope high end | 8.0 | 9.5 to 10.0 |
+| Legacy-efficiency check (not preferred) | 12.8 | 14.0 |
+
+Rule used: PRV set about 15% to 25% above nominal working pressure, while staying below the weakest component pressure rating.
+
+### 8.4 Charge chamber dimensions, thickness, and material adequacy
+
+A 1.0 L chamber is common to all bore variants. Two practical geometries:
+
+| Chamber ID | Straight length for ~1.0 L | Notes |
+| ---: | ---: | --- |
+| 80 mm | 200 mm | Compact and easy to package |
+| 100 mm | 127 mm | Shorter, larger diameter package |
+
+Material check for 6061-T6 aluminium (yield about 276 MPa) with design allowable stress about 92 MPa (SF = 3 on yield):
+
+$$
+t_{\min} \approx \frac{P_g r}{\sigma_{allow}}
+$$
+
+For chamber ID = 80 mm (r = 40 mm):
+
+1. Baseline 6 bar g class: $t_{\min}$ is about 0.26 mm.
+2. Legacy 13 bar g class: $t_{\min}$ is about 0.56 mm.
+
+For chamber ID = 100 mm (r = 50 mm):
+
+1. Baseline 6 bar g class: $t_{\min}$ is about 0.33 mm.
+2. Legacy 13 bar g class: $t_{\min}$ is about 0.69 mm.
+
+Practical build recommendation (machining, dents, threaded ports, cyclic use):
+
+1. Use 6061-T6 chamber wall at least 4 mm.
+2. Prefer 5 to 6 mm where multiple threaded ports are added.
+3. Hydro test each chamber to at least 1.5x intended working gauge pressure.
+
+Conclusion on material: 6061-T6 is adequate for this pressure class if flange, port threads, and bolt path are correctly designed and tested.
+
+### 8.5 QEV orifice and solenoid voltage
+
+QEV main orifice sizing (from corrected dwell-time sensitivity):
+
+| Dwell assumption | Effective orifice needed |
+| ---: | ---: |
+| 50 ms | 14.31 mm |
+| 40 ms | 16.00 mm |
+| 30 ms | 18.47 mm |
+| 25 ms | 20.24 mm |
+
+Recommended procurement spec:
+
+1. QEV effective flow diameter: 16 to 20 mm.
+2. Pilot solenoid: 24 VDC coil preferred (industrial standard, robust wiring, fast response).
+3. Minimum pilot valve Cv: 0.7 or higher for quick QEV opening.
+4. Coil power class: about 4 to 8 W typical.
+
+### 8.6 Barrel dimensions and thickness for all four bore variants
+
+Assumed barrel length for all variants: 700 mm.
+
+Thin-wall minimum from hoop formula at baseline pressure (about 6 bar g) is small, but practical launcher construction should use much thicker walls. Recommended values below include manufacturing and handling margin.
+
+| Variant | Bore diameter ID | Radius | Barrel length | Calc $t_{\min}$ at 6 bar g (SF=3) | Practical recommended wall | Recommended OD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| V1 | 120 mm | 60 mm | 700 mm | 0.39 mm | 4 mm | 128 mm |
+| V2 | 160 mm | 80 mm | 700 mm | 0.52 mm | 5 mm | 170 mm |
+| V3 | 200 mm | 100 mm | 700 mm | 0.65 mm | 6 mm | 212 mm |
+| V4 | 240 mm | 120 mm | 700 mm | 0.78 mm | 8 mm | 256 mm |
+
+If you must operate near the legacy 12.8 bar g case, increase recommended barrel wall by about 1.5x versus the table above, and re-check endcap and flange bolts from force, not hoop stress alone.
+
+### 8.7 One-line required set per variant
+
+| Variant | CO2/shot (baseline) | Regulator set | PRV set | Chamber (all variants) | QEV orifice | Solenoid | Barrel spec |
+| --- | ---: | ---: | ---: | --- | --- | --- | --- |
+| V1 (120 mm) | 12.74 g | 6.0 bar g | 7.0 bar g | 1.0 L, 6061-T6, 80x200 mm or 100x127 mm, 4 to 6 mm wall | 16 to 20 mm | 24 VDC | 120 ID x 700, 4 mm wall |
+| V2 (160 mm) | 12.74 g | 6.0 bar g | 7.0 bar g | same | 16 to 20 mm | 24 VDC | 160 ID x 700, 5 mm wall |
+| V3 (200 mm) | 12.74 g | 6.0 bar g | 7.0 bar g | same | 16 to 20 mm | 24 VDC | 200 ID x 700, 6 mm wall |
+| V4 (240 mm) | 12.74 g | 6.0 bar g | 7.0 bar g | same | 16 to 20 mm | 24 VDC | 240 ID x 700, 8 mm wall |
