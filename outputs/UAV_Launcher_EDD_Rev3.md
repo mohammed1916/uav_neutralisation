@@ -822,8 +822,6 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 
 ---
 
-
-
 # 10. Conclusion
 
 ## 10.1 Optimal Configuration Summary
@@ -984,7 +982,7 @@ $$
 V_c = \pi \times (0.025\,\text{m})^2 \times 0.500\,\text{m} = 9.817 \times 10^{-4}\,\text{m}^3 \approx 0.982\,\text{L}
 $$
 
-✓ Chamber volume 0.982 L ≈ 1.0 L — meets design specification.
+Chamber volume 0.982 L ≈ 1.0 L — meets design specification.
 
 Using the ideal gas law to find the number of CO₂ moles stored at operating conditions (T = 293 K, P = 10 bar abs):
 
@@ -993,7 +991,7 @@ PV = nRT \quad \Rightarrow \quad n = \frac{PV}{RT}
 $$
 
 $$
-n = \frac{1.0 \times 10^6\,\text{Pa} \times 9.817 \times 10^{-4}\,\text{m}^3}{8.314\,\text{J/mol·K} \times 293\,\text{K}} = \frac{981.7}{2435.9} = 0.403\,\text{mol}
+n = \frac{1.0 \times 10^6\,\text{Pa} \times 9.817 \times 10^{-4}\,\text{m}^3}{8.314\,\text{J mol}^{-1} \text{ K}^{-1} \times 293\,\text{K}} = \frac{981.7}{2435.9} = 0.403\,\text{mol}
 $$
 
 Converting to mass using M_CO₂ = 44.01 g/mol:
@@ -1002,7 +1000,7 @@ $$
 m_{CO_2} = n \times M = 0.403 \times 44.01 = 17.74\,\text{g per shot}
 $$
 
-✓ One 88 g cartridge provides ≈ 88 / 17.7 ≈ 5 shots at full charge. (With the exact EDD governing pressure of 11 bar absolute, this becomes ≈19.9 g/shot → ≈4 full shots per cartridge; see Section 3.1.)
+One 88 g cartridge provides ≈ 88 / 17.7 ≈ 5 shots at full charge. (With the exact EDD governing pressure of 11 bar absolute, this becomes ≈19.9 g/shot → ≈4 full shots per cartridge; see Section 3.1.)
 
 ### C.3.2 Stored Energy (Polytropic Expansion)
 
@@ -1082,7 +1080,7 @@ $$
 KE = \tfrac{1}{2}mv^2 \quad \Rightarrow \quad v = \sqrt{\frac{2\,KE}{m}} = \sqrt{\frac{2 \times 437\,\text{J}}{0.30\,\text{kg}}} = \sqrt{2{,}913} \approx 54\,\text{m/s}
 $$
 
-✓ Predicted muzzle velocity: **50–55 m/s** (range accounts for seal drag and QEV timing variation).
+Predicted muzzle velocity: **50–55 m/s** (range accounts for seal drag and QEV timing variation).
 
 > **Note:** This is the interceptor UAV scenario (m = 0.30 kg). For the 1.0 kg test-mass ODE model, v_exit ≈ 21–26 m/s (Section 4.4). Both results are produced by the same physical system; the lighter UAV payload reaches higher velocity.
 
@@ -1114,7 +1112,7 @@ $$
 SF = \frac{\sigma_y}{\sigma_{hoop}} = \frac{276}{8.67} = 31.8
 $$
 
-✓ Safety factor 31.8 >> 3.0 minimum requirement. (At 11 bar absolute: σ_hoop = 9.53 MPa, SF = 29.0 — still >> 3.0.)
+Safety factor 31.8 >> 3.0 minimum requirement. (At 11 bar absolute: σ_hoop = 9.53 MPa, SF = 29.0 — still >> 3.0.)
 
 ### C.5.2 Hoop Stress — Charge Chamber
 
@@ -1128,7 +1126,7 @@ $$
 SF = \frac{276}{8.33} = 33.1
 $$
 
-✓ Safety factor 33.1 >> 3.0. (At 11 bar absolute: σ_hoop = 9.17 MPa, SF = 30.1 — still >> 3.0.)
+Safety factor 33.1 >> 3.0. (At 11 bar absolute: σ_hoop = 9.17 MPa, SF = 30.1 — still >> 3.0.)
 
 ### C.5.3 PRV Sizing Verification
 
@@ -1142,7 +1140,7 @@ $$
 SF_{at\,PRV} = \frac{276}{15.0} = 18.4
 $$
 
-✓ Even at full PRV set pressure, SF = 18.4. The safety relief pressure is not a structural risk.
+ Even at full PRV set pressure, SF = 18.4. The safety relief pressure is not a structural risk.
 
 ### C.5.4 Hydrostatic Test Gate (T1)
 
@@ -1228,7 +1226,6 @@ The following actions are mandatory before any gas pressurisation (ordered by pr
 | 5 | Hydrostatic test chamber assembly to 22.5 bar, 5 min hold, signed cert | Test lead        | T1 gate           |
 | 6 | Caliper check all sabots: OD must be 52.0 ± 0.2 mm at 3 points        | Fabrication      | Before barrel fit |
 | 7 | Verify solenoid valve cold-temp rating ≥ −20°C                      | Procurement      | Before order      |
-
 
 ---
 
