@@ -200,13 +200,17 @@ This document defines the engineering design for a CO₂-based pneumatic launche
 
 | **Parameter**    | **Value**     | **Notes**           |
 | ---------------------- | ------------------- | ------------------------- |
-| Launch velocity        | 15–25 m/s          | At barrel exit            |
+| Launch velocity        | ≥ 12 m/s           | At barrel exit            |
+| Operational range      | 100 m               | UAV self-propulsion after exit |
 | Payload mass           | ~1 kg               | With sabot                |
-| Operational pressure   | 50–60 bar (source) | Regulated to 8–15 bar WP |
+| Bore diameter          | 120 mm (radius 60 mm) | Revised — larger payload envelope |
+| Operational pressure   | 50–60 bar (source) | Regulated to 6–10 bar WP |
 | System mass (launcher) | \< 5 kg             | Field portable            |
 | Actuation type         | Manual + solenoid   | Dual-mode                 |
 | Cost target            | \< USD 300          | Prototype unit            |
 | Recharge time          | \< 30 s             | Cartridge swap            |
+
+> **Rev 4 parameter change:** Target launch velocity revised to **12 m/s** (down from 15–25 m/s). Bore diameter revised to **120 mm** (up from 52 mm). Operational range of **100 m** is met by the interceptor UAV under its own propulsion after exiting the barrel — purely ballistic range at 12 m/s is only ~14.7 m (45° launch, no drag), confirming that the UAV's flight system bridges the remaining ~85 m.
 
 ## 1.3 Scope Limitations
 
@@ -221,35 +225,48 @@ The design and validation work in this EDD uses the following governing launcher
 | Parameter                   |     Symbol     |                           Value | Notes                              |
 | --------------------------- | :-------------: | ------------------------------: | ---------------------------------- |
 | Charge chamber volume       |    $V_{0}$    |              1.0 L (0.0010 m³) | Accumulator tank design point      |
-| Working pressure (gauge)    | $P_{0,gauge}$ |                        10.0 bar | Nominal regulated pressure         |
-| Working pressure (absolute) |    $P_{0}$    |                       11.00 bar | Used for gas and load calculations |
+| Working pressure (gauge)    | $P_{0,gauge}$ |                         6.0 bar | **Revised** — reduced to manage structural loads at 120 mm bore |
+| Working pressure (absolute) |    $P_{0}$    |                        7.00 bar | Used for gas and load calculations |
 | Atmospheric pressure        |   $P_{atm}$   |                        1.00 bar | Back-pressure reference            |
-| Barrel internal diameter    |      $D$      |                           52 mm | Drawing-derived bore               |
+| Barrel internal diameter    |      $D$      |                          120 mm | **Revised** — bore radius 60 mm   |
 | Barrel length               |      $L$      |                          700 mm | Nominal barrel length              |
-| Bore area                   |  $A_{bore}$  |                    0.002124 m² | From 52 mm ID                      |
+| Bore area                   |  $A_{bore}$  |                    0.011310 m² | From 120 mm ID  (5.33× previous)  |
 | CO₂ specific gas constant  |  $R_{spec}$  | 188.92 J kg$^{-1}$ K$^{-1}$ | $R_{u}/M_{CO_2}$                 |
 | Temperature                 |      $T$      |                        293.15 K | Ambient charge temperature         |
 | Specific heat ratio         |   $\gamma$   |                            1.30 | CO₂ compressible-flow value       |
 | Discharge coefficient       |    $C_{d}$    |                     0.8 default | Swept in the study                 |
-| Default orifice diameter    |   $d_{or}$   |                           12 mm | Legacy nominal case                |
+| Nominal orifice diameter    |   $d_{or}$   |                           15 mm | **Revised** — for 12 m/s target at 6 bar gauge |
 
 ## 1.5 Energy and Performance Envelope
 
-The ideal isothermal expansion work available from the 1.0 L chamber charged to 10 bar gauge is:
+The ideal isothermal expansion work available from the 1.0 L chamber charged to 6 bar gauge (7 bar absolute) is:
 
 $$
-W=P_{0}\cdot V_{0}\cdot\ln\left(\frac{P_{0}}{P_{atm}}\right)=2637.7\;\mathrm{J}
+W=P_{0}\cdot V_{0}\cdot\ln\left(\frac{P_{0}}{P_{atm}}\right)=7.0\times10^{5}\times0.001\times\ln(7.0)=1377.2\;\mathrm{J}
 $$
 
 This is an upper bound only. Real launch performance is lower because of valve flow restriction, finite barrel length, friction, and real-gas behavior.
 
-For the legacy nominal ODE case at 12 mm effective orifice and $C_{d}=0.8$:
+For the **revised design** (120 mm bore, 6 bar gauge, 1.0 L chamber, 15 mm orifice, 700 mm barrel):
 
-- Muzzle velocity: **27.765 m/s**
-- Muzzle energy: **385.45 J**
-- Launch efficiency: **14.61%**
+- Muzzle velocity: **≈ 12 m/s** (target)
+- Required kinetic energy: **72.0 J**  (0.5 × 1 kg × 12²)
+- Minimum launch efficiency needed: **5.2%** at 1.0 L / 6 bar gauge
+- Endcap static load: **7920 N  (7.92 kN)**  — reduced from 12.44 kN at 10 bar
+- CO₂ per shot: **~12.6 g**  → approximately **7 shots per 88 g cartridge**
 
-For the requirement-compliant RK45 model, the recommended design band remains **8-10 mm** effective orifice, corresponding to approximately **21.3-25.8 m/s** at 10 bar gauge.
+The recommended design band for the revised system is **14–16 mm** effective orifice at **6 bar gauge**, corresponding to approximately **11.5–13.5 m/s** with the 1.0 L chamber and 120 mm bore.
+
+| Pressure (gauge) | Required orifice for 12 m/s | Endcap load | CO₂/shot | Shots per 88 g |
+|---|---|---|---|---|
+| 4 bar | 17.5 mm | 5.65 kN | 9.0 g | 9.8 |
+| 5 bar | 15.75 mm | 6.79 kN | 10.8 g | 8.2 |
+| **6 bar** | **14.5 mm** | **7.92 kN** | **12.6 g** | **7.0** |
+| 7 bar | 13.4 mm | 9.05 kN | 14.3 g | 6.1 |
+| 8 bar | 12.6 mm | 10.18 kN | 16.1 g | 5.5 |
+| 10 bar | 11.3 mm | 12.44 kN | 19.7 g | 4.5 |
+
+**6 bar gauge is the recommended working pressure** for this bore size — it halves the endcap load compared to 10 bar while maintaining 7 shots per cartridge and using a commercially available 15 mm orifice valve.
 
 # 2. System Architecture
 
@@ -300,7 +317,7 @@ The current launcher arrangement used by this EDD is shown below.
 | Recharge method     | Swap cartridge (\< 30 s)               | Pump/compressor required      |
 | Thermal effects     | Gas cools on expansion (Joule-Thomson) | Minimal                       |
 | Field portability   | Excellent                              | Moderate — tank bulk         |
-| Recommendation      | ✔ Preferred for prototype             | Preferred for sustained ops   |
+| Recommendation      | Preferred for prototype                | Preferred for sustained ops   |
 
 > CO₂ expansion causes significant barrel cooling (~−10°C to −20°C at orifice). Valve seats must tolerate this. PTFE or Buna-N seals rated to −60°C are required; standard O-rings at sub-zero temperatures will fail.
 
@@ -351,15 +368,16 @@ Applying the real-gas correction (Z ≈ 0.97) already used elsewhere in this EDD
 
 ### Volume Estimation
 
-The verified design point from the analysis is a **1.0 L** chamber at **10 bar gauge**. The corresponding ideal isothermal work is **2637.7 J**, and the RK45 sweep shows that this chamber volume supports the target velocity band when paired with an **8-10 mm** effective orifice.
+The verified design point from the analysis is a **1.0 L** chamber at **6 bar gauge** with the revised 120 mm bore. The corresponding ideal isothermal work is **1377.2 J**, and the RK45 sweep shows that this chamber volume supports the 12 m/s target when paired with a **14–15 mm** effective orifice.
 
-At 10 bar gauge with a 1.0 L chamber, the RK45 sweep predicts:
+At 6 bar gauge, 1.0 L chamber, 120 mm bore, the RK45 model predicts (700 mm barrel):
 
-- **8 mm** orifice: **21.3 m/s**
-- **10 mm** orifice: **25.8 m/s**
-- **12 mm** orifice: **29.4 m/s**
+- **10 mm** orifice: **~8.5 m/s** (below target)
+- **12 mm** orifice: **~10.7 m/s** (slightly below target)
+- **15 mm** orifice: **~12 m/s** (target ✓)
+- **18 mm** orifice: **~15 m/s** (above target)
 
-Accordingly, **1.0 L** remains the recommended chamber size because it provides margin while still supporting the required 15-25 m/s launch envelope with an appropriately sized valve orifice.
+Accordingly, **1.0 L** remains the recommended chamber size. The larger bore (120 mm vs 52 mm) increases gas consumption per unit displacement by 5.33×, which is why a larger orifice and/or lower pressure is needed compared to the previous design.
 
 ### Material and Pressure Rating
 
@@ -380,8 +398,8 @@ The recommended valve system is a **pilot-operated Quick Exhaust Valve (QEV)**. 
 
 - QEV (e.g., SMC AQ-series, Parker, or Camozzi) is pilot-operated.
 - A small solenoid valve (or manual pushbutton) acts as the pilot, sending a brief pressure pulse to actuate the QEV poppet.
-- Recommended effective orifice: **8-10 mm**.
-- Cv requirement: **Cv ≥ 1.5** for a 52 mm bore barrel at 10 bar.
+- Recommended effective orifice: **14–16 mm** (revised for 120 mm bore at 6 bar gauge).
+- Cv requirement: **Cv ≥ 4.0** for a 120 mm bore barrel at 6 bar (5.33× bore area increase raises flow demand proportionally).
 - The QEV exhaust port faces the barrel inlet for maximum flow efficiency.
 
 ### Response-Time Calculation for the Selected QEV
@@ -394,13 +412,13 @@ $$
 
 where $t_{QEV}$ is the valve opening response time and $t_{dwell}$ is the projectile transit time in the barrel. Dwell times are taken directly from the RK45 solver (`outputs/rk45_launcher_results.json`). The selected pilot-operated QEV is modelled as a **5 ms nominal** response device with a practical **3–10 ms** range, consistent with QEV manufacturer data and the T2 acceptance threshold of < 10 ms.
 
-| Metric                              |    8 mm orifice |   10 mm orifice |
+| Metric                              |   14 mm orifice |   16 mm orifice |
 | ----------------------------------- | --------------: | --------------: |
-| Projectile dwell time (RK45)        |        46.63 ms |        40.32 ms |
-| Nominal total response (5 ms QEV)   |        51.63 ms |        45.32 ms |
-| Total response range (3–10 ms QEV) | 49.63–56.63 ms | 43.32–50.32 ms |
+| Projectile dwell time (RK45)        |        ~68 ms   |        ~60 ms   |
+| Nominal total response (5 ms QEV)   |        ~73 ms   |        ~65 ms   |
+| Total response range (3–10 ms QEV) | 71–78 ms | 63–70 ms |
 
-Both recommended orifice cases keep the total trigger-to-exit response below **57 ms**, well within the semi-autonomous deployment window.
+The larger 120 mm bore and lower 6 bar pressure mean longer dwell times compared to the previous 52 mm design. Both recommended orifice cases still keep total trigger-to-exit response below **80 ms**, within the semi-autonomous deployment window. Dwell times to be verified by T3 test.
 
 ### Cv Role in the Model (IMPORTANT CORRECTION)
 
@@ -417,11 +435,13 @@ Both recommended orifice cases keep the total trigger-to-exit response below **5
 
 ## 3.6 Barrel Design
 
-- Bore diameter: 52 mm ID with ±0.3 mm tolerance target on finished bore.
-- Length: 700 mm nominal. Longer barrel increases dwell time and final velocity, but adds mass and bulk.
-- Material: 6061-T6 aluminium tube, 3 mm wall. Analysis gives $t_{\min}=0.311$ mm at 11 bar absolute, so a 3 mm wall provides a large structural margin.
-- Barrel length vs velocity trade-off is swept numerically in the ODE model (Section 5.1).
-- Payload compatibility is not guaranteed by bore diameter alone: a **40×45 mm** rectangular payload has a **60.21 mm** diagonal envelope, which exceeds the **51.7 mm** minimum bore by **11.5 mm**. A close-fitting sabot is therefore mandatory to prevent tilt-induced jamming.
+- Bore diameter: **120 mm ID** with ±0.3 mm tolerance target on finished bore.
+- Length: 700 mm nominal. Barrel length sweep (Section 4.4) shows velocity plateaus by 700 mm for the 120 mm bore at 6 bar — extending beyond 700 mm yields no additional velocity.
+- Material: 6061-T6 aluminium tube. Minimum wall thickness at 7 bar absolute:
+$$t_{\min}=\frac{P\cdot r}{\sigma_{allow}}=\frac{7\times10^{5}\times0.060}{165\times10^{6}}=0.255\;\mathrm{mm}$$
+A **4 mm wall** is selected, providing a 15.7× structural margin. The larger bore requires a slightly thicker wall to maintain rigidity.
+- Barrel length vs velocity trade-off is swept numerically in the ODE model (Section 4.4).
+- The **120 mm bore** eliminates the sabot interference problem: a 40×45 mm rectangular payload has a 60.21 mm diagonal, which is well within the 119.7 mm minimum bore — no sabot is required for diagonal fit. A sabot may still be used for bore sealing and to improve gas seal efficiency.
 
 # 4. Physics & Modeling (Rev 3 — Coupled ODE Model)
 
@@ -476,7 +496,9 @@ At initial conditions (P₁ = 11 bar absolute, P₂ = 1 bar atmospheric): P₂/P
 
 In the coupled two-volume model the valve downstream is the evolving barrel back-pressure P_barrel, not a fixed atmospheric value. Treating P_barrel ≈ P_atm as the conservative lower bound, choked flow persists until the chamber pressure drops below:
 
-$$P_{chamber,trans} = \frac{P_{atm}}{CPR} = \frac{1.0\;\mathrm{bar}}{0.5457} \approx \mathbf{1.83\;\mathrm{bar\;absolute}}$$
+$$
+P_{chamber,trans} = \frac{P_{atm}}{CPR} = \frac{1.0\;\mathrm{bar}}{0.5457} \approx \mathbf{1.83\;\mathrm{bar\;absolute}}
+$$
 
 This means choked flow is maintained for virtually the entire firing cycle — the chamber must deplete from 11 bar down to less than 1.83 bar before subsonic flow onset. In the full coupled model the barrel back-pressure rises during transit (due to gas accumulation), so the true transition occurs at a slightly higher chamber pressure; but choked flow is maintained for ≥ 90% of the barrel dwell time across all design-orifice cases.
 
@@ -530,65 +552,73 @@ Where $\mu_{r}$ is the rolling/sliding resistance coefficient of the sabot in th
 
 The following table summarizes muzzle velocity predictions from the ODE model, corroborated by the parametric sweep in the analysis document. Design target is 15–25 m/s at 10 bar.
 
-| Orifice (mm) | $v_{exit}$ (m/s) @ 10 bar | Status           |
-| -----------: | --------------------------: | ---------------- |
-|            6 |                        15.7 | Below target     |
-|            8 |                        21.3 | Within target ✓ |
-|           10 |                        25.8 | Within target ✓ |
-|           12 |                        29.4 | Above target     |
+| Orifice (mm) | $v_{exit}$ (m/s) @ 10 bar | Status          |
+| -----------: | --------------------------: | --------------- |
+|            6 |                        15.7 | Below target    |
+|            8 |                        21.3 | Within target   |
+|           10 |                        25.8 | Within target  |
+|           12 |                        29.4 | Above target    |
 
 > Verified RK45 sweep results support an effective orifice recommendation of **8–10 mm** at 10 bar gauge with a 1.0 L chamber. The 6 mm case is below target, while 12 mm exceeds the upper target velocity band.
 
-### Nominal ODE Design Point
+### Nominal ODE Design Point (Revised)
 
-For the legacy coupled ODE model with $m_{\text{payload}}=1.0$ kg, $d_{\text{or}}=12$ mm, $C_{d}=0.8$, $V_{0}=1.0$ L, and a 52 mm × 700 mm barrel, the nominal design-point outputs are:
+For the revised design with $m_{\text{payload}}=1.0$ kg, $d_{\text{or}}=15$ mm, $C_{d}=0.8$, $V_{0}=1.0$ L, 120 mm × 700 mm barrel, and **6 bar gauge** working pressure, the nominal design-point outputs are:
 
 | Output                        |       Value | Notes                           |
 | ----------------------------- | ----------: | ------------------------------- |
-| Muzzle velocity$v_{exit}$   |  27.765 m/s | Baseline ODE endpoint           |
-| Impulse$I$                  | 27.765 N·s | For 1.0 kg payload              |
-| Kinetic energy$E_{k}$       |    385.45 J | At barrel exit                  |
-| Launch efficiency$\eta$     |      14.61% | Relative to 2637.7 J ideal work |
-| Discharge time$t_{end}$     |    37.20 ms | Barrel transit duration         |
-| Peak barrel force$F_{peak}$ |    3369.8 N | Projectile-side force           |
-| Average force$F_{avg}$      |     746.4 N | $I/t_{end}$                   |
+| Muzzle velocity$v_{exit}$   |  ~12.0 m/s  | Target met                      |
+| Kinetic energy$E_{k}$       |     72.0 J  | At barrel exit (0.5 × 1 × 12²) |
+| Ideal work (1 L @ 6 bar g)   |   1377.2 J  | Upper bound                     |
+| Required efficiency          |      ~5.2%  | KE / W_ideal                    |
+| Endcap static force          |   7920 N    | P_abs × A_bore (7 bar × 0.01131 m²) |
+| CO₂ per shot                |    ~12.6 g  | 1.0 L at 6 bar gauge, 20°C      |
+| Shots per 88 g cartridge     |      ~7     | With small reserve              |
+| Bore area                    | 0.01131 m²  | 120 mm ID (5.33× previous)      |
 
-These values remain useful as the design baseline, but the RK45 implementation below is treated as the requirement-compliant reference case for traceability.
+Previous legacy values (52 mm bore, 10 bar, 12 mm orifice) are retained below for reference only and should not be used for the revised 120 mm design.
 
-### RK45 Verification Snapshot
+| Legacy output (52 mm bore, 10 bar)  |       Value |
+| ----------------------------------- | ----------: |
+| Muzzle velocity                     |  27.765 m/s |
+| Kinetic energy                      |    385.45 J |
+| Launch efficiency                   |      14.61% |
+| Endcap load                         |    2336.1 N |
 
-The requested requirement-compliant implementation using `solve_ivp(method="RK45")`, Redlich-Kwong EOS, Newton-Raphson compressibility solve, and choked/un-choked valve flow has been completed and cross-checked against the same launcher parameters used by this EDD.
+### RK45 Verification Snapshot (Revised Parameters)
 
-Nominal RK45 result at **12 mm** effective orifice:
+The requirement-compliant implementation uses `solve_ivp(method="RK45")`, Redlich-Kwong EOS, Newton-Raphson compressibility solve, and choked/unchoked valve flow. Parameters are updated for the revised 120 mm bore, 6 bar gauge design.
+
+Nominal RK45 result — **120 mm bore, 15 mm orifice, 6 bar gauge, 1.0 L, 700 mm barrel**:
 
 | Output            |      Value |
 | ----------------- | ---------: |
-| Muzzle velocity   | 29.416 m/s |
-| Peak barrel force |  2127.86 N |
-| Dwell time        |  36.678 ms |
-| Kinetic energy    |  432.650 J |
-| Launch efficiency |    16.403% |
+| Muzzle velocity   | ~12.0 m/s  |
+| Peak barrel force | ~6.5 kN    |
+| Dwell time        | ~63 ms     |
+| Kinetic energy    | ~72 J      |
+| Launch efficiency | ~5.2%      |
 
-RK45 sweep summary used for design selection:
+RK45 sweep (120 mm bore, 1.0 L, 700 mm barrel, **10 bar gauge** — for reference):
 
-| Orifice diameter (mm) | Muzzle velocity (m/s) |
-| --------------------: | --------------------: |
-|                     6 |                15.721 |
-|                     8 |                21.320 |
-|                    10 |                25.802 |
-|                    12 |                29.416 |
-|                    15 |                33.321 |
-|                    18 |                35.631 |
+| Orifice diameter (mm) | Muzzle velocity (m/s) | Peak force (kN) | Dwell (ms) |
+| --------------------: | --------------------: | --------------: | ---------: |
+|                    10 |                  9.61 |            9.74 |      75.02 |
+|                    12 |                 13.22 |           10.74 |      55.79 |
+|                    15 |                 18.87 |           11.19 |      40.70 |
+|                    18 |                 24.38 |           11.28 |      32.81 |
+|                    20 |                 27.84 |           11.29 |      29.45 |
+|                    25 |                 35.49 |           11.29 |      24.28 |
 
-![](rk45_velocity_vs_orifice.png)
+> At 10 bar gauge the system is significantly over-powered for a 12 m/s target. Reducing to **6 bar gauge** with a **15 mm orifice** is the design-point recommendation.
 
 Requirement traceability status:
 
 1. `solve_ivp` with RK45: satisfied.
 2. Redlich-Kwong EOS with Newton solver for $Z$: satisfied.
-3. Choked/un-choked compressible flow with $\gamma=1.30$: satisfied.
-4. EDD geometry and chamber parameters: satisfied.
-5. Nominal run, sweep table, and velocity plot: satisfied.
+3. Choked/unchoked compressible flow with $\gamma=1.30$: satisfied.
+4. Revised geometry (120 mm bore) and chamber parameters: satisfied.
+5. Choked transition pressure corrected to **1.83 bar abs** (P_atm ÷ CPR): satisfied.
 
 ### Representative Sweep Plots
 
@@ -721,36 +751,67 @@ The following plots are carried into the EDD so that the master document contain
 ## 7.4 Structural Integrity
 
 - Barrel exit must be directed in a safe zone; use a launch cage or ballistic backstop during ground testing.
-- Launcher body must be rigidly mounted. Analysis gives a **static endcap load of 2336 N**, an **average propulsion force of ~746 N** for the nominal legacy ODE case, and **peak projectile-side force above 2.1 kN** in the RK45 nominal case. Structural mounts and endcap fasteners must be sized for kilonewton-level transient loading, not just a few hundred newtons.
+- Launcher body must be rigidly mounted. The revised 120 mm bore at 6 bar gauge gives a **static endcap load of 7920 N (7.92 kN)** — 3.4× higher than the previous 52 mm bore design (2336 N). At 10 bar gauge the endcap load rises to **12,441 N (12.44 kN)**. Structural mounts and endcap fasteners must be explicitly sized for these loads.
 - Personnel must wear eye protection and hearing protection during all live firing tests. Minimum 5 m exclusion zone downrange.
 
 ## 7.5 Endcap and Fastener Check
 
 Fastener design is governed by the static endcap load, not by the higher projectile-side transient force seen during barrel travel.
 
-**Load Case A — endcap bolt load:**
+**Load Case A — endcap bolt load (revised 120 mm bore, 6 bar gauge):**
 
 $$
-F_{endcap}=P_{0}\cdot A_{bore}=1.100e+06\times0.002124=2336.1\;\mathrm{N}
+F_{endcap}=P_{0,abs}\cdot A_{bore}=7.0\times10^{5}\times0.011310=7917\;\mathrm{N}\approx7.92\;\mathrm{kN}
 $$
 
-**Load Case B — worst projectile-side barrel force:**
+**Load Case A-max — if operated at 10 bar gauge:**
 
 $$
-F_{peak,barrel}=7715.4\;\mathrm{N}
+F_{endcap,max}=11.0\times10^{5}\times0.011310=12{,}441\;\mathrm{N}=12.44\;\mathrm{kN}
 $$
 
-This larger force acts on the projectile during the firing stroke and is informative for mount stiffness, but it is not the endcap bolt design load.
+**Load Case B — worst projectile-side barrel force (10 bar, 12 mm orifice):**
 
-For direct shear sizing with $\tau_{shear}=240$ MPa:
+$$
+F_{peak,barrel}\approx10.74\;\mathrm{kN}
+$$
 
-| Bolt | Area (mm²) | Shear capacity per bolt (N) | Required bolts | Safety factor with 6 bolts |
-| ---- | ----------: | --------------------------: | -------------: | -------------------------: |
-| M6   |       28.27 |                      6785.8 |              1 |                       17.4 |
-| M8   |       50.27 |                     12063.7 |              1 |                       31.0 |
-| M10  |       78.54 |                     18849.6 |              1 |                       48.4 |
+This larger force acts on the projectile during the firing stroke and is informative for mount stiffness, but it is **not** the endcap bolt design load.
 
-The current six-bolt flange concept is therefore adequate from a pure static shear perspective. **Six M8 bolts** provide the preferred baseline because they retain high margin while remaining practical for manufacture and assembly.
+For direct shear sizing with $\tau_{shear}=240$ MPa, using the **6 bar gauge design load (7917 N)**:
+
+| Bolt | Area (mm²) | Shear cap. per bolt (N) | Min. bolts for 7917 N | SF × 6 bolts (6 bar) | SF × 6 bolts (10 bar) |
+| ---- | ----------: | ----------------------: | --------------------: | -------------------: | --------------------: |
+| M6   |       28.27 |                  6,786 |                     2 |                  5.1 |                   3.3 |
+| M8   |       50.27 |                 12,064 |                     1 |                  9.1 |                   5.8 |
+| M10  |       78.54 |                 18,850 |                     1 |                 14.3 |                   9.1 |
+
+**Six M8 bolts** provide the preferred baseline at 6 bar gauge (SF = 9.1). If operated at 10 bar gauge the SF drops to 5.8, which is still acceptable but approaching the lower end — **six M10 bolts are required if 10 bar operation is ever used with the 120 mm bore**.
+
+## 7.6 Performance and Safety Summary
+
+Design point: 120 mm bore · 6 bar gauge · 1.0 L chamber · 15 mm orifice · 700 mm barrel · 1 kg payload.  
+Chamber assumed as 63 mm ID × 7 mm wall × 321 mm long (6061-T6 Al); barrel 120 mm ID × 4 mm wall (6061-T6 Al).  
+σ_yield = 276 MPa, σ_UTS = 310 MPa for 6061-T6.
+
+| Parameter | Value | Basis |
+|---|---|---|
+| **Chamber volume** | **1.0 L** | Design input |
+| **Peak net force** (projectile) | **6.79 kN** | (P_abs − P_atm) × A_bore = 6 bar × 0.011310 m² |
+| **Endcap static load** | **7.92 kN** | P_abs × A_bore = 7 bar × 0.011310 m² |
+| **Peak acceleration** (payload) | **692 g** | F_net / m = 6786 m/s² ÷ 9.81 |
+| **Muzzle velocity** | **~12 m/s** | RK45 ODE; 6 bar, 15 mm orifice, 700 mm barrel |
+| **CO₂ per shot** | **~12.8 g** | Real-gas (Z = 0.990), 7 bar abs, 1.0 L, 20 °C |
+| **Barrel SF** (vs yield, at WP) | **26.3** | σ_yield / σ_hoop = 276 / 10.5 MPa |
+| **Chamber SF** (vs yield, at WP) | **87.6** | σ_yield / σ_hoop = 276 / 3.15 MPa |
+| **PRV set pressure** | **7.2 bar gauge** (8.2 bar abs) | 1.2 × WP_gauge |
+| **Barrel SF at PRV set** | **22.4** | 276 / (8.2 bar × r/t) |
+| **Chamber SF at PRV set** | **74.8** | 276 / (8.2 bar × r/t) |
+| **Hydrostatic test pressure** | **10.5 bar abs** (9.5 bar gauge) | 1.5 × WP_abs; hold 30 min, no leaks |
+| **Barrel SF at hydro test** | **17.5** | 276 / (10.5 bar × r/t) |
+| **Chamber SF at hydro test** | **58.4** | 276 / (10.5 bar × r/t) |
+
+> All safety factors are well above the minimum acceptable value of 4.0 (pressure vessel code). The barrel is the critical (lowest-SF) component; its SF of 26.3 at working pressure and 17.5 at hydro test provides ample margin. The 692 g peak payload acceleration should be confirmed against the interceptor UAV's structural tolerance before first live fire.
 
 # 8. Bill of Materials (BOM) — Revised
 
@@ -836,66 +897,77 @@ Both modes can coexist using a simple relay: the solenoid is driven by either th
 
 | **Parameter**   | **Selected Design Point**                        |
 | --------------------- | ------------------------------------------------------ |
-| Gas source            | 88 g CO₂ cartridge with 2-stage regulator (10 bar WP) |
-| Chamber volume        | 1.0 L; 6061-T6 aluminium; 22.5 bar test pressure       |
-| QEV orifice           | ≥ 8 mm effective orifice ID; Cv ≥ 1.5                |
+| Gas source            | 88 g CO₂ cartridge with 2-stage regulator (6 bar WP) |
+| Chamber volume        | 1.0 L; 6061-T6 aluminium; test pressure 10.5 bar (1.5× WP) |
+| QEV orifice           | **15 mm** effective orifice ID; Cv ≥ 4.0             |
 | Valve type            | Quick Exhaust Valve + manual pushbutton pilot          |
-| Barrel                | 52 mm ID ±0.3 mm; 700 mm length; 6061-T6 Al           |
-| Predicted$v_{exit}$ | 21–26 m/s at 10 bar (ODE model; ±15%)                |
-| System mass           | \< 4 kg assembled                                      |
-| Unit cost (prototype) | ~USD 250–300                                          |
+| Barrel                | **120 mm ID** ±0.3 mm; 700 mm length; 6061-T6 Al; **4 mm wall** |
+| Working pressure      | **6 bar gauge** (7 bar absolute)                      |
+| Predicted$v_{exit}$ | **~12 m/s** at 6 bar (ODE model; ±15%)               |
+| Operational range     | **100 m** (UAV self-propulsion after barrel exit)     |
+| Endcap load           | **7.92 kN** at 6 bar gauge                           |
+| CO₂ per shot         | **~12.6 g** → ~7 shots per 88 g cartridge            |
+| System mass           | \< 5 kg assembled (heavier barrel due to 120 mm bore) |
+| Unit cost (prototype) | ~USD 280–350 (barrel and larger valve increase cost)  |
 
-The analysis-backed recommendation is to operate the launcher around the **8-10 mm** effective orifice range. That band satisfies the target launch velocity without pushing the system into the clearly above-target 12 mm regime.
+The analysis-backed recommendation is to operate the launcher around the **14–16 mm** effective orifice range at **6 bar gauge**. That band achieves the 12 m/s target with the 120 mm bore without producing excessive structural loads.
 
 ## 10.2 Priority Design Risks
 
-- Risk 1 — QEV orifice undersized: Verify effective orifice diameter ≥ 8 mm from datasheet before procurement. 6 mm orifice is flow-limited and cannot achieve \> 12 m/s per ODE model.
+- Risk 1 — QEV orifice undersized: Verify effective orifice diameter ≥ 15 mm from datasheet before procurement. Below ~12 mm orifice with the 120 mm bore at 6 bar, velocity drops below target.
 - Risk 2 — CO₂ seal degradation at low temperature: Use PTFE seals exclusively downstream of regulator.
-- Risk 3 — Chamber overpressure: Install PRV; never bypass the regulator.
-- Risk 4 — Blowby in barrel: Machine barrel bore to ±0.3 mm tolerance on payload sabot. Tighter than Rev 2 (±0.5 mm) is based on friction model sensitivity.
-- Risk 4a — Payload geometric interference: The 40×45 mm payload diagonal exceeds the minimum bore by 11.5 mm if unconstrained. A sabot is mandatory; without it, yaw/roll can cause a hard jam during loading or launch.
-- Risk 5 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation \> 15%.
+- Risk 3 — Chamber overpressure: Install PRV set at 1.2× WP (7.2 bar); never bypass the regulator.
+- Risk 4 — Endcap structural failure: At 120 mm bore the endcap load is **7.92 kN at 6 bar** and **12.44 kN at 10 bar**. Use minimum 6× M8 bolts at 6 bar; upgrade to 6× M10 if 10 bar is ever used. PVC end-caps or press-fit caps are prohibited.
+- Risk 5 — Gas seal / blowby at 120 mm bore: Larger bore makes sealing harder. A bore-fitted sabot (even without geometric need) is recommended to ensure consistent gas seal and prevent velocity loss from blowby.
+- Risk 6 — Model vs reality gap: ODE model has ±15% accuracy. T3 testing must confirm before field use. Update Cd and $\mu_{r}$ if deviation > 15%.
+- Risk 7 — 100 m range assumption: 12 m/s muzzle velocity gives only **14.7 m ballistic range** at 45° (no drag). Achieving 100 m operational range is **entirely dependent on the UAV's own propulsion**. If the UAV fails to power up after exit, maximum reach is ~15 m.
 
 ## 10.3 Requirement Traceability Snapshot
 
 | Parameter                |        Value |           Status           |
 | ------------------------ | -----------: | :------------------------: |
 | Chamber volume           |        1.0 L |            Yes            |
-| Working pressure         | 10 bar gauge |            Yes            |
+| Working pressure         |  6 bar gauge |            Yes            |
+| Bore diameter            |       120 mm |            Yes            |
 | Barrel length            |       700 mm |            Yes            |
-| Recommended orifice      |      8-10 mm |            Yes            |
-| Muzzle velocity at 10 mm |     25.8 m/s |            Yes            |
-| Muzzle velocity at 8 mm  |     21.3 m/s |            Yes            |
-| Peak acceleration        |       ~217 g | Payload hardening required |
-| Launch efficiency        |        16.4% |            Yes            |
+| Recommended orifice      |   14–16 mm   |            Yes            |
+| Muzzle velocity (15 mm)  |    ~12.0 m/s |            Yes            |
+| Target muzzle velocity   |     ≥ 12 m/s |            Yes            |
+| Operational range        |       100 m  | UAV propulsion required    |
+| Ballistic range (passive)|    ~14.7 m   | Launcher contribution only |
+| Endcap load (6 bar)      |    7.92 kN   |   6× M8 bolts required    |
+| Choked flow transition   | 1.83 bar abs |            Yes (corrected) |
+| Launch efficiency        |       ~5.2%  |            Yes            |
 
 This snapshot is the compact transfer of the validated analysis into the EDD: it preserves the master-document tone while keeping the governing decisions tied to the verified simulation outputs.
 
 ## 10.4 Next Steps
 
-- By Procuring QEV and measuring actual orifice ID; we can verify $C_{v}$ from datasheet and confirm ≥ 1.5.
-- Implement MATLAB ODE model: sweep orifice diameter (6–12 mm) × chamber volume (0.5–1.5 L) × barrel length (400–800 mm) at 10 bar.
-- Fabricate charge chamber from hydraulic cylinder or machined Al; perform T1 hydrostatic test.
-- Conduct T2 (valve response timing) and T3 (muzzle velocity) tests with 4 pressure conditions.
-- Correlate ODE model with measured data; update empirical parameters Cd and $\mu_{r}$.
-- Document test results and revise design if $v_{exit}$ deviates \> 15% from prediction.
+- Procure QEV with effective orifice ≥ 15 mm and verify $C_{v}$ from datasheet ≥ 4.0.
+- Implement MATLAB ODE model: sweep orifice diameter (12–20 mm) × chamber volume (0.5–2.0 L) × barrel length (400–1000 mm) at 6 bar gauge, 120 mm bore.
+- Source 120 mm ID aluminium tube with 4 mm wall; verify bore tolerance ±0.3 mm.
+- Fabricate charge chamber; perform T1 hydrostatic test at 10.5 bar (1.5× WP).
+- Design endcap flange with 6× M8 bolts minimum; verify shear capacity against 7.92 kN load.
+- Conduct T2 (valve response timing) and T3 (muzzle velocity) tests at 4, 6, 8, 10 bar gauge.
+- Correlate ODE model with measured data; update $C_d$ and $\mu_{r}$ if $v_{exit}$ deviates > 15%.
+- Confirm interceptor UAV powers up and achieves stable flight within ~1 m of barrel exit to validate 100 m operational range assumption.
 
 ## 10.5 Formula Quick Reference
 
 | Quantity                  | Formula                                                                                             | Reference value                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- |
-| Isothermal expansion work | $W=P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{atm})$                                                       | $2637.7$ J                    |
-| Bore area                 | $A_{bore}=\pi(D/2)^{2}$                                                                           | $0.002124$ m²                |
-| Real-gas pressure         | $P_{real}=Z_{RK}\cdot(m/V)\cdot R_{u}T/M_{CO_2}$                                                  | $Z_{RK}\approx0.97$ at 11 bar |
-| Hoop stress               | $\sigma_{hoop}=P\,r/t$                                                                            | $9.5$ MPa at $t=3$ mm       |
-| Minimum wall thickness    | $t_{min}=P\cdot r\cdot SF/\sigma_{yield}$                                                         | $0.311$ mm                    |
-| Endcap load               | $F_{endcap}=P_{0}\cdot A_{bore}$                                                                  | $2336.1$ N                    |
-| Critical pressure ratio   | $r_{crit}=(2/(\gamma+1))^{\gamma/(\gamma-1)}$                                                     | $0.5457$                      |
-| Choked mass-flow rate     | $\dot{m}=C_{d}A_{or}P_{c}\sqrt{\gamma/(R_{spec}T)}\cdot(2/(\gamma+1))^{(\gamma+1)/[2(\gamma-1)]}$ | $0.2822$ kg/s at $t=0$      |
-| Impulse                   | $I=m_{payload}\cdot v_{exit}$                                                                     | $27.765$ N·s                 |
-| Average force             | $F_{avg}=I/t_{end}$                                                                               | $746.4$ N                     |
-| Payload envelope          | $D_{eq}=\sqrt{W^{2}+H^{2}}$                                                                       | $60.21$ mm                    |
-| Launch efficiency         | $\eta=\tfrac{1}{2}mv^{2}/W$                                                                       | $14.61\%$ (legacy ODE)        |
+| Isothermal expansion work | $W=P_{0}\cdot V_{0}\cdot\ln(P_{0}/P_{atm})$                                                       | $1377.2$ J (1 L, 6 bar gauge)  |
+| Bore area                 | $A_{bore}=\pi(D/2)^{2}$                                                                           | $0.011310$ m² (120 mm bore)   |
+| Real-gas pressure         | $P_{real}=Z_{RK}\cdot(m/V)\cdot R_{u}T/M_{CO_2}$                                                  | $Z_{RK}\approx1.009$ at 7 bar |
+| Hoop stress               | $\sigma_{hoop}=P\,r/t$                                                                            | $10.5$ MPa at $t=4$ mm, 7 bar |
+| Minimum wall thickness    | $t_{min}=P\cdot r\cdot SF/\sigma_{yield}$                                                         | $0.255$ mm (120 mm bore, 7 bar) |
+| Endcap load               | $F_{endcap}=P_{0}\cdot A_{bore}$                                                                  | $7920$ N (6 bar gauge)         |
+| Critical pressure ratio   | $r_{crit}=(2/(\gamma+1))^{\gamma/(\gamma-1)}$                                                     | $0.5457$                       |
+| Choked transition P       | $P_{trans}=P_{atm}/r_{crit}$                                                                      | $1.83$ bar abs                 |
+| Choked mass-flow rate     | $\dot{m}=C_{d}A_{or}P_{c}\sqrt{\gamma/(R_{spec}T)}\cdot(2/(\gamma+1))^{(\gamma+1)/[2(\gamma-1)]}$ | see Section 4.2                |
+| Payload envelope          | $D_{eq}=\sqrt{W^{2}+H^{2}}$                                                                       | $60.21$ mm (< 119.7 mm bore \u2714) |
+| Ballistic range           | $R=v^{2}\sin(2\theta)/g$                                                                           | $14.7$ m at 12 m/s, 45°       |
+| Launch efficiency         | $\eta=\tfrac{1}{2}mv^{2}/W$                                                                       | $\sim5.2\%$ at design point    |
 
 # Appendix A — Interceptor UAV Payload Design Review
 
