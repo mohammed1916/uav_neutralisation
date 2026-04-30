@@ -37,26 +37,29 @@ Rounded up for margin: **target muzzle velocity = 30 m/s**.
 
 ---
 
-## 2. Fixed Design Parameters
+## 2. Corrected Design Parameters
 
-| Parameter                   | Symbol               | Value              | Notes                              |
-| --------------------------- | -------------------- | ------------------ | ---------------------------------- |
-| Payload mass (with sabot)   | $m$                | 1.0 kg             |                                    |
-| Target muzzle velocity      | $v$                | 30 m/s             | From §1.2                         |
-| Chamber volume              | $V_0$              | 1.0 L = 0.001 m³  |                                    |
-| Barrel length               | $L$                | 700 mm             |                                    |
-| Ambient temperature         | $T$                | 293.15 K           | 20°C                              |
-| CO₂ specific gas constant  | $R_{\text{spec}}$  | 188.92 J/(kg·K)   | $R_u / M_{\text{CO}_2}$          |
-| Specific heat ratio         | $\gamma$           | 1.30               | CO₂ compressible value            |
-| Discharge coefficient       | $C_d$              | 0.8                | For QEV orifice                    |
-| Ambient pressure            | $P_{\text{atm}}$   | 1 bar = 100,000 Pa |                                    |
-| Efficiency factor           | $\eta$             | 0.20 (20%)         | Valve losses + friction + real gas |
-| Real-gas compressibility    | $Z$                | 0.990              | CO₂ at ~10 bar, 20°C             |
-| Estimated barrel dwell time | $t_{\text{dwell}}$ | 50 ms              | For orifice sizing                 |
+| Parameter | Symbol | Value | Notes |
+| --- | --- | --- | --- |
+| Payload mass (with sabot) | $m$ | 1.0 kg | |
+| Target muzzle velocity | $v$ | 30 m/s | From §1.2 |
+| Chamber volume | $V_1$ | 1.0 L = 0.001 m³ | Fixed for sweep |
+| Barrel length | $L$ | 700 mm | Fixed for sweep |
+| Ambient temperature | $T$ | 293.15 K | 20°C |
+| CO₂ specific gas constant | $R_{\text{spec}}$ | 188.92 J/(kg·K) | $R_u / M_{\text{CO}_2}$ |
+| Specific heat ratio | $\gamma$ | 1.30 | CO₂ compressible value |
+| Discharge coefficient | $C_d$ | 0.80 | For QEV orifice |
+| Ambient pressure | $P_{\text{atm}}$ | 1 bar = 100,000 Pa | |
+| Real-gas compressibility | $Z$ | 0.990 | CO₂ near this pressure range |
+| Baseline polytropic exponent | $n$ | 1.25 | Near-adiabatic fast discharge |
+| Baseline launcher efficiency | $\eta$ | 0.50 | Recommended single loss term |
+| Sensitivity band | $n, \eta$ | $n = 1.20$ to $1.30$, $\eta = 0.40$ to $0.60$ | Used to bound results |
+| Reference dwell time | $t_{\text{dwell}}$ | 46.7 ms | Constant-acceleration reference $2L/v$ |
+| Valve sizing band | $t_{\text{dwell}}$ | 25 to 50 ms | Used for orifice sensitivity |
 
 ---
 
-## 3. Step-by-Step Derivation
+## 3. Corrected Step-by-Step Derivation
 
 ### 3.1 Required Kinetic Energy
 
@@ -64,266 +67,239 @@ $$
 KE = \frac{1}{2} m v^2 = \frac{1}{2} \times 1.0 \times 30^2 = \boxed{450 \; \text{J}}
 $$
 
-This is the same for all four bore sizes — it depends only on payload mass and target velocity.
+This remains the same for all bores.
 
-### 3.2 Required Ideal Gas Work
+### 3.2 Modeling Correction: Fast Expansion Is Not Isothermal
 
-With efficiency $\eta = 0.20$, the chamber gas must supply:
-
-$$
-W_{\text{req}} = \frac{KE}{\eta} = \frac{450}{0.20} = \boxed{2250 \; \text{J}}
-$$
-
-### 3.3 Required Chamber Pressure (Pressure Solve)
-
-The ideal isothermal expansion work from a chamber at pressure $P_{\text{abs}}$ expanding to atmospheric is:
+The original calculation used:
 
 $$
-W = P_{\text{abs}} \times V_0 \times \ln\!\left(\frac{P_{\text{abs}}}{P_{\text{atm}}}\right)
+W = P V \ln\!\left(\frac{P}{P_{\text{atm}}}\right)
 $$
 
-We need $W = W_{\text{req}} = 2250$ J, with $V_0 = 0.001$ m³. This is transcendental in $P_{\text{abs}}$ and is solved by bisection iteration.
-
-**Starting the iteration** — test $P_{\text{abs}} = 10$ bar abs:
+That is an isothermal expansion model. For a 10 to 50 ms discharge with negligible heat transfer, the chamber behavior is better represented as polytropic / near-adiabatic:
 
 $$
-W_{10\text{bar}} = 10 \times 10^5 \times 0.001 \times \ln(10) = 1000 \times 2.3026 = 2302.6 \; \text{J}
-$$
-
-That is slightly above 2250 J, so the pressure is just under 10 bar. Converging with bisection:
-
-$$
-\boxed{P_{\text{abs}} = 9.8404 \; \text{bar abs}}
+P_1 V_1^n = P_2 V_2^n
 $$
 
 $$
-\boxed{P_{\text{gauge}} = 8.8404 \; \text{bar gauge}}
+W = \frac{P_1 V_1 - P_2 V_2}{n - 1}
 $$
 
-**Verification:**
+with $n \approx 1.2$ to $1.3$ for CO₂ in this regime.
+
+There is a second bookkeeping issue: the original document combined an isothermal model with a very low lumped efficiency, $\eta = 0.20$. That risks counting the same losses twice.
+
+This revision therefore uses two cases:
+
+1. **Legacy-efficiency check:** keep $\eta = 0.20$ only to show what happens if the old loss factor is retained while the thermodynamics are corrected.
+2. **Recommended baseline:** use polytropic expansion with a single lumped efficiency $\eta = 0.50$.
+
+The corresponding gas-work targets are:
 
 $$
-W = 9.8404 \times 10^5 \times 0.001 \times \ln(9.8404) = 984.04 \times \ln(9.8404) = 984.04 \times 2.2866 = 2250.0 \; \text{J} \; \checkmark
+W_{\text{req,legacy}} = \frac{450}{0.20} = \boxed{2250 \; \text{J}}
 $$
 
-> **Key insight:** The required pressure is **identical for all four bore sizes**. The pressure is determined entirely by the energy budget ($W_{\text{req}}$), which depends on $KE$, $\eta$, $V_0$, and $T$ — none of which involve bore diameter. The bore only affects the structural endcap load.
+$$
+W_{\text{req,baseline}} = \frac{450}{0.50} = \boxed{900 \; \text{J}}
+$$
+
+### 3.3 Required Chamber Pressure With Polytropic Expansion
+
+Using $n = 1.25$ and $P_2 = P_{\text{atm}}$, the final volume at atmospheric discharge is:
+
+$$
+V_2 = V_1 \left(\frac{P_1}{P_{\text{atm}}}\right)^{1/n}
+$$
+
+Substituting into the polytropic work expression gives a transcendental pressure solve:
+
+$$
+W = \frac{P_1 V_1 - P_{\text{atm}} V_1 \left(P_1 / P_{\text{atm}}\right)^{1/n}}{n - 1}
+$$
+
+Solved by bisection for $V_1 = 0.001$ m³:
+
+| Case | $n$ | $\eta$ | $W_{\text{req}}$ (J) | $P_1$ (bar abs) | $P_g$ (bar gauge) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Legacy-efficiency check | 1.25 | 0.20 | 2250 | **13.779** | **12.779** |
+| Recommended baseline | 1.25 | 0.50 | 900 | **6.985** | **5.985** |
+
+So the old single-point result of 9.84 bar abs is **not a stable design conclusion**. Once the expansion model is corrected, the answer depends strongly on how losses are represented.
+
+Pressure sensitivity across the realistic band is:
+
+| $n$ | $\eta = 0.40$ | $\eta = 0.50$ | $\eta = 0.60$ |
+| ---: | ---: | ---: | ---: |
+| 1.20 | 7.772 bar abs | 6.648 bar abs | 5.871 bar abs |
+| 1.25 | 8.191 bar abs | 6.985 bar abs | 6.154 bar abs |
+| 1.30 | 8.617 bar abs | 7.328 bar abs | 6.440 bar abs |
+
+**Corrected insight:** thermodynamic pressure remains bore-independent for a fixed energy target and chamber volume, but it is sensitive to the thermodynamic model and to how efficiency is defined.
 
 ### 3.4 Choked Mass-Flow Constant
 
-For choked (sonic) flow through the valve orifice:
+For choked flow through the valve orifice:
 
 $$
-\dot{m} = C_d \cdot A_{\text{or}} \cdot P_{\text{abs}} \cdot \sqrt{\frac{\gamma}{R_{\text{spec}} T}} \cdot \left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}}
+\dot{m} = C_d A_{\text{or}} P_1 \sqrt{\frac{\gamma}{R_{\text{spec}} T}} \left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}}
 $$
 
-Evaluating the constant (independent of bore) for CO₂ at $T = 293.15$ K, $\gamma = 1.30$, $C_d = 0.8$:
+Evaluating the constant at $T = 293.15$ K, $\gamma = 1.30$, $C_d = 0.8$:
 
 $$
-\sqrt{\frac{\gamma}{R_{\text{spec}} T}} = \sqrt{\frac{1.30}{188.92 \times 293.15}} = \sqrt{\frac{1.30}{55,388}} = \sqrt{2.348 \times 10^{-5}} = 4.845 \times 10^{-3}
-$$
-
-$$
-\left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}} = \left(\frac{2}{2.30}\right)^{\frac{2.30}{0.60}} = (0.8696)^{3.833} = 0.5852
+\sqrt{\frac{\gamma}{R_{\text{spec}} T}} = \sqrt{\frac{1.30}{188.92 \times 293.15}} = 4.845 \times 10^{-3}
 $$
 
 $$
-\text{choke\_factor} = C_d \times 4.845 \times 10^{-3} \times 0.5852 = 0.8 \times 2.836 \times 10^{-3} = \mathbf{0.002268} \; \text{kg/(m}^2 \text{⋅Pa⋅s)}
+\left(\frac{2}{\gamma+1}\right)^{\frac{\gamma+1}{2(\gamma-1)}} = 0.5852
 $$
 
-Therefore $\dot{m} = A_{\text{or}} \times P_{\text{abs}} \times 0.002268$.
+$$
+k_c = 0.8 \times 4.845 \times 10^{-3} \times 0.5852 = \boxed{0.002268 \; \text{kg/(m}^2\text{·Pa·s)}}
+$$
 
 ### 3.5 CO₂ Mass per Shot
 
-Using the real-gas ideal expression with compressibility $Z = 0.990$:
+Using the real-gas ideal expression:
 
 $$
-m_{\text{CO}_2} = \frac{P_{\text{abs}} \times V_0 \times M_{\text{CO}_2}}{Z \times R_u \times T} = \frac{9.8404 \times 10^5 \times 0.001 \times 0.04401}{0.990 \times 8.314 \times 293.15}
+m_{\text{CO}_2} = \frac{P_1 V_1 M_{\text{CO}_2}}{Z R_u T}
 $$
 
-$$
-= \frac{43.30}{2411.1} = 0.01795 \; \text{kg} = \boxed{17.95 \; \text{g per shot}}
-$$
+This remains bore-independent for a fixed pressure, but it changes when the pressure model changes.
 
-> Also bore-independent — depends only on $P_{\text{abs}}$, $V_0$, and gas properties.
+| Case | $P_1$ (bar abs) | CO₂ per shot |
+| --- | ---: | ---: |
+| Legacy-efficiency check | 13.779 | **25.13 g** |
+| Recommended baseline | 6.985 | **12.74 g** |
 
-### 3.6 Required Orifice Diameter
+### 3.6 Valve Sizing: 14.3 mm Is Only a Lower Bound
 
-Required mass flow rate to discharge $m_{\text{CO}_2}$ within $t_{\text{dwell}} = 50$ ms:
-
-$$
-\dot{m}_{\text{req}} = \frac{m_{\text{CO}_2}}{t_{\text{dwell}}} = \frac{0.01795}{0.050} = 0.3590 \; \text{kg/s}
-$$
-
-Required orifice area from choked flow equation:
+With a fixed dwell time, the required mass flow rate is:
 
 $$
-A_{\text{or}} = \frac{\dot{m}_{\text{req}}}{P_{\text{abs}} \times \text{choke\_factor}} = \frac{0.3590}{9.8404 \times 10^5 \times 0.002268} = \frac{0.3590}{2231.4} = 1.6082 \times 10^{-4} \; \text{m}^2 = 160.82 \; \text{mm}^2
+\dot{m}_{\text{req}} = \frac{m_{\text{CO}_2}}{t_{\text{dwell}}}
 $$
 
-Equivalent circular diameter:
+and the orifice area is:
 
 $$
-d_{\text{or}} = 2\sqrt{\frac{A_{\text{or}}}{\pi}} = 2\sqrt{\frac{160.82}{\pi}} = 2\sqrt{51.21} = 2 \times 7.156 = \boxed{14.31 \; \text{mm}}
+A_{\text{or}} = \frac{\dot{m}_{\text{req}}}{P_1 \times \text{choke\_factor}}
 $$
 
-> Also bore-independent. Orifice is sized to the energy (pressure and gas mass), not to bore geometry.
+If $t_{\text{dwell}} = 50$ ms is held fixed, the baseline case gives:
+
+$$
+d_{\text{or,50ms}} = \boxed{14.31 \; \text{mm}}
+$$
+
+That number is useful only as a **lower-bound sizing point under the explicit 50 ms dwell assumption**. It is not a proof that valve size is bore-independent.
+
+The bore enters through barrel dynamics: larger bores produce larger instantaneous force, different pressure decay, and therefore different dwell times and peak flow demand. A simple sensitivity check using the corrected baseline gives:
+
+| Dwell time | Required orifice diameter |
+| ---: | ---: |
+| 50 ms | 14.31 mm |
+| 40 ms | 16.00 mm |
+| 30 ms | 18.47 mm |
+| 25 ms | 20.24 mm |
+
+So the corrected statement is:
+
+> **Pressure and CO₂ mass are thermodynamically bore-independent for fixed energy and chamber volume, but real valve sizing is not strictly bore-independent because dwell time and flow demand depend on launcher dynamics.**
+
+For this reason the practical valve recommendation is no longer a fixed 14 mm part. A **16 to 20 mm effective orifice** is a more defensible design band until the dwell time is solved with a coupled chamber-barrel dynamic model.
 
 ---
 
-## 4. Per-Bore Calculations
+## 4. Corrected Bore Comparison
 
-All four cases share: $P_{\text{abs}} = 9.8404$ bar abs, $P_{\text{gauge}} = 8.84$ bar gauge, CO₂/shot = 17.95 g, $d_{\text{or}} = 14.31$ mm.
+The smallest bore that fits the payload is still the preferred direction, but the corrected loads are different from the earlier draft.
 
-The **only quantity that varies with bore** is the endcap static load $F_{\text{endcap}} = P_{\text{abs}} \times A_{\text{bore}}$.
-
-### Bore radius 60 mm — diameter 120 mm
+Static endcap load remains:
 
 $$
-A_{\text{bore}} = \pi r^2 = \pi \times (0.060)^2 = 0.011310 \; \text{m}^2 \; (113.10 \; \text{cm}^2)
+F_{\text{endcap}} = P_1 \times A_{\text{bore}} = P_1 \times \pi r^2
 $$
 
-$$
-F_{\text{endcap}} = 9.8404 \times 10^5 \times 0.011310 = 11{,}129 \; \text{N} = \mathbf{11.13 \; \text{kN}}
-$$
+The table below shows both the recommended baseline and the legacy-efficiency check, plus force design bands using structural safety factors of 2 and 3.
 
-Status flags: Endcap > 10 kN (marginally — 11.13 kN vs 10 kN limit)
+| Bore radius | Bore diameter | Static load at 5.985 bar g baseline | Static load at legacy 12.779 bar g | SF = 2 design load (baseline) | SF = 3 design load (baseline) |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 60 mm | 120 mm | **7.90 kN** | **15.58 kN** | 15.80 kN | 23.70 kN |
+| 80 mm | 160 mm | 14.04 kN | 27.70 kN | 28.09 kN | 42.13 kN |
+| 100 mm | 200 mm | 21.95 kN | 43.29 kN | 43.89 kN | 65.84 kN |
+| 120 mm | 240 mm | 31.60 kN | 62.34 kN | 63.20 kN | 94.80 kN |
+
+### What this means structurally
+
+- At the **recommended baseline**, only the 60 mm radius case remains below 10 kN static load.
+- At the **legacy-efficiency check**, even the 60 mm radius case rises to 15.6 kN static and exceeds the 10 bar gauge envelope.
+- With a structural force safety factor of 2 to 3, even the 60 mm radius case should be designed for **15.8 to 23.7 kN** in the baseline scenario.
+- Larger bores move rapidly into a heavy flange / pressure-vessel class and are hard to justify for a portable launcher.
 
 ---
 
-### Bore radius 80 mm — diameter 160 mm
+## 5. Corrected Conclusions
 
-$$
-A_{\text{bore}} = \pi \times (0.080)^2 = 0.020106 \; \text{m}^2 \; (201.06 \; \text{cm}^2)
-$$
+| Parameter | Earlier draft | Corrected interpretation |
+| --- | --- | --- |
+| Thermodynamic model | Isothermal | Fast discharge should be treated as polytropic / near-adiabatic |
+| Pressure result | 9.84 bar abs | **6.99 bar abs baseline** with $n = 1.25$, $\eta = 0.50$; **13.78 bar abs** if the old $\eta = 0.20$ is retained |
+| CO₂ per shot | 17.95 g | **12.74 g baseline** or **25.13 g** for the legacy-efficiency check |
+| Orifice result | 14.31 mm fixed | **14.31 mm only at 50 ms dwell**; realistic valve band is **16 to 20 mm** if dwell is 25 to 40 ms |
+| Bore effect | Endcap load only | Bore leaves the thermodynamic energy unchanged, but it strongly affects structural load, dwell time, flow demand, and therefore valve sizing |
 
-$$
-F_{\text{endcap}} = 9.8404 \times 10^5 \times 0.020106 = 19{,}785 \; \text{N} = \mathbf{19.79 \; \text{kN}}
-$$
+The core design lesson still survives the correction:
 
-Status flags: Endcap > 10 kN
+> **Choose the smallest bore that geometrically fits the payload.**
 
----
-
-### Bore radius 100 mm — diameter 200 mm
-
-$$
-A_{\text{bore}} = \pi \times (0.100)^2 = 0.031416 \; \text{m}^2 \; (314.16 \; \text{cm}^2)
-$$
-
-$$
-F_{\text{endcap}} = 9.8404 \times 10^5 \times 0.031416 = 30{,}915 \; \text{N} = \mathbf{30.91 \; \text{kN}}
-$$
-
-Status flags: Endcap > 10 kN
+That remains true because larger bores do not reduce the gas energy requirement, but they do increase endcap load dramatically and tend to make the flow problem harder rather than easier.
 
 ---
 
-### Bore radius 120 mm — diameter 240 mm
+## 6. Recommendation
 
-$$
-A_{\text{bore}} = \pi \times (0.120)^2 = 0.045239 \; \text{m}^2 \; (452.39 \; \text{cm}^2)
-$$
+### Recommended interpretation of the 30 m/s scenario
 
-$$
-F_{\text{endcap}} = 9.8404 \times 10^5 \times 0.045239 = 44{,}517 \; \text{N} = \mathbf{44.52 \; \text{kN}}
-$$
+The 120 mm diameter case is still the only credible option among the four bores studied, but the corrected document should no longer claim that the design is settled at 8.84 bar gauge with a 14 mm valve.
 
-Status flags: Endcap > 10 kN
+The more defensible baseline is:
 
----
+| Parameter | Recommended baseline value |
+| --- | --- |
+| Bore radius | **60 mm** |
+| Bore diameter | **120 mm** |
+| Chamber model | **Polytropic, $n = 1.25$** |
+| Pressure | **5.99 bar gauge** baseline, with **4.87 to 7.62 bar gauge** sensitivity over $n = 1.20$ to $1.30$, $\eta = 0.40$ to $0.60$ |
+| Chamber volume | **1.0 L** |
+| Barrel length | **700 mm** |
+| Valve orifice | **16 to 20 mm effective ID recommended** until dwell is solved dynamically |
+| CO₂ per shot | **~12.7 g baseline** |
+| Static endcap load | **~7.9 kN baseline** |
+| Structural design load | **15.8 to 23.7 kN** for SF = 2 to 3 |
+| Operational concept | **30 m/s launch plus UAV self-propulsion** |
 
-## 5. Summary Results Table
+### Important caveat
 
-| Bore radius (mm) | Bore diameter (mm) | A_bore (m²) |  P_gauge (bar) |     Endcap load (kN) |   CO₂/shot (g) |    Orifice (mm) |
-| ---------------: | -----------------: | -----------: | -------------: | -------------------: | --------------: | --------------: |
-|     **60** |      **120** |     0.011310 | **8.84** | **11.13** ⚠️ | **17.95** | **14.31** |
-|               80 |                160 |     0.020106 |           8.84 |             19.79 ❌ |           17.95 |           14.31 |
-|              100 |                200 |     0.031416 |           8.84 |             30.91 ❌ |           17.95 |           14.31 |
-|              120 |                240 |     0.045239 |           8.84 |             44.52 ❌ |           17.95 |           14.31 |
+If measured launcher efficiency is closer to the old 0.20 assumption, this 1.0 L chamber concept no longer sits inside a 10 bar gauge working envelope. In that case the corrected thermodynamics require:
 
-> ⚠️ Slightly over 10 kN limit — manageable with reinforced flange
-> ❌ Significantly over 10 kN — requires major structural reinforcement or design change
+- **12.78 bar gauge** chamber pressure
+- **25.1 g CO₂ per shot**
+- **15.6 kN** static endcap load even for the 120 mm diameter bore
 
-### Criteria check per case
-
-| Criterion            | Limit     | r=60 mm      | r=80 mm     | r=100 mm    | r=120 mm    |
-| -------------------- | --------- | ------------ | ----------- | ----------- | ----------- |
-| P_gauge 3–10 bar    | ≥3, ≤10 | ✅ 8.84 bar  | ✅ 8.84 bar | ✅ 8.84 bar | ✅ 8.84 bar |
-| Endcap load ≤ 10 kN | ≤ 10 kN  | ⚠️ 11.1 kN | ❌ 19.8 kN  | ❌ 30.9 kN  | ❌ 44.5 kN  |
-| CO₂/shot ≤ 20 g    | ≤ 20 g   | ✅ 18.0 g    | ✅ 18.0 g   | ✅ 18.0 g   | ✅ 18.0 g   |
-| Orifice 10–30 mm    | 10–30 mm | ✅ 14.3 mm   | ✅ 14.3 mm  | ✅ 14.3 mm  | ✅ 14.3 mm  |
+That is a materially different system class.
 
 ---
 
-## 6. Critical Observation: Why Pressure and Orifice Are Bore-Independent
+## 7. Notes and Remaining Limits
 
-This analysis reveals a **fundamental insight** that is easy to miss:
-
-> **For a fixed energy target, fixed chamber volume, and fixed efficiency assumption, the required operating pressure and orifice diameter are completely independent of bore size.** Bore size only changes the endcap structural load.
-
-**Why?**
-
-- The pressure is set by: $P_{\text{abs}} \times V_0 \times \ln(P_{\text{abs}}/P_{\text{atm}}) = KE/\eta$. No bore term appears.
-- The CO₂ mass per shot is set by: $m = P_{\text{abs}} \times V_0 \times M / (ZRT)$. No bore term appears.
-- The orifice is set by: $A_{\text{or}} = (m/t_{\text{dwell}}) / (P_{\text{abs}} \times k)$. No bore term appears.
-- The endcap load IS bore-dependent: $F = P_{\text{abs}} \times \pi r^2$, growing as $r^2$.
-
-**Practical implication:** The only reason to choose a small bore is to keep the endcap load manageable. All other parameters (pressure, gas consumption, valve specification) stay the same. **Choose the smallest bore that geometrically fits the payload.**
-
----
-
-## 7. Recommendation
-
-### Optimal selection: Bore radius 60 mm (120 mm diameter)
-
-**This is the only bore size that approaches the ≤ 10 kN endcap load criterion.** All larger bores fail it decisively. The 60 mm radius case gives 11.13 kN — **11.3% over the 10 kN guideline**, which is a soft engineering limit rather than a hard failure threshold.
-
-Mitigation for 11.13 kN endcap load at 60 mm radius bore:
-
-- Use **6× M10 grade 8.8 bolts** on the endcap flange (each capable of 18.85 kN in shear at 240 MPa; 6× gives 113.1 kN capacity, SF = 10.2).
-- Alternatively, **6× M8 class 12.9** provides equivalent capacity.
-- Use a **full-face gasket** (not O-ring only) to distribute the load across the flange face.
-- Endcap material: minimum 6061-T6 aluminium or mild steel. No PVC, ABS, or press-fit end caps at this load level.
-
-### Why 80–120 mm bore radii are not recommended for 30 m/s
-
-| Bore r | Endcap load | Equivalent weight | Structural challenge                 |
-| ------ | ----------- | ----------------- | ------------------------------------ |
-| 60 mm  | 11.1 kN     | ~1.13 tonnes      | Manageable — reinforced flange      |
-| 80 mm  | 19.8 kN     | ~2.0 tonnes       | Requires heavy steel flanges         |
-| 100 mm | 30.9 kN     | ~3.1 tonnes       | Industrial pressure vessel territory |
-| 120 mm | 44.5 kN     | ~4.5 tonnes       | Impractical for portable system      |
-
-### Summary of recommended design point
-
-| Parameter              | Value                                                           |
-| ---------------------- | --------------------------------------------------------------- |
-| Bore radius            | **60 mm**                                                 |
-| Bore diameter          | **120 mm**                                                |
-| Working pressure       | **8.84 bar gauge** (~9 bar gauge, practical round number) |
-| Chamber volume         | **1.0 L**                                                 |
-| Barrel length          | **700 mm**                                                |
-| QEV orifice            | **14–15 mm** effective ID                                |
-| Target muzzle velocity | **30 m/s**                                                |
-| CO₂ per shot          | **~18 g** (~4.9 shots per 88 g cartridge)                 |
-| Endcap load            | **~11.1 kN** — requires 6× M10 flange bolts             |
-| Operational range      | **100 m** (UAV flies remaining ~85 m under own power)     |
-
-### Alternative: Reduce pressure by increasing efficiency assumption or chamber volume
-
-If 11.13 kN is truly unacceptable and a 60 mm bore must be used, the endcap load can be reduced by:
-
-1. **Increasing $V_0$ to 1.5 L** → allows $P_{\text{abs}}$ to drop to ~7.1 bar abs (6.1 bar gauge) → endcap load drops to **8.02 kN** ✅
-2. **Improving efficiency to η = 0.30** (better valve, longer barrel) → $W_{\text{req}}$ drops to 1500 J → $P_{\text{abs}} \approx 7.5$ bar abs → endcap **8.48 kN** ✅
-3. **Accept 30 m/s is achievable only with UAV assistance** and size the launcher for 20 m/s instead if UAV propulsion is more capable → $P_{\text{abs}} \approx 5.5$ bar abs → endcap **6.2 kN** ✅
-
----
-
-## 8. Notes and Assumptions
-
-1. **Efficiency η = 0.20** is conservative for a CO₂ QEV launcher. Well-designed systems achieve 25–35%. If η is higher, required pressure is lower and endcap loads decrease.
-2. **t_dwell = 50 ms** is an estimate for the 120 mm bore at ~30 m/s. Actual dwell is shorter for larger bores (larger bore area accelerates faster). The orifice calculation is therefore slightly conservative — actual required orifice may be smaller.
-3. The **14.31 mm orifice** is comfortably within the 10–30 mm commercially available QEV range. The SMC VHS and Parker QEV series both cover this size.
-4. **CO₂ per shot = 17.95 g** → approximately **4.9 shots per standard 88 g CO₂ cartridge** (with ~2 g reserve). An extended 120 g cartridge gives approximately 6.7 shots.
-5. **P > 2 bar condition:** All cases give P_gauge = 8.84 bar, well above the 2 bar reliability floor.
-6. **100 m operational range** is achievable only because the UAV has its own propulsion. A purely ballistic launch at 30 m/s and 45° gives maximum range ≈ 91.7 m (no drag). With real drag on a 1 kg, ~0.06 m² cross-section payload, actual ballistic range at 30 m/s is likely **50–70 m**. The UAV propulsion bridges the remainder.
+1. The 120 to 240 mm bores studied here are much larger than the earlier 52 mm concept. They should be treated as a different launcher class, not as a direct scale-up.
+2. The pressure solve is corrected, but valve sizing still needs a coupled chamber-barrel transient model if this document is to be used for procurement or detailed fabrication.
+3. The constant-acceleration reference dwell is $2L/v = 46.7$ ms. Actual dwell can be shorter because acceleration is front-loaded, which is why the valve recommendation is given as a band rather than a single number.
+4. A 14.3 mm valve is still mathematically consistent with a 50 ms dwell assumption. The correction is that this should be treated as a lower-bound estimate, not as the final answer.
+5. The structural design should not use static force alone. A force safety factor of 2 to 3 is appropriate to cover valve-opening shock, non-uniform loading, and modeling uncertainty.
+6. The 100 m operational range still depends on UAV self-propulsion. A purely ballistic 30 m/s launch is marginal even before aerodynamic drag is included.
